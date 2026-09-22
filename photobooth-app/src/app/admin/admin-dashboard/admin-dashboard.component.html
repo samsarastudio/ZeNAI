@@ -1,0 +1,1675 @@
+<div class="pb-page pb-admin-dash">
+  <div class="pb-admin-shell">
+    <header class="pb-admin-topbar">
+      <h1 class="pb-admin-title">PhotoBooth admin</h1>
+      <div class="pb-admin-actions">
+        <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="reloadConfig()">Reload</button>
+        <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="logout()">Sign out</button>
+        <a routerLink="/" class="pb-btn pb-btn-ghost pb-btn-sm">Booth</a>
+      </div>
+    </header>
+
+    <div class="pb-admin-layout">
+      <aside class="pb-admin-sidebar">
+        <p class="pb-admin-sidebar-title">Sections</p>
+        <nav class="pb-admin-nav" aria-label="Admin sections">
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'copy'" (click)="setTab('copy')">
+            Copy
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'branding'" (click)="setTab('branding')">
+            Logo
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'camera'" (click)="setTab('camera')">
+            Camera
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'cans'" (click)="setTab('cans')">
+            Cans
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'display'" (click)="setTab('display')">
+            Display
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'gallery'" (click)="setTab('gallery')">
+            Cloud
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'print'" (click)="setTab('print')">
+            Print
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'jobs'" (click)="setTab('jobs')">
+            AI jobs
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'email'" (click)="setTab('email')">
+            Email
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'system'" (click)="setTab('system')">
+            System
+          </button>
+          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'debug'" (click)="setTab('debug')">
+            Debug
+          </button>
+        </nav>
+      </aside>
+
+      <section class="pb-admin-content">
+        @if (status(); as s) {
+          <p class="pb-admin-status">{{ s }}</p>
+        }
+
+    @if (tab === 'copy') {
+      <div class="pb-admin-grid">
+        <section class="pb-admin-card">
+          <h2>Attract</h2>
+          <label>Icon</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.icon" />
+          <label>Tagline</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.tagline" />
+          <label>Title</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.title" />
+          <label>Subtitle</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.subtitle" />
+          <label>Main text scale (0.6 - 1.6)</label>
+          <input class="pb-input" type="number" min="0.6" max="1.6" step="0.05" [(ngModel)]="draft.attract.mainScale" />
+          <label>Top block scale (logo + tagline, 0.6 - 1.6)</label>
+          <input class="pb-input" type="number" min="0.6" max="1.6" step="0.05" [(ngModel)]="draft.attract.topScale" />
+          <label>CTA label</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.ctaLabel" />
+          <label>Start (aria)</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.startAria" />
+          <label>Admin link label</label>
+          <input class="pb-input" [(ngModel)]="draft.attract.adminLink" />
+        </section>
+
+        <section class="pb-admin-card">
+          <h2>QR / unlock</h2>
+          <label>Icon</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.icon" />
+          <label>Title</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.title" />
+          <label>Subtitle</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.subtitle" />
+          <label>Scan success message</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.scanSuccess" />
+          <label>Footer line</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.footer" />
+          <label>Code label</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.codeLabel" />
+          <label>OK button</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.ok" />
+          <label>Back button</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.back" />
+          <label>Invalid code message</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.invalidCode" />
+          <label>Debug hint</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.debugHint" />
+          <label>Bypass code</label>
+          <input class="pb-input" [(ngModel)]="draft.qr.bypassCode" />
+        </section>
+
+        <section class="pb-admin-card">
+          <h2>Capture</h2>
+          <label>Side title</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.sideTitle" />
+          <label>Instructions</label>
+          <textarea class="pb-input pb-textarea" rows="3" [(ngModel)]="draft.capture.instructions"></textarea>
+          <label>Starting camera placeholder</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.starting" />
+          <label>Ready title</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.readyTitle" />
+          <label>Ready subtitle</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.readySubtitle" />
+          <label>Footer hint</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.footerHint" />
+          <label>Smile hint</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.smileHint" />
+          <label>Countdown (seconds)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="1"
+            max="15"
+            step="1"
+            [(ngModel)]="draftCapture.countdownSeconds"
+          />
+          <p class="pb-hint pb-hint-tight">How long the 3-2-1 timer runs before the shutter (1–15).</p>
+        </section>
+
+        <section class="pb-admin-card">
+          <h2>Result</h2>
+          <label>Title</label>
+          <input class="pb-input" [(ngModel)]="draft.result.title" />
+          <label>Loading</label>
+          <input class="pb-input" [(ngModel)]="draft.result.loading" />
+          <label>Saved prefix</label>
+          <input class="pb-input" [(ngModel)]="draft.result.savedPrefix" />
+          <label>Retake</label>
+          <input class="pb-input" [(ngModel)]="draft.result.retake" />
+          <label>Submit</label>
+          <input class="pb-input" [(ngModel)]="draft.result.submit" />
+          <label>Create AI version (button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.generateAi" />
+          <label>Generating AI (status)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.generatingAi" />
+          <label>AI preview title</label>
+          <input class="pb-input" [(ngModel)]="draft.result.aiPreviewTitle" />
+          <label>AI error prefix</label>
+          <input class="pb-input" [(ngModel)]="draft.result.aiErrorPrefix" />
+          <label>AI gallery page title</label>
+          <input class="pb-input" [(ngModel)]="draft.result.aiGalleryTitle" />
+          <label>Gallery thumbnail — original</label>
+          <input class="pb-input" [(ngModel)]="draft.result.galleryThumbOriginal" />
+          <label>Gallery thumbnail — AI</label>
+          <input class="pb-input" [(ngModel)]="draft.result.galleryThumbAi" />
+          <label>Gallery “back to photo”</label>
+          <input class="pb-input" [(ngModel)]="draft.result.galleryBackToResult" />
+          <label>Gallery finish</label>
+          <input class="pb-input" [(ngModel)]="draft.result.galleryFinish" />
+          <label>Print (one-shot button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.print" />
+          <label>Printing status</label>
+          <input class="pb-input" [(ngModel)]="draft.result.printing" />
+          <label>Printed status</label>
+          <input class="pb-input" [(ngModel)]="draft.result.printed" />
+          <label>Print failed prefix</label>
+          <input class="pb-input" [(ngModel)]="draft.result.printFailed" />
+          <label>Make physical sheet (button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.makePhysical" />
+          <label>Remake physical sheet (button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.remakePhysical" />
+          <label>Creating physical sheet (status)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.makingPhysical" />
+          <label>Physical sheet error prefix</label>
+          <input class="pb-input" [(ngModel)]="draft.result.physicalErrorPrefix" />
+          <label>Make framed (button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.makeFramed" />
+          <label>Remake framed (button)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.remakeFramed" />
+          <label>Applying frame (status)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.makingFramed" />
+          <label>AI progress panel title</label>
+          <input class="pb-input" [(ngModel)]="draft.result.thinkingSummary" />
+          <label>Progress step 1</label>
+          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepAnalyze" />
+          <label>Progress step 2 (inpainting background)</label>
+          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepBackground" />
+          <label>Progress step 3</label>
+          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepPlan" />
+          <label>Progress step 4</label>
+          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepImage" />
+          <label>Progress footnote</label>
+          <textarea class="pb-input pb-textarea" rows="2" [(ngModel)]="draft.result.thinkingFootnote"></textarea>
+        </section>
+
+        <section class="pb-admin-card">
+          <h2>AI mode screen</h2>
+          <label>Title</label>
+          <input class="pb-input" [(ngModel)]="draft.aiMode.title" />
+          <label>Subtitle</label>
+          <input class="pb-input" [(ngModel)]="draft.aiMode.subtitle" />
+          <label>Back</label>
+          <input class="pb-input" [(ngModel)]="draft.aiMode.back" />
+          <label>Plain photo option (Photocapture / Default)</label>
+          <input class="pb-input" [(ngModel)]="draft.aiMode.plainPhotoLabel" />
+          <p class="pb-hint pb-hint-tight">
+            Shown first on the style screen; picks a normal booth photo with no AI step on the result page.
+          </p>
+        </section>
+      </div>
+      <div class="pb-admin-footer">
+        <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveCopy()">Save capture settings</button>
+      </div>
+    }
+
+    @if (tab === 'themes') {
+      <div class="pb-admin-themes">
+        <section class="pb-admin-card">
+          <h2>Active theme</h2>
+          <p class="pb-hint">WordPress-style packs live in the <code>themes/&lt;id&gt;/</code> folder (theme.json + styles.css).</p>
+          <label>Theme</label>
+          <select class="pb-input" [(ngModel)]="activeThemeId">
+            @if (themes().length === 0) {
+              <option [value]="activeThemeId">{{ activeThemeId }}</option>
+            }
+            @for (t of themes(); track t.id) {
+              <option [value]="t.id">{{ t.name }} ({{ t.id }})</option>
+            }
+          </select>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveThemeSelection()">
+              Apply theme
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="installZip()">
+              Install from zip
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="downloadSelectedTheme()">
+              Download theme zip
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || activeThemeId === 'default'"
+              (click)="removeSelectedTheme()"
+            >
+              Remove theme
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" (click)="exportTemplate()">Download blank template zip</button>
+          </div>
+          <p class="pb-hint pb-hint-tight">
+            “Download theme zip” exports the selected theme folder. “Remove theme” deletes it from disk (not available
+            for <code>default</code>). If you remove the active theme, the app switches to default.
+          </p>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'ai') {
+      <div class="pb-admin-ai">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>OpenAI image generation</h2>
+          <p class="pb-hint">
+            Optional AI transform after capture. Frame overlays are managed in
+            <strong>Admin → Frames</strong>.
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftRequireQrUnlock" />
+            Require QR / code unlock before capture
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftAiEnabled" />
+            Enable AI style step after unlock
+          </label>
+          <label>Default mode</label>
+          <select class="pb-input" [(ngModel)]="draftDefaultAiModeId">
+            <option [ngValue]="null">Guest chooses (show style screen)</option>
+            <option [ngValue]="plainPhotoModeId">
+              Plain photo only — skip style screen, no AI transform
+            </option>
+            @for (m of draftAiModes; track m.id) {
+              <option [ngValue]="m.id">{{ m.label }} ({{ m.id }}) — fixed default</option>
+            }
+          </select>
+          <p class="pb-hint pb-hint-tight">
+            When a fixed AI mode is selected, guests skip the style screen and only that mode runs.
+            Upload the AI reference logo in Admin → Logo. Use <code>&#123;brand&#125;</code> in prompts
+            for the brand name field there.
+          </p>
+          <p class="pb-hint pb-hint-tight">
+            @if (booth.openAiConfigured()) {
+              An API key is stored on this machine.
+            } @else {
+              No API key stored — add one below to enable generation.
+            }
+          </p>
+          <label>OpenAI API key (optional — leave blank to keep current)</label>
+          <input
+            class="pb-input"
+            type="password"
+            autocomplete="off"
+            placeholder="sk-…"
+            [(ngModel)]="openAiKeyDraft"
+          />
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveAi()">
+              Save AI settings
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || (!openAiKeyDraft.trim() && !booth.openAiConfigured())"
+              (click)="testOpenAiKey()"
+            >
+              Test API key
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || !booth.openAiConfigured()"
+              (click)="clearOpenAiKey()"
+            >
+              Remove API key
+            </button>
+          </div>
+        </section>
+
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>AI modes (after QR)</h2>
+          <p class="pb-hint">
+            Each mode is a button for guests (unless a fixed default is set). Enable
+            <strong>inpainting</strong> to composite the guest photo onto pre-made branded backgrounds
+            — one background is picked at random per guest when randomize is on.
+          </p>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="addAiMode()">
+              Add mode
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="addDjMode()">
+              Add DJ template
+            </button>
+          </div>
+          @for (m of draftAiModes; track $index) {
+            <div class="pb-admin-ai-row">
+              <h3>Mode {{ $index + 1 }}</h3>
+              <label>Id (stable key)</label>
+              <input class="pb-input" [(ngModel)]="m.id" />
+              <label>Button label</label>
+              <input class="pb-input" [(ngModel)]="m.label" />
+              <label class="pb-admin-check">
+                <input type="checkbox" [(ngModel)]="m.useInpainting" />
+                Use inpainting with background images
+              </label>
+              @if (m.useInpainting) {
+                <label class="pb-admin-check">
+                  <input type="checkbox" [(ngModel)]="m.randomizeBackground" />
+                  Randomize background per guest
+                </label>
+                <label>Inpaint prompt (blend instructions)</label>
+                <textarea class="pb-input pb-textarea" rows="5" [(ngModel)]="m.inpaintPrompt"></textarea>
+                <p class="pb-hint pb-hint-tight">
+                  Backgrounds live in <code>config/ai-backgrounds/{{ m.id }}/</code> next to the app.
+                </p>
+                <div class="pb-admin-bg-grid">
+                  @for (bg of backgroundsForMode(m.id); track bg.filename) {
+                    <figure class="pb-admin-bg-thumb">
+                      <img [src]="bg.url" [alt]="bg.filename" loading="lazy" />
+                      <figcaption>{{ bg.filename }}</figcaption>
+                      <button
+                        type="button"
+                        class="pb-btn pb-btn-ghost pb-btn-sm"
+                        [disabled]="busy()"
+                        (click)="deleteAiBackground(m.id, bg.filename)"
+                      >
+                        Remove
+                      </button>
+                    </figure>
+                  } @empty {
+                    <p class="pb-hint">No backgrounds yet — upload at least one for inpainting.</p>
+                  }
+                </div>
+                <div class="pb-row pb-row-wrap">
+                  <button
+                    type="button"
+                    class="pb-btn pb-btn-primary"
+                    [disabled]="busy() || !m.id.trim()"
+                    (click)="uploadAiBackground(m.id)"
+                  >
+                    Upload background…
+                  </button>
+                  <button type="button" class="pb-btn pb-btn-ghost" (click)="refreshAiBackgrounds(m.id)">
+                    Refresh list
+                  </button>
+                </div>
+              }
+              <label>Prompt @if (m.useInpainting) { (fallback if inpainting off) }</label>
+              <textarea class="pb-input pb-textarea" rows="5" [(ngModel)]="m.prompt"></textarea>
+              <div class="pb-row pb-row-wrap">
+                <button type="button" class="pb-btn pb-btn-ghost" (click)="applyNewspaperPrompt($index)">
+                  Insert Newspaper prompt
+                </button>
+                <button type="button" class="pb-btn pb-btn-ghost" (click)="applyDjInpaintPrompt($index)">
+                  Insert DJ inpaint prompt
+                </button>
+                <button
+                  type="button"
+                  class="pb-btn pb-btn-ghost"
+                  [disabled]="draftAiModes.length <= 1"
+                  (click)="removeAiMode($index)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          }
+        </section>
+      </div>
+    }
+
+    @if (tab === 'branding') {
+      <div class="pb-admin-branding">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>App logo</h2>
+          <p class="pb-hint">
+            Logo shown on guest-facing screens only — attract, QR unlock, and the style picker.
+            This is separate from the AI reference logo below.
+          </p>
+          @if (branding.logoSrc(); as logo) {
+            <div class="pb-admin-logo-preview">
+              <img [src]="logo" alt="App logo preview" />
+            </div>
+          } @else {
+            <p class="pb-hint">No app logo — emoji icons from copy settings are shown on screen.</p>
+          }
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="uploadLogo()">
+              Upload app logo…
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || !branding.hasLogo()"
+              (click)="removeLogo()"
+            >
+              Remove app logo
+            </button>
+          </div>
+        </section>
+
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>AI brand reference</h2>
+          <p class="pb-hint">
+            Logo used only for AI generation — composited onto backgrounds and sent as an
+            <code>image[]</code> reference for signage, product boxes, headphones, and clothing.
+            Use <code>&#123;brand&#125;</code> in AI prompts for the brand name field below.
+          </p>
+          @if (branding.aiLogoSrc(); as aiLogo) {
+            <div class="pb-admin-logo-preview">
+              <img [src]="aiLogo" alt="AI reference logo preview" />
+            </div>
+          } @else {
+            <p class="pb-hint">No AI reference logo uploaded.</p>
+          }
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="uploadAiLogo()">
+              Upload AI reference logo…
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || !branding.hasAiLogo()"
+              (click)="removeAiLogo()"
+            >
+              Remove AI reference logo
+            </button>
+          </div>
+
+          <label>Brand name (for prompts)</label>
+          <input
+            class="pb-input"
+            placeholder="Your brand name"
+            [(ngModel)]="draftBranding.brandName"
+          />
+          <p class="pb-hint pb-hint-tight">
+            Replaces <code>&#123;brand&#125;</code> in AI mode prompts when a text label is needed
+            alongside the reference logo.
+          </p>
+
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftBranding.applyBrandToAi" />
+            Apply AI reference logo to generated photos
+          </label>
+          <p class="pb-hint pb-hint-tight">
+            When enabled, the AI reference logo is composited onto backgrounds and included in the
+            OpenAI edit request. Requires an AI reference logo above.
+          </p>
+
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveBranding()">
+              Save brand settings
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'gallery') {
+      <div class="pb-admin-gallery">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Cloud upload</h2>
+          <p class="pb-hint">
+            After AI finishes, photos upload to the ZYN cloud dashboard. Guest email is sent
+            <strong>from that dashboard</strong> (SendGrid), not from this kiosk. Open the dashboard at
+            <code>{{ draftGallery.apiBaseUrl || 'http://127.0.0.1:3020' }}/admin</code>
+            (PIN 2727).
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGallery.enabled" />
+            Enable cloud upload
+          </label>
+          <label>Cloud API base URL</label>
+          <input class="pb-input" [(ngModel)]="draftGallery.apiBaseUrl" placeholder="http://127.0.0.1:3020" />
+          <label>Upload token</label>
+          <input class="pb-input" type="password" [(ngModel)]="draftGallery.uploadToken" autocomplete="off" />
+          <label>Session prefix (daily slug)</label>
+          <input class="pb-input" [(ngModel)]="draftGallery.sessionPrefix" />
+          <p class="pb-hint pb-hint-tight">
+            Today’s album:
+            @if (todayGalleryUrl()) {
+              <a [href]="todayGalleryUrl()" target="_blank" rel="noopener">{{ todayGalleryUrl() }}</a>
+              ·
+              <a [href]="draftGallery.apiBaseUrl + '/wall'" target="_blank" rel="noopener">wall</a>
+            } @else {
+              set a base URL first
+            }
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGallery.uploadAi" />
+            Upload AI results to cloud (required for gallery / email)
+          </label>
+          <p class="pb-hint">Raw captures are never uploaded — cloud and print use the finished AI image only.</p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGallery.uploadPhysical" />
+            Upload physical print sheets (admin download only — not guest wall/gallery)
+          </label>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveGallery()">
+              Save gallery settings
+            </button>
+          </div>
+        </section>
+
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Upload queue</h2>
+          <p class="pb-hint">
+            Photos upload in the background. If the cloud dashboard was offline, use
+            <strong>Re-sync queue</strong> to retry. Scans <code>capture/</code> (last 7 days) for
+            photos not yet queued.
+          </p>
+          @if (uploadQueueSummary()) {
+            <p class="pb-hint pb-hint-tight">
+              Queue:
+              {{ uploadQueueSummary()!.uploadedOk }} uploaded ·
+              {{ uploadQueueSummary()!.queued }} queued ·
+              {{ uploadQueueSummary()!.pending }} in progress ·
+              {{ uploadQueueSummary()!.error }} failed
+            </p>
+          }
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="galleryForceResync" />
+            Force re-upload already completed photos (use if Moments lost files)
+          </label>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="refreshUploadQueueSummary()">
+              Refresh queue status
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="resyncUploadQueue()">
+              Re-sync upload queue
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'modes') {
+      <div class="pb-admin-modes">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Booth modes</h2>
+          <p class="pb-hint">
+            Guests pick a mode after <strong>Tap to start</strong>. Enable one or both options
+            below. If only one is enabled, that mode runs automatically (no picker).
+            Physical cut sheets upload to Moments for <strong>admin download only</strong> (not the
+            guest wall). Custom sheets can also be generated in Moments Admin → Physical frame.
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGuestModes.defaultEnabled" />
+            <strong>Digital frame</strong> — photo + digital frames / caption / AI as configured
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGuestModes.physicalFrameEnabled" />
+            <strong>Physical frame</strong> — landscape capture, rotate 90°, sheet with
+            <em>two identical</em> portrait cells for cutting into frames
+          </label>
+
+          @if (draftGuestModes.physicalFrameEnabled) {
+            <h3 class="pb-admin-subhead">Physical cut-sheet layout (cm / mm at DPI)</h3>
+            <p class="pb-hint pb-hint-tight">
+              Each cell prints at the centimetre size below — measurable with a ruler on SELPHY
+              postcard paper (148 × 100 mm). Gap and margins are auto-filled around the two cells so
+              global print bleed is not applied. Safe insets only shift the photo
+              <em>inside</em> the frame (heads / ridges). Guests can zoom and drag before the sheet
+              is created.
+            </p>
+            <div class="pb-row pb-row-wrap">
+              <label>
+                Cell width (cm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="3"
+                  max="7.4"
+                  step="0.1"
+                  [(ngModel)]="draftPhysicalFrame.cellWidthCm"
+                />
+              </label>
+              <label>
+                Cell height (cm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="4"
+                  max="9.8"
+                  step="0.1"
+                  [(ngModel)]="draftPhysicalFrame.cellHeightCm"
+                />
+              </label>
+              <label>
+                Photo inset (mm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="0"
+                  max="12"
+                  step="0.5"
+                  [(ngModel)]="draftPhysicalFrame.innerPaddingMm"
+                />
+              </label>
+              <label>
+                Safe top (mm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="0"
+                  max="20"
+                  step="0.5"
+                  [(ngModel)]="draftPhysicalFrame.safeInsetTopMm"
+                />
+              </label>
+              <label>
+                Safe bottom (mm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="0"
+                  max="25"
+                  step="0.5"
+                  [(ngModel)]="draftPhysicalFrame.safeInsetBottomMm"
+                />
+              </label>
+              <label>
+                Safe left (mm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="0"
+                  max="15"
+                  step="0.5"
+                  [(ngModel)]="draftPhysicalFrame.safeInsetLeftMm"
+                />
+              </label>
+              <label>
+                Safe right (mm)
+                <input
+                  class="pb-input"
+                  type="number"
+                  min="0"
+                  max="15"
+                  step="0.5"
+                  [(ngModel)]="draftPhysicalFrame.safeInsetRightMm"
+                />
+              </label>
+              <label>
+                Rotate
+                <select class="pb-input" [(ngModel)]="draftPhysicalFrame.rotateDegrees">
+                  <option [ngValue]="90">90° clockwise</option>
+                  <option [ngValue]="-90">90° counter-clockwise</option>
+                </select>
+              </label>
+            </div>
+            <label class="pb-admin-check">
+              <input type="checkbox" [(ngModel)]="draftPhysicalFrame.borderEnabled" />
+              Thin gold border (double hairline)
+            </label>
+            <p class="pb-hint pb-hint-tight">
+              Each cell prints
+              <strong>
+                {{ draftPhysicalFrame.cellWidthCm }} × {{ draftPhysicalFrame.cellHeightCm }} cm
+              </strong>
+              (ruler size). Sheet is a Canon SELPHY postcard
+              <strong>14.8 × 10.0 cm</strong>
+              at {{ draftPhysicalFrame.dpi }} DPI ({{ physicalSheetPixelW() }}×{{ physicalSheetPixelH() }} px).
+              Gap and margins auto-fill. Global print bleed is not applied.
+            </p>
+          }
+
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveModes()">
+              Save modes
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'system') {
+      <div class="pb-admin-system">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>App version / OTA</h2>
+          <p class="pb-hint">
+            Version comes from <code>version.json</code> beside <code>ZYN-Photobooth.exe</code> (Folder
+            build stamp). Updates are <strong>manual</strong>: Cloud admin rolls out a package,
+            then Check → Install on this booth (app quits, replaces files, keeps config / capture /
+            data, relaunches).
+          </p>
+          <p class="pb-hint pb-hint-tight">
+            Installed: <strong>{{ appVersionLabel() }}</strong>
+            @if (canSelfUpdate()) {
+              · Folder build (OTA supported)
+            } @else {
+              · OTA needs a Folder install (not portable exe / not ng serve)
+            }
+          </p>
+          @if (installRootLabel(); as root) {
+            <p class="pb-hint pb-hint-tight">Install folder: <code>{{ root }}</code></p>
+          }
+          @if (pendingUpdateLabel()) {
+            <p class="pb-hint pb-hint-tight">Available: <strong>{{ pendingUpdateLabel() }}</strong></p>
+          }
+          <div class="pb-row pb-row-wrap">
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || updateBusy()"
+              (click)="checkBoothUpdateNow()"
+            >
+              {{ updateBusy() ? 'Checking…' : 'Check for update' }}
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-primary"
+              [disabled]="busy() || updateBusy() || !pendingUpdateLabel()"
+              (click)="installBoothUpdateNow()"
+            >
+              {{ updateBusy() ? 'Working…' : 'Install update now' }}
+            </button>
+          </div>
+        </section>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>OpenAI API</h2>
+          <p class="pb-hint">
+            Base URL must include <code>/v1</code>. Use a proxy or Azure-compatible endpoint if needed.
+            The key stays on the kiosk disk.
+          </p>
+          <label>API base URL</label>
+          <input class="pb-input" [(ngModel)]="draftOpenAiApiUrl" placeholder="https://api.openai.com/v1" />
+          <label>API key {{ booth.openAiConfigured() ? '(saved — leave blank to keep)' : '' }}</label>
+          <input class="pb-input" type="password" [(ngModel)]="openAiKeyDraft" autocomplete="off" />
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveOpenAiApi()">
+              Save OpenAI API
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || (!openAiKeyDraft.trim() && !booth.openAiConfigured())"
+              (click)="testOpenAiKey()"
+            >
+              Test key
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'photos') {
+      <div class="pb-admin-photos">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Photos</h2>
+          <p class="pb-hint">
+            Local captures on this booth — every photo taken, not only printed ones. Same grid as
+            Photo history. Physical sheets also upload to Moments so you can download them from
+            Gallery admin on another device. Delete removes files from this booth only.
+          </p>
+          <pb-capture-photo-browser [compact]="true" />
+        </section>
+      </div>
+    }
+
+    @if (tab === 'print') {
+      <div class="pb-admin-print">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Photo printing</h2>
+          <p class="pb-hint">
+            Choose any Windows printer queue installed on this PC (DNP DS-RX1, etc.).
+            Auto-print sends the AI photo to the selected printer when generation finishes.
+            DNP RX1 uses 4×6″; other USB drivers use postcard paper size when selected.
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftPrint.enabled" />
+            Enable printing
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftPrint.autoPrint" />
+            Auto-print when AI finishes
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftPrint.stampTime" />
+            Stamp capture time on prints
+          </label>
+          <label class="pb-admin-check">
+            <input
+              type="checkbox"
+              [(ngModel)]="draftPrint.allowWifiPrinters"
+              (ngModelChange)="onAllowWifiChange()"
+            />
+            Show Wi‑Fi / network printers
+          </label>
+          <label>Printer</label>
+          <select class="pb-input" [(ngModel)]="draftPrint.printerName">
+            <option [ngValue]="null">
+              {{
+                draftPrint.allowWifiPrinters
+                  ? 'Auto (USB first, then Wi‑Fi)'
+                  : 'Auto (USB photo printer)'
+              }}
+            </option>
+            @for (p of printers(); track p.name) {
+              <option [ngValue]="p.name">{{ printerLabel(p) }}</option>
+            }
+          </select>
+          @if (!printers().length) {
+            <p class="pb-hint pb-hint-tight">
+              @if (draftPrint.allowWifiPrinters) {
+                No printers found. Install the printer driver in Windows Printers & scanners,
+                then tap <strong>Refresh printers</strong>.
+              } @else {
+                No USB printers found. Plug the printer in by USB, finish the Windows driver install,
+                then tap <strong>Refresh printers</strong>. Enable Wi‑Fi printers above if needed.
+              }
+            </p>
+          }
+          @if (selectedPrinter(); as sp) {
+            <p class="pb-hint pb-hint-tight">
+              Driver: <code>{{ sp.driverName || 'unknown' }}</code>
+              · Port: <code>{{ sp.portName || 'unknown' }}</code>
+              @if (sp.isUsb && sp.usesIppDriver) {
+                · <strong>USB IPP fallback</strong> — jobs can spool; paper size may be ignored until the vendor USB driver binds
+              } @else if (!sp.isUsb) {
+                · <strong>Wi‑Fi / network</strong> — paper size and color may be ignored; USB is more reliable
+              } @else if (sp.isDnpDriver) {
+                · <strong>DNP USB — ready</strong> (4×6″)
+              } @else if (sp.isCanonDriver) {
+                · <strong>Canon USB — ready</strong> (postcard)
+              } @else if (sp.isUsb) {
+                · <strong>USB — ready</strong>
+              }
+            </p>
+          }
+          <label>Borderless bleed (USB white-edge fix)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="1.00"
+            max="1.12"
+            step="0.01"
+            [(ngModel)]="draftPrint.bleedScale"
+          />
+          <p class="pb-hint pb-hint-tight">
+            Default <code>1.02</code>–<code>1.06</code> overscans slightly on unframed photos so USB
+            borderless prints don’t show a thin white edge. Framed / physical-frame layouts ignore bleed.
+          </p>
+          <label>Framed print left/right inset (mm)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="0"
+            max="12"
+            step="0.5"
+            [(ngModel)]="draftPrint.framedEdgeInsetMm"
+          />
+          <p class="pb-hint pb-hint-tight">
+            White margin on the left and right only for framed prints. Typical 0–4 mm.
+          </p>
+          <label>Framed print extra bottom (mm)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="0"
+            max="12"
+            step="0.5"
+            [(ngModel)]="draftPrint.framedBottomExtraMm"
+          />
+          <p class="pb-hint pb-hint-tight">
+            Extra white at the bottom for framed prints when the printer overscans the trailing edge.
+          </p>
+
+          <p class="pb-hint pb-hint-tight">
+            USB queues (ports like <code>USB001</code>) are always listed. For DNP DS-RX1, install the
+            RX1 Windows driver so the queue appears here, then select it.
+          </p>
+
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="savePrint()">
+              Save print settings
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="refreshPrinters()">
+              Refresh printers
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="testPrint()">
+              Test print
+            </button>
+          </div>
+        </section>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Auto-print queue</h2>
+          <p class="pb-hint">
+            Pending, printing, and failed AI jobs only. Pause stops draining without dropping queued items.
+            Reprint uses the saved AI file — it does not recapture or regenerate.
+          </p>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-ghost" (click)="refreshJobs()">Refresh</button>
+            <button type="button" class="pb-btn pb-btn-ghost" (click)="kickJobs()">Drain queue</button>
+            @if (draftPrint.autoPrint) {
+              <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="toggleAutoPrint(false)">Pause auto-print</button>
+            } @else {
+              <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="toggleAutoPrint(true)">Resume auto-print</button>
+            }
+          </div>
+          @if (!draftPrint.autoPrint) {
+            <p class="pb-hint"><strong>Paused</strong> — queued prints wait until you resume or tap Drain / Retry.</p>
+          }
+          @if (jobSummary(); as sum) {
+            <p class="pb-hint">AI queued {{ sum['aiQueued'] || 0 }} · running {{ sum['aiRunning'] || 0 }} · print pending {{ sum['printPending'] || 0 }} · failed {{ sum['printFailed'] || 0 }}</p>
+          }
+          <table class="pb-job-table">
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>Can</th>
+                <th>AI</th>
+                <th>Print</th>
+                <th>Email</th>
+                <th>Error</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (j of queueJobs(); track j.id) {
+                <tr>
+                  <td>{{ j.createdAt }}</td>
+                  <td>{{ j.canLabel || j.canId }}</td>
+                  <td>{{ j.aiStatus }}</td>
+                  <td>{{ j.printStatus }}</td>
+                  <td>{{ j.emailStatus }}</td>
+                  <td>{{ j.lastError }}</td>
+                  <td>
+                    <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="printOp(j.id, 'retry')">Retry</button>
+                    <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="printOp(j.id, 'top')">Top</button>
+                    <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="printOp(j.id, 'skip')">Skip</button>
+                    <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" (click)="printOp(j.id, 'reprint')">Reprint</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </section>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Print history</h2>
+          <p class="pb-hint">Preview AI results and reprint from the saved file. Pagination below.</p>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-ghost" [class.pb-tab-active]="printHistoryWhen() === 'all'" (click)="setPrintHistoryWhen('all')">All</button>
+            <button type="button" class="pb-btn pb-btn-ghost" [class.pb-tab-active]="printHistoryWhen() === 'today'" (click)="setPrintHistoryWhen('today')">Today</button>
+            <button type="button" class="pb-btn pb-btn-ghost" [class.pb-tab-active]="printHistoryWhen() === 'range'" (click)="setPrintHistoryWhen('range')">Range</button>
+          </div>
+          @if (printHistoryWhen() === 'range') {
+            <div class="pb-row pb-row-wrap">
+              <input class="pb-input" type="date" [ngModel]="printHistoryFrom()" (ngModelChange)="printHistoryFrom.set($event); printHistoryPage.set(1)" />
+              <input class="pb-input" type="date" [ngModel]="printHistoryTo()" (ngModelChange)="printHistoryTo.set($event); printHistoryPage.set(1)" />
+            </div>
+          }
+          <div class="pb-print-history-grid">
+            <div class="pb-print-history-list">
+              @for (j of historyPageItems(); track j.id) {
+                <button
+                  type="button"
+                  class="pb-print-history-row"
+                  [class.is-on]="historyPreviewId() === j.id"
+                  (click)="selectHistoryJob(j)"
+                >
+                  <span class="pb-print-history-meta">
+                    <strong>{{ j.canLabel || j.canId || 'Photo' }}</strong>
+                    <small>{{ j.createdAt }}</small>
+                    <em>{{ j.printStatus }}</em>
+                  </span>
+                  <span
+                    class="pb-btn pb-btn-ghost pb-btn-sm"
+                    role="button"
+                    [attr.aria-disabled]="!j.aiPath"
+                    (click)="j.aiPath && printOp(j.id, 'reprint'); $event.stopPropagation()"
+                  >Reprint</span>
+                </button>
+              } @empty {
+                <p class="pb-hint">No jobs in this range.</p>
+              }
+              <div class="pb-row pb-row-wrap pb-print-history-pager">
+                <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" [disabled]="printHistoryPage() <= 1" (click)="goPrintHistoryPage(-1)">Prev</button>
+                <span class="pb-hint">Page {{ printHistoryPage() }} of {{ printHistoryPageCount() }}</span>
+                <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" [disabled]="printHistoryPage() >= printHistoryPageCount()" (click)="goPrintHistoryPage(1)">Next</button>
+              </div>
+            </div>
+            <div class="pb-print-history-preview">
+              @if (historyPreviewUrl(); as url) {
+                <img [src]="url" alt="Print preview" />
+              } @else {
+                <p class="pb-hint">Select a job to preview the AI photo.</p>
+              }
+            </div>
+          </div>
+          <h3>Capture files</h3>
+          <pb-capture-photo-browser [compact]="true" />
+        </section>
+      </div>
+    }
+
+    @if (tab === 'jobs') {
+      <div>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>AI generation jobs</h2>
+          <p class="pb-hint">
+            The booth runs this queue locally (AI → cloud upload → print). The cloud dashboard mirrors status when gallery upload is enabled.
+          </p>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-ghost" (click)="refreshJobs()">Refresh</button>
+            <button type="button" class="pb-btn pb-btn-ghost" (click)="kickJobs()">Drain queue</button>
+          </div>
+          @if (jobSummary(); as sum) {
+            <p class="pb-hint">
+              AI queued {{ sum['aiQueued'] || 0 }} · running {{ sum['aiRunning'] || 0 }} · done {{ sum['aiDone'] || 0 }} · failed {{ sum['aiFailed'] || 0 }}
+              · print pending {{ sum['printPending'] || 0 }}
+            </p>
+          }
+          <div class="pb-ai-job-list">
+            @for (j of recentJobs(); track j.id) {
+              <div class="pb-ai-job-row">
+                <div class="pb-ai-job-thumb">
+                  @if (jobThumbUrls()[j.id]; as thumb) {
+                    <img [src]="thumb" alt="" />
+                  } @else {
+                    <span>AI {{ j.aiStatus || 'pending' }}</span>
+                  }
+                </div>
+                <div class="pb-ai-job-meta">
+                  <p>
+                    <strong>{{ j.canLabel || j.canId || 'Guest' }}</strong>
+                    · <code>{{ j.id }}</code>
+                  </p>
+                  <p class="pb-ai-job-pills">
+                    <span class="pb-ai-pill" [attr.data-st]="j.aiStatus">AI: {{ j.aiStatus || 'idle' }}</span>
+                    <span class="pb-ai-pill" [attr.data-st]="j.uploadStatus">Upload: {{ j.uploadStatus || 'idle' }}</span>
+                    <span class="pb-ai-pill" [attr.data-st]="j.printStatus">Print: {{ j.printStatus || 'idle' }}</span>
+                  </p>
+                  <p class="pb-hint">
+                    {{ formatJobWhen(j.updatedAt || j.createdAt) }}
+                    @if (j.lastError) {
+                      · {{ j.lastError }}
+                    }
+                  </p>
+                </div>
+              </div>
+            } @empty {
+              <p class="pb-hint">No booth jobs yet. Status appears when a guest capture is enqueued.</p>
+            }
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'cans') {
+      <div>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>ZYN cans</h2>
+          <p class="pb-hint">
+            Each flavor uses its own F1 scene and driver head box. Upload a unique composition per can —
+            the booth never borrows another flavor's image.
+          </p>
+          @for (c of draftCans; track c.id; let i = $index) {
+            <div class="pb-admin-card pb-can-editor">
+              <h3>{{ c.label }} <code>{{ c.id }}</code></h3>
+              <label>Label</label>
+              <input class="pb-input" [(ngModel)]="draftCans[i].label" />
+              <label>Strength</label>
+              <input class="pb-input" [(ngModel)]="draftCans[i].strength" />
+              <label>Inpaint prompt</label>
+              <textarea class="pb-input" rows="3" [(ngModel)]="draftCans[i].inpaintPrompt"></textarea>
+
+              <div class="pb-can-scene">
+                @if (compositionFor(c.id)?.url) {
+                  <div class="pb-can-scene-preview">
+                    <img [src]="compositionFor(c.id)!.url!" alt="" />
+                    <div
+                      class="pb-can-face-box"
+                      [style.left]="faceBox(i).xPercent + '%'"
+                      [style.top]="faceBox(i).yPercent + '%'"
+                      [style.width]="faceBox(i).widthPercent + '%'"
+                      [style.height]="faceBox(i).heightPercent + '%'"
+                    ></div>
+                  </div>
+                  <p class="pb-hint">
+                    @if (compositionFor(c.id)?.source === 'shared') {
+                      Shared placeholder — upload this can's unique scene before event day.
+                    } @else {
+                      {{ compositionFor(c.id)?.filename }} (this can only)
+                    }
+                  </p>
+                } @else {
+                  <p class="pb-hint">No scene yet. Drop composition.jpg in config/compositions/{{ c.id }}/ or upload below.</p>
+                }
+                <button type="button" class="pb-btn" [disabled]="busy()" (click)="uploadCanScene(c.id)">
+                  Upload scene
+                </button>
+              </div>
+
+              <div class="pb-can-face-grid">
+                <label>Face X %
+                  <input class="pb-input" type="number" min="0" max="96" step="0.5" [(ngModel)]="faceBox(i).xPercent" />
+                </label>
+                <label>Face Y %
+                  <input class="pb-input" type="number" min="0" max="96" step="0.5" [(ngModel)]="faceBox(i).yPercent" />
+                </label>
+                <label>Face W %
+                  <input class="pb-input" type="number" min="4" max="80" step="0.5" [(ngModel)]="faceBox(i).widthPercent" />
+                </label>
+                <label>Face H %
+                  <input class="pb-input" type="number" min="4" max="80" step="0.5" [(ngModel)]="faceBox(i).heightPercent" />
+                </label>
+              </div>
+            </div>
+          }
+          <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveCans()">Save cans</button>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'display') {
+      <div>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Gallery display (server settings)</h2>
+          <p class="pb-hint">The standalone gallery-display app reads this API. Default port 3040.</p>
+          <label>API port</label>
+          <input class="pb-input" type="number" [(ngModel)]="draftDisplay.apiPort" />
+          <label>API token</label>
+          <input class="pb-input" [(ngModel)]="draftDisplay.apiToken" />
+          <label>Filter</label>
+          <select class="pb-input" [(ngModel)]="draftDisplay.filter">
+            <option value="today">Today</option>
+            <option value="all">All</option>
+            <option value="range">Date range</option>
+            <option value="tags">Tags</option>
+            <option value="picked">Direct pick</option>
+          </select>
+          <label>Range from</label>
+          <input class="pb-input" type="date" [(ngModel)]="draftDisplay.rangeFrom" />
+          <label>Range to</label>
+          <input class="pb-input" type="date" [(ngModel)]="draftDisplay.rangeTo" />
+          <label>Tags (comma)</label>
+          <input class="pb-input" [(ngModel)]="displayTagsText" />
+          <label>Slide interval (ms)</label>
+          <input class="pb-input" type="number" [(ngModel)]="draftDisplay.intervalMs" />
+          <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveDisplay()">Save display settings</button>
+          <h3>Direct pick</h3>
+          @for (j of jobItems(); track j.id) {
+            <label class="pb-check">
+              <input type="checkbox" [ngModel]="j.displayPicked" (ngModelChange)="togglePicked(j.id, $event)" />
+              {{ j.canLabel || j.id }} · {{ j.aiStatus }}
+            </label>
+          }
+        </section>
+      </div>
+    }
+
+    @if (tab === 'email') {
+      <div>
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>SendGrid email</h2>
+          <p class="pb-hint">
+            Photos are emailed by the <strong>cloud dashboard</strong> after upload (preferred).
+            This kiosk SendGrid path is only used if Cloud upload is turned off.
+          </p>
+          <label class="pb-check"><input type="checkbox" [(ngModel)]="draftEmail.enabled" /> Send AI photo by email</label>
+          <label>SendGrid API URL</label>
+          <input class="pb-input" [(ngModel)]="draftEmail.apiUrl" placeholder="https://api.sendgrid.com/v3/mail/send" />
+          <label>API key {{ booth.email().apiKeyConfigured ? '(saved — leave blank to keep)' : '' }}</label>
+          <input class="pb-input" type="password" [(ngModel)]="sendGridKeyDraft" autocomplete="off" />
+          <label>From email</label>
+          <input class="pb-input" [(ngModel)]="draftEmail.from" placeholder="noreply@example.com" />
+          <label>From name</label>
+          <input class="pb-input" [(ngModel)]="draftEmail.fromName" />
+          <label>Subject</label>
+          <input class="pb-input" [(ngModel)]="draftEmail.subject" />
+          <label>Body</label>
+          <textarea class="pb-input" rows="3" [(ngModel)]="draftEmail.body"></textarea>
+          <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveEmail()">Save SendGrid</button>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'frames') {
+      <div class="pb-admin-frames">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Photo frame overlays</h2>
+          <p class="pb-hint">
+            Choose which decorative frames guests see after capture (Digital frame mode). Export a
+            landscape PNG at <strong>3:2 (6×4)</strong> — for example <strong>1800×1200</strong> or
+            <strong>2400×1600</strong> — with a transparent or black photo hole. That ratio fills the
+            Moments gallery, live wall, and SELPHY 6×4 print with no letterbox gap. A 16:9 frame
+            (wider) leaves empty space at the top of gallery tiles.
+            <code>botanical-landscape.png</code> is already 3:2. Moments Admin is the master library —
+            this booth pulls it on load and drops overlays deleted on the server. Offline, the last
+            local copies keep working.
+          </p>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftFramesEnabled" />
+            Apply a frame to every photo after capture
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftAutoApplyFrame" [disabled]="!draftFramesEnabled" />
+            Auto-apply frame silently (skip the frame-selection screen for guests)
+            <span class="pb-hint pb-hint-inline">
+              Uses the default frame when set, otherwise picks randomly from the enabled frames.
+            </span>
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGuestAdjustPhoto" [disabled]="!draftFramesEnabled" />
+            Zoom and pan after capture (align people in the frame)
+            <span class="pb-hint pb-hint-inline">
+              Same drag / zoom as physical sheets. Turn off for a faster kiosk flow. Make framed from
+              originals always includes this step.
+            </span>
+          </label>
+          <label class="pb-admin-check">
+            <input type="checkbox" [(ngModel)]="draftGuestTextEnabled" [disabled]="!draftFramesEnabled" />
+            Prompt guests for custom frame text (in-app keyboard)
+          </label>
+          @if (draftGuestTextEnabled) {
+            <label class="pb-admin-check">
+              <input type="checkbox" [(ngModel)]="draftGuestTextOptional" />
+              Allow guests to skip the text step
+            </label>
+            <label>Max characters</label>
+            <input
+              class="pb-input"
+              type="number"
+              min="8"
+              max="80"
+              step="1"
+              [(ngModel)]="draftGuestTextMaxLength"
+            />
+            <label>Credit line under guest text (optional)</label>
+            <input
+              class="pb-input"
+              type="text"
+              maxlength="60"
+              placeholder="by inmoment photography"
+              [(ngModel)]="draftGuestTextCreditLine"
+            />
+            <div class="pb-caption-grid">
+              <label>
+                Horizontal position
+                <span class="pb-caption-val">{{ draftGuestTextXPercent }}%</span>
+              </label>
+              <input
+                class="pb-range"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                [(ngModel)]="draftGuestTextXPercent"
+              />
+              <label>
+                Vertical position
+                <span class="pb-caption-val">{{ draftGuestTextYPercent }}%</span>
+              </label>
+              <input
+                class="pb-range"
+                type="range"
+                min="0"
+                max="100"
+                step="1"
+                [(ngModel)]="draftGuestTextYPercent"
+              />
+              <label>
+                Text size
+                <span class="pb-caption-val">{{ draftGuestTextSizePercent }}% of print height</span>
+              </label>
+              <input
+                class="pb-range"
+                type="range"
+                min="1.5"
+                max="8"
+                step="0.1"
+                [(ngModel)]="draftGuestTextSizePercent"
+              />
+              <label>Alignment</label>
+              <select class="pb-input" [(ngModel)]="draftGuestTextAlign">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+              <label>Guest text color</label>
+              <div class="pb-color-row">
+                <input type="color" [(ngModel)]="draftGuestTextColor" />
+                <input class="pb-input" type="text" maxlength="7" [(ngModel)]="draftGuestTextColor" />
+              </div>
+              <label>Credit color</label>
+              <div class="pb-color-row">
+                <input type="color" [(ngModel)]="draftGuestTextCreditColor" />
+                <input class="pb-input" type="text" maxlength="7" [(ngModel)]="draftGuestTextCreditColor" />
+              </div>
+            </div>
+            <label class="pb-admin-check">
+              <input type="checkbox" [(ngModel)]="draftGuestTextBrush" />
+              Soft brushstroke behind text (off is cleaner)
+            </label>
+            @if (draftGuestTextBrush) {
+              <label>
+                Brush opacity
+                <span class="pb-caption-val">{{ captionBrushOpacityPct }}%</span>
+              </label>
+              <input
+                class="pb-range"
+                type="range"
+                min="0.05"
+                max="1"
+                step="0.01"
+                [(ngModel)]="draftGuestTextBrushOpacity"
+              />
+            }
+            <div
+              class="pb-caption-preview"
+              role="application"
+              aria-label="Click or drag to place guest text on the 6 by 4 print"
+              (pointerdown)="startCaptionPreviewDrag($event)"
+              (pointermove)="moveCaptionPreviewDrag($event)"
+              (pointerup)="endCaptionPreviewDrag()"
+              (pointercancel)="endCaptionPreviewDrag()"
+            >
+              @if (captionPreviewFrameUrl) {
+                <img class="pb-caption-preview-frame" [src]="captionPreviewFrameUrl" alt="" />
+              } @else {
+                <div class="pb-caption-preview-photo" aria-hidden="true"></div>
+              }
+              <div
+                class="pb-caption-preview-mark"
+                [class.is-left]="draftGuestTextAlign === 'left'"
+                [class.is-right]="draftGuestTextAlign === 'right'"
+                [style.left.%]="draftGuestTextXPercent"
+                [style.top.%]="draftGuestTextYPercent"
+              >
+                @if (draftGuestTextBrush) {
+                  <span
+                    class="pb-caption-preview-brush"
+                    [style.opacity]="draftGuestTextBrushOpacity"
+                    aria-hidden="true"
+                  ></span>
+                }
+                <span
+                  class="pb-caption-preview-guest"
+                  [style.color]="draftGuestTextColor"
+                  [style.font-size.em]="captionPreviewSizeEm"
+                  >Happy Onam</span
+                >
+                @if (draftGuestTextCreditLine.trim()) {
+                  <span class="pb-caption-preview-credit" [style.color]="draftGuestTextCreditColor">{{
+                    draftGuestTextCreditLine
+                  }}</span>
+                }
+              </div>
+            </div>
+            <p class="pb-hint pb-hint-tight">
+              Click or drag on the 6×4 print to place the text. Brush opacity goes to 100%. Save, then take a
+              new photo to apply on real prints.
+            </p>
+          }
+          <label>Default frame (pre-selected for guests)</label>
+          <select class="pb-input" [(ngModel)]="draftDefaultFrameFile">
+            <option [ngValue]="null">First enabled frame</option>
+            @for (f of photoFramesList(); track f.filename) {
+              <option [ngValue]="f.filename" [disabled]="!f.guestEnabled">
+                {{ f.label }} ({{ f.filename }})
+              </option>
+            }
+          </select>
+          <label>Photo size inside frame (1 = fill opening)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="0.5"
+            max="1"
+            step="0.01"
+            [(ngModel)]="draftPhotoScale"
+          />
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveFrames()">
+              Save frame settings
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="uploadPhotoFrame()">
+              Upload frame
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="syncFramesFromMoments()">
+              Sync with Moments
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="selectAllGuestFrames()">
+              Enable all for guests
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="clearGuestFrames()">
+              Disable all for guests
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="refreshPhotoFrames()">
+              Refresh list
+            </button>
+          </div>
+        </section>
+
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Frames on this machine</h2>
+          <p class="pb-hint pb-hint-tight">
+            Stored in <code>config/photo-frames/</code>. The booth pulls the Moments library on
+            startup (and when the network returns). Frames deleted on the server are removed here.
+            Uploading a frame still publishes it to Moments when a gallery token is set. Offline, the
+            last local copies stay in use and photo uploads wait in the queue.
+          </p>
+          @if (photoFramesList().length === 0) {
+            <p class="pb-hint">No frames found. Sync from Moments or upload a PNG with a black or transparent photo hole.</p>
+          }
+          <div class="pb-admin-frame-grid">
+            @for (f of photoFramesList(); track f.filename) {
+              <article class="pb-admin-frame-card" [class.is-default]="draftDefaultFrameFile === f.filename">
+                <img [src]="f.url" [alt]="f.label" />
+                <div class="pb-admin-frame-meta">
+                  <strong>{{ f.label }}</strong>
+                  <code>{{ f.filename }}</code>
+                  @if (frameSizeHint(f); as hint) {
+                    <p class="pb-hint pb-hint-tight" [class.pb-frame-ratio-warn]="f.fitsGallery === false">{{ hint }}</p>
+                  }
+                  <label class="pb-admin-check">
+                    <input
+                      type="checkbox"
+                      [ngModel]="f.guestEnabled"
+                      (ngModelChange)="toggleGuestFrame(f.filename, $event)"
+                    />
+                    Show to guests
+                  </label>
+                  <div class="pb-row pb-row-wrap">
+                    <button
+                      type="button"
+                      class="pb-btn pb-btn-ghost pb-btn-sm"
+                      [disabled]="busy()"
+                      (click)="draftDefaultFrameFile = f.filename"
+                    >
+                      Set default
+                    </button>
+                    <button
+                      type="button"
+                      class="pb-btn pb-btn-ghost pb-btn-sm"
+                      [disabled]="busy()"
+                      (click)="publishFrameToMoments(f.filename)"
+                    >
+                      Publish
+                    </button>
+                    <button
+                      type="button"
+                      class="pb-btn pb-btn-ghost pb-btn-sm"
+                      [disabled]="busy()"
+                      (click)="deletePhotoFrame(f.filename)"
+                    >
+                      Delete local
+                    </button>
+                    <button
+                      type="button"
+                      class="pb-btn pb-btn-ghost pb-btn-sm"
+                      [disabled]="busy()"
+                      (click)="deleteRemoteFrame(f.filename)"
+                    >
+                      Delete on server
+                    </button>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        </section>
+      </div>
+    }
+
+    @if (tab === 'camera') {
+      <div class="pb-admin-camera">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Camera source</h2>
+          <p class="pb-hint">
+            Choose which camera the booth uses for capture. When the Canon EDSDK bridge is installed,
+            <strong>Auto</strong> uses the SDK; otherwise the system webcam is used. Force webcam for
+            debugging without a DSLR.
+          </p>
+          <p class="pb-hint pb-hint-tight">
+            @if (draftCamera.source === 'webcam') {
+              System camera is selected. Canon SDK is not used for capture.
+            } @else if (hasBridge()) {
+              Canon EDSDK bridge detected on this machine.
+            } @else {
+              No EDSDK bridge — only system webcams are available unless you add
+              <code>edsdk-bridge.exe</code> next to the app.
+            }
+          </p>
+
+          <label>Source mode</label>
+          <select class="pb-input" [(ngModel)]="draftCamera.source">
+            <option value="auto">Auto — SDK when available, else webcam</option>
+            <option value="sdk" [disabled]="!hasBridge()">Force Canon SDK</option>
+            <option value="webcam">Force system webcam (debug)</option>
+          </select>
+
+          @if (hasBridge() && (draftCamera.source === 'auto' || draftCamera.source === 'sdk')) {
+            <label>Canon camera (SDK index)</label>
+            <div class="pb-row pb-row-wrap">
+              <select class="pb-input" [(ngModel)]="draftCamera.sdkCameraIndex">
+                @if (sdkCameras().length === 0) {
+                  <option [ngValue]="0">Index 0 (refresh to list)</option>
+                }
+                @for (cam of sdkCameras(); track $index) {
+                  <option [ngValue]="$index">{{ $index }} — {{ cam }}</option>
+                }
+              </select>
+              <button
+                type="button"
+                class="pb-btn pb-btn-ghost"
+                [disabled]="busy()"
+                (click)="refreshCameraDevices()"
+              >
+                Refresh list
+              </button>
+            </div>
+          }
+
+          @if (draftCamera.source === 'webcam' || draftCamera.source === 'auto' || !hasBridge()) {
+            <label>System webcam</label>
+            <div class="pb-row pb-row-wrap">
+              <select class="pb-input" [(ngModel)]="draftCamera.webcamDeviceId">
+                <option [ngValue]="null">Default (browser picks)</option>
+                @for (cam of webcamDevices(); track cam.deviceId) {
+                  <option [ngValue]="cam.deviceId">{{ cam.label }}</option>
+                }
+              </select>
+              <button
+                type="button"
+                class="pb-btn pb-btn-ghost"
+                [disabled]="busy()"
+                (click)="refreshCameraDevices()"
+              >
+                Refresh list
+              </button>
+            </div>
+            <p class="pb-hint pb-hint-tight">
+              Browser may ask for camera permission the first time you refresh or open this tab.
+            </p>
+          }
+
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveCamera()">
+              Save camera settings
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="openLogsFolder()">
+              Open logs folder
+            </button>
+          </div>
+          @if (logFilePath(); as logPath) {
+            <p class="pb-hint pb-hint-tight">
+              Offline diagnostics write to <code>{{ logPath }}</code> (no internet needed). Copy that
+              file if support needs to see camera errors.
+            </p>
+          }
+        </section>
+      </div>
+    }
+
+    @if (tab === 'debug') {
+      <div class="pb-admin-debug">
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Debug</h2>
+          <p class="pb-hint">
+            Backend debug controls. Preview is for checking AI compositions on the kiosk; leave it
+            off in production so guests skip straight to thank-you.
+          </p>
+          <label class="pb-check">
+            <input type="checkbox" [(ngModel)]="draftDebug.enabled" />
+            Enable live debug logging
+          </label>
+          <label class="pb-check">
+            <input type="checkbox" [(ngModel)]="draftDebug.showPreviewAfterGenerate" />
+            Show generated image preview after AI (check compositions)
+          </label>
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveDebug()">
+              Save debug setting
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="refreshDebugPanel()">
+              Reload from disk
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="clearDebugPanel()">
+              Clear panel
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="pingDebugLog()">
+              Write test line
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="openLogsFolder()">
+              Open logs folder
+            </button>
+          </div>
+          @if (logFilePath(); as logPath) {
+            <p class="pb-hint pb-hint-tight">Log file: <code>{{ logPath }}</code></p>
+          }
+          <div class="pb-admin-log-panel" aria-live="polite">
+            @for (e of boothLog.entries(); track e.id) {
+              <div class="pb-admin-log-line" [attr.data-level]="e.level">
+                <span class="pb-admin-log-meta"
+                  >{{ e.ts.slice(11, 19) }} · {{ e.level }} · {{ e.scope }}</span
+                >
+                <span class="pb-admin-log-msg">{{ e.message }}</span>
+                @if (e.detail) {
+                  <span class="pb-admin-log-detail">{{ e.detail }}</span>
+                }
+              </div>
+            } @empty {
+              <p class="pb-hint">No log lines yet. Enable debug, save, then use the booth or tap “Write test line”.</p>
+            }
+          </div>
+        </section>
+      </div>
+    }
+      </section>
+    </div>
+  </div>
+</div>
+@if (printTroubleErr(); as pe) {
+  <pb-print-trouble-dialog
+    [error]="pe"
+    retryLabel="Test print"
+    [retrying]="busy()"
+    (closed)="printTroubleErr.set(null)"
+    (retry)="testPrint()"
+  />
+}

@@ -1,0 +1,24 @@
+<div class="pb-vk" role="group" aria-label="On-screen keyboard">
+  @for (row of rows; track $index) {
+    <div class="pb-vk-row">
+      @for (key of row; track key) {
+        <button type="button" class="pb-vk-key" (click)="press(key)">
+          {{ shift ? key : key.toLowerCase() }}
+        </button>
+      }
+    </div>
+  }
+  <div class="pb-vk-row">
+    <button type="button" class="pb-vk-key pb-vk-wide" (click)="toggleShift()">
+      {{ shift ? 'ABC' : 'abc' }}
+    </button>
+    @for (key of extras; track key) {
+      <button type="button" class="pb-vk-key" (click)="press(key)">{{ key }}</button>
+    }
+    <button type="button" class="pb-vk-key pb-vk-wide" (click)="backspace()">⌫</button>
+  </div>
+  <div class="pb-vk-row">
+    <button type="button" class="pb-vk-key pb-vk-space" (click)="space()">Space</button>
+    <button type="button" class="pb-vk-key pb-vk-wide" (click)="clear()">Clear</button>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="pb-page pb-caption-page">
+  <div class="pb-caption-shell">
+    <h1 class="pb-title">{{ copy().caption.title }}</h1>
+    <p class="pb-sub">{{ copy().caption.subtitle }}</p>
+
+    @if (err(); as e) {
+      <p class="pb-msg">{{ e }}</p>
+    }
+
+    <div class="pb-caption-field" aria-live="polite">
+      <span class="pb-caption-value" [class.is-empty]="!text()">
+        {{ text() || copy().caption.placeholder }}
+      </span>
+      @if (credit()) {
+        <span class="pb-caption-credit">{{ credit() }}</span>
+      }
+      <span class="pb-caption-meta">{{ remaining() }} left</span>
+    </div>
+
+    <pb-virtual-keyboard
+      [value]="text()"
+      [maxLength]="maxLen()"
+      (valueChange)="onText($event)"
+    />
+
+    <div class="pb-caption-actions">
+      <button
+        type="button"
+        class="pb-btn pb-btn-primary"
+        [disabled]="busy() || (!optional() && !text().trim())"
+        (click)="continue()"
+      >
+        {{ busy() ? copy().caption.applying : copy().caption.continueLabel }}
+      </button>
+      @if (optional()) {
+        <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="skip()">
+          {{ copy().caption.skipLabel }}
+        </button>
+      }
+    </div>
+  </div>
+</div>

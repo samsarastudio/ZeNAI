@@ -1,0 +1,49 @@
+<div class="pb-page pb-frame-page">
+  <div class="pb-frame-shell">
+    <h1 class="pb-title">{{ copy().frame.title }}</h1>
+    <p class="pb-sub">{{ copy().frame.subtitle }}</p>
+
+    @if (err(); as e) {
+      <p class="pb-msg">{{ e }}</p>
+    }
+
+    <div class="pb-frame-grid">
+      @for (f of frames(); track f.filename) {
+        <button
+          type="button"
+          class="pb-frame-card"
+          [class.is-selected]="selected() === f.filename"
+          [disabled]="busy()"
+          (click)="selectFrame(f.filename)"
+        >
+          <img [src]="f.url" [alt]="f.label" />
+          <span class="pb-frame-card-label">{{ f.label }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="pb-frame-actions">
+      <button
+        type="button"
+        class="pb-btn pb-btn-primary"
+        [disabled]="busy() || !selected()"
+        (click)="applySelected()"
+      >
+        {{ busy() ? copy().frame.applying : copy().frame.continueLabel }}
+      </button>
+      <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="skipFrame()">
+        {{ copy().frame.skipLabel }}
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (adjustOpen() && photoPath() && selected()) {
+  <pb-frame-adjust-dialog
+    [imagePath]="photoPath()!"
+    [frameFile]="selected()!"
+    [busy]="busy()"
+    (confirmed)="onAdjustConfirm($event)"
+    (cancelled)="onAdjustCancel()"
+  />
+}

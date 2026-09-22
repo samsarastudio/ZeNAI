@@ -1,0 +1,32 @@
+@if (booth.debugEnabled()) {
+  <aside class="pb-debug-dock" [class.is-collapsed]="collapsed" aria-label="Debug log panel">
+    <header class="pb-debug-dock-bar">
+      <button type="button" class="pb-debug-dock-title" (click)="toggle()">
+        Debug log · {{ logs.entryCount() }}
+      </button>
+      <div class="pb-debug-dock-actions">
+        <button type="button" class="pb-debug-dock-btn" (click)="clear()">Clear</button>
+        <button type="button" class="pb-debug-dock-btn" (click)="toggle()">
+          {{ collapsed ? 'Expand' : 'Hide' }}
+        </button>
+      </div>
+    </header>
+    @if (!collapsed) {
+      <div #scroller class="pb-debug-dock-body">
+        @for (e of logs.entries(); track e.id) {
+          <div class="pb-debug-line" [attr.data-level]="e.level">
+            <span class="pb-debug-ts">{{ e.ts.slice(11, 19) }}</span>
+            <span class="pb-debug-lvl">{{ e.level }}</span>
+            <span class="pb-debug-scope">{{ e.scope }}</span>
+            <span class="pb-debug-msg">{{ e.message }}</span>
+            @if (e.detail) {
+              <span class="pb-debug-detail">{{ e.detail }}</span>
+            }
+          </div>
+        } @empty {
+          <p class="pb-debug-empty">Waiting for log events…</p>
+        }
+      </div>
+    }
+  </aside>
+}

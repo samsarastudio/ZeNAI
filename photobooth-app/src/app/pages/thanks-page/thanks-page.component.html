@@ -1,0 +1,37 @@
+<div class="pb-page pb-thanks pb-zyn-thanks-page">
+  <div class="pb-zyn-thanks">
+    @if (branding.logoSrc(); as logo) {
+      <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
+    } @else {
+      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
+    }
+    <h1 class="pb-zyn-subtitle">
+      <span>AI</span>
+      <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
+    </h1>
+
+    <div class="pb-zyn-thanks-hero">
+      @if (printStatus() === 'failed' || aiStatus() === 'failed' || backendReachable() === false) {
+        <div class="pb-zyn-thanks-warn" aria-hidden="true">!</div>
+      } @else {
+        <img class="pb-zyn-thanks-tick" src="zyn/finalTick.png" alt="" />
+      }
+      <h2 class="pb-zyn-thanks-title">
+        @for (line of headline().split('\n'); track $index) {
+          @if ($index === 0) {
+            <span class="pb-zyn-thanks-line">{{ line }}</span>
+          } @else {
+            <span class="pb-zyn-subtitle-grad">{{ line }}</span>
+          }
+        }
+      </h2>
+      @if (statusHint()) {
+        <p class="pb-zyn-thanks-hint">{{ statusHint() }}</p>
+      }
+    </div>
+
+    <button type="button" class="pb-btn pb-btn-primary" (click)="startOver()">
+      {{ copy().thanks.startOver }}
+    </button>
+  </div>
+</div>

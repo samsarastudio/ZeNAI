@@ -1,0 +1,45 @@
+<div class="pb-page pb-ai-mode pb-zyn-flavor-page">
+  <div class="pb-zyn-screen">
+    <header class="pb-zyn-header">
+      @if (branding.logoSrc(); as logo) {
+        <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
+      } @else {
+        <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
+      }
+      <h1 class="pb-zyn-subtitle">
+        <span>AI</span>
+        <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
+      </h1>
+      <p class="pb-zyn-tagline">{{ copy().cans.subtitle }}</p>
+    </header>
+
+    <ul class="pb-zyn-flavor-list" role="list">
+      @for (c of flavors(); track c.id) {
+        <li>
+          <button
+            type="button"
+            class="pb-zyn-flavor-card"
+            [class.is-active]="selectedId() === c.id"
+            (click)="select(c.id, c.displayLabel)"
+          >
+            <span class="pb-zyn-flavor-art">
+              <img class="pb-zyn-flavor-img" [src]="artFor(c.id)" [alt]="c.displayLabel" />
+            </span>
+            <h3>{{ c.displayLabel }}</h3>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <div class="pb-zyn-flavor-actions">
+      <button
+        type="button"
+        class="pb-btn pb-btn-primary"
+        [disabled]="!selectedId()"
+        (click)="continue()"
+      >
+        {{ copy().cans.continue }}
+      </button>
+    </div>
+  </div>
+</div>

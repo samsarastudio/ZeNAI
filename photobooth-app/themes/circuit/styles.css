@@ -1,0 +1,409 @@
+/**
+ * Dark “circuit” theme — LED strips, power-line accents, tech-framed icons.
+ * Tweak colors in :root to match your event.
+ */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  --pb-font-sans: "Outfit", system-ui, sans-serif;
+  --pb-font-display: "Instrument Serif", Georgia, serif;
+  --pb-bg-base: #0a0a0b;
+  --pb-ink: #f4f4f5;
+  --pb-card-bg: rgba(24, 24, 27, 0.92);
+  --pb-card-border: rgba(244, 244, 245, 0.12);
+  --pb-msg: #fb7185;
+  --pb-btn-primary-top: #bb162b;
+  --pb-btn-primary-bottom: #8f0f22;
+  --pb-btn-primary-text: #ffffff;
+  --pb-circuit-led: #bb162b;
+  --pb-circuit-led-glow: rgba(255, 70, 90, 0.65);
+  --pb-circuit-cyan: #22d3ee;
+  --pb-circuit-cyan-dim: rgba(34, 211, 238, 0.35);
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(187, 22, 43, 0.28), transparent 55%),
+    linear-gradient(180deg, #111113 0%, #0a0a0b 45%);
+}
+
+.pb-card {
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.pb-btn-ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--pb-ink);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.pb-input {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--pb-ink);
+}
+
+.pb-capture-layout .pb-side {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.pb-preview-wrap {
+  box-shadow:
+    0 14px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(34, 211, 238, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.pb-result-frame {
+  box-shadow:
+    0 18px 56px rgba(0, 0, 0, 0.55),
+    0 0 48px rgba(187, 22, 43, 0.1),
+    inset 0 0 0 1px rgba(34, 211, 238, 0.06);
+}
+
+/* ─── Tech “display” icon frames — emoji only ─── */
+.pb-attract .pb-icon:not(.pb-icon-logo),
+.pb-qr .pb-icon:not(.pb-icon-logo) {
+  position: relative;
+  z-index: 0;
+  width: clamp(4.25rem, 11vw, 6rem);
+  height: clamp(4.25rem, 11vw, 6rem);
+  margin-inline: auto;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-size: clamp(2rem, 6.5vw, 3rem);
+  line-height: 1;
+  background: linear-gradient(155deg, rgba(38, 38, 44, 0.96) 0%, rgba(12, 12, 16, 0.98) 100%);
+  border: 2px solid rgba(187, 22, 43, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 36px rgba(187, 22, 43, 0.22),
+    inset 0 0 24px rgba(187, 22, 43, 0.12);
+  animation: pb-circuit-icon-glow 3.2s ease-in-out infinite alternate;
+}
+
+.pb-attract .pb-icon:not(.pb-icon-logo)::before,
+.pb-qr .pb-icon:not(.pb-icon-logo)::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.pb-attract .pb-icon:not(.pb-icon-logo)::after,
+.pb-qr .pb-icon:not(.pb-icon-logo)::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 10px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--pb-circuit-led),
+    rgba(255, 255, 255, 0.85),
+    var(--pb-circuit-led),
+    transparent
+  );
+  background-size: 180% 100%;
+  animation: pb-circuit-led-micro 2s linear infinite;
+  opacity: 0.85;
+}
+
+.pb-attract .pb-icon-logo,
+.pb-qr .pb-icon-logo {
+  position: relative;
+  z-index: 0;
+  margin-bottom: 1rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 14px;
+  background: rgba(12, 12, 16, 0.65);
+  border: 1px solid rgba(187, 22, 43, 0.45);
+  box-shadow:
+    0 0 24px rgba(187, 22, 43, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+@keyframes pb-circuit-icon-glow {
+  0% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      0 0 28px rgba(187, 22, 43, 0.18),
+      inset 0 0 20px rgba(187, 22, 43, 0.1);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 0 44px rgba(187, 22, 43, 0.32),
+      inset 0 0 28px rgba(187, 22, 43, 0.16);
+  }
+}
+
+@keyframes pb-circuit-led-micro {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* ─── Backdrop: cyan circuit traces + EV / tech Font Awesome doodles ─── */
+.pb-doodle-circuit {
+  perspective: 960px;
+  /* Keep doodles inside the clipped backdrop: 3D skew/Y rotates extend past the layout box */
+  padding: max(env(safe-area-inset-top), clamp(1.25rem, 4vmin, 2.75rem))
+    clamp(0.75rem, 2.5vw, 1.5rem) clamp(1rem, 3.5vmin, 2.25rem);
+  box-sizing: border-box;
+}
+
+.pb-doodle-circuit .pb-doodle-cluster {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.85rem, 2.8vw, 1.5rem) clamp(1rem, 3vw, 1.65rem);
+  max-width: min(38vw, 480px);
+  font-size: clamp(1.05rem, 2.6vw, 1.85rem);
+  color: rgba(34, 211, 238, 0.11);
+  text-shadow:
+    0 0 14px rgba(34, 211, 238, 0.35),
+    0 0 2px rgba(14, 165, 233, 0.25);
+  filter: drop-shadow(0 0 1px rgba(34, 211, 238, 0.2));
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* Sit below the top LED strip & clear the viewport edge (was ~8% — clipped under overflow:hidden) */
+.pb-doodle-circuit .pb-doodle-cluster--a {
+  top: clamp(2.5rem, 11vh, 6rem);
+  left: clamp(0.5rem, 3vw, 1.25rem);
+  transform-origin: 14% 42%;
+  animation: pb-circuit-cluster-a 19s ease-in-out infinite;
+}
+
+.pb-doodle-circuit .pb-doodle-cluster--b {
+  bottom: clamp(1.25rem, 9vh, 4rem);
+  right: clamp(0.5rem, 3vw, 1.25rem);
+  justify-content: flex-end;
+  transform-origin: 86% 42%;
+  animation: pb-circuit-cluster-b 22s ease-in-out infinite;
+}
+
+.pb-doodle-circuit .pb-doodle-cluster i {
+  animation: pb-circuit-icon-float 9s ease-in-out infinite;
+}
+
+.pb-doodle-circuit .pb-doodle-cluster i:nth-child(odd) {
+  animation-delay: -2.5s;
+}
+
+.pb-doodle-circuit .pb-doodle-cluster i:nth-child(3n) {
+  animation-delay: -5s;
+}
+
+@keyframes pb-circuit-cluster-a {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(0, 0) rotate(-5deg) skewY(0deg) rotateY(0deg);
+  }
+  18% {
+    opacity: 0.78;
+    transform: translate(2%, 3%) rotate(-4deg) skewY(1.6deg) rotateY(-2.2deg);
+  }
+  38% {
+    opacity: 0.58;
+    transform: translate(3.5%, 4%) rotate(-3deg) skewY(-0.8deg) rotateY(1.8deg);
+  }
+  58% {
+    opacity: 0.88;
+    transform: translate(2.5%, 3.5%) rotate(-4deg) skewY(1deg) rotateY(-1.5deg);
+  }
+  78% {
+    opacity: 0.62;
+    transform: translate(1%, 2%) rotate(-5deg) skewY(-0.5deg) rotateY(1deg);
+  }
+}
+
+@keyframes pb-circuit-cluster-b {
+  0%,
+  100% {
+    opacity: 0.48;
+    transform: translate(0, 0) rotate(7deg) skewY(0deg) rotateY(0deg);
+  }
+  20% {
+    opacity: 0.82;
+    transform: translate(-3%, -2%) rotate(6deg) skewY(-2deg) rotateY(3.5deg);
+  }
+  42% {
+    opacity: 0.56;
+    transform: translate(-5.5%, -4%) rotate(4deg) skewY(1.2deg) rotateY(-3deg);
+  }
+  62% {
+    opacity: 0.84;
+    transform: translate(-4%, -3.5%) rotate(5deg) skewY(-1.4deg) rotateY(2deg);
+  }
+  82% {
+    opacity: 0.54;
+    transform: translate(-1.5%, -1%) rotate(7deg) skewY(0.7deg) rotateY(-1deg);
+  }
+}
+
+@keyframes pb-circuit-icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.pb-backdrop-el {
+  position: absolute;
+  pointer-events: none;
+  contain: layout style paint;
+}
+
+/* Horizontal LED strips — static accents (no continuous scan; avoids idle GPU heat) */
+.pb-backdrop-el--1 {
+  top: 11%;
+  left: -5%;
+  right: -5%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.12) 18%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(187, 22, 43, 0.2) 82%,
+    transparent 100%
+  );
+  box-shadow: 0 0 14px rgba(34, 211, 238, 0.28);
+  opacity: 0.85;
+}
+
+.pb-backdrop-el--2 {
+  bottom: 13%;
+  left: -5%;
+  right: -5%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(34, 211, 238, 0.18) 35%,
+    rgba(56, 189, 248, 0.45) 50%,
+    rgba(34, 211, 238, 0.18) 65%,
+    transparent 100%
+  );
+  opacity: 0.75;
+}
+
+/* PCB-style traces — static */
+.pb-backdrop-el--3 {
+  width: 135%;
+  height: 2px;
+  top: 36%;
+  left: -18%;
+  transform: rotate(-9deg);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 18px,
+    rgba(34, 211, 238, 0.28) 18px,
+    rgba(34, 211, 238, 0.28) 19px,
+    transparent 19px,
+    transparent 44px
+  );
+  opacity: 0.35;
+}
+
+.pb-backdrop-el--4 {
+  width: 125%;
+  height: 2px;
+  bottom: 36%;
+  right: -15%;
+  transform: rotate(11deg);
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 26px,
+    rgba(244, 244, 245, 0.08) 26px,
+    rgba(244, 244, 245, 0.08) 27px,
+    transparent 27px,
+    transparent 52px
+  );
+  opacity: 0.4;
+}
+
+@keyframes pb-circuit-led-scan {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes pb-circuit-power-drift {
+  0% {
+    transform: rotate(-8deg) translateX(0);
+    opacity: 0.28;
+  }
+  100% {
+    transform: rotate(-8deg) translateX(4%);
+    opacity: 0.45;
+  }
+}
+
+@keyframes pb-circuit-power-drift-b {
+  0% {
+    transform: rotate(9deg) translateX(0);
+    opacity: 0.32;
+  }
+  100% {
+    transform: rotate(9deg) translateX(-3%);
+    opacity: 0.48;
+  }
+}
+
+@keyframes pb-circuit-v-led {
+  0%,
+  100% {
+    background-position: 0% 0%;
+    opacity: 0.65;
+  }
+  50% {
+    background-position: 0% 100%;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pb-backdrop-el,
+  .pb-doodle-circuit .pb-doodle-cluster,
+  .pb-doodle-circuit .pb-doodle-cluster i,
+  .pb-attract .pb-icon:not(.pb-icon-logo),
+  .pb-qr .pb-icon:not(.pb-icon-logo),
+  .pb-attract .pb-icon:not(.pb-icon-logo)::before,
+  .pb-qr .pb-icon:not(.pb-icon-logo)::before,
+  .pb-attract .pb-icon:not(.pb-icon-logo)::after,
+  .pb-qr .pb-icon:not(.pb-icon-logo)::after {
+    animation: none !important;
+  }
+
+  .pb-doodle-circuit .pb-doodle-cluster {
+    transform: none;
+    opacity: 0.72;
+  }
+}

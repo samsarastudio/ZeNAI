@@ -1,0 +1,274 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --pb-font-sans: 'DM Sans', system-ui, sans-serif;
+  --pb-font-display: 'Cormorant Garamond', Georgia, serif;
+  --pb-bg-base: #efe6d8;
+  --pb-ink: #2b2218;
+  /* Kiosk surfaces: brighter and more opaque for arm’s-length readability */
+  --pb-card-bg: rgba(255, 252, 246, 0.92);
+  --pb-card-border: rgba(61, 48, 32, 0.16);
+  --pb-msg: #7a2e2e;
+  --pb-btn-primary-top: #3d3020;
+  --pb-btn-primary-bottom: #2b2218;
+  --pb-btn-primary-text: #fdfaf5;
+
+  --pb-radius-md: 16px;
+  --pb-radius-lg: 22px;
+  --pb-radius-xl: 28px;
+  /* Minimum comfortable touch height (~52px); buttons may grow taller */
+  --pb-touch-target: 3.25rem;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--pb-font-sans);
+  font-size: clamp(17px, 1.05vw + 14px, 21px);
+  line-height: 1.45;
+  color: var(--pb-ink);
+  background-color: var(--pb-bg-base);
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(ellipse at 20% 0%, rgba(212, 196, 176, 0.55), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(190, 176, 154, 0.45), transparent 50%);
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+/* Fixed decorative layer (themes override inner elements). */
+.pb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+html[data-pb-theme='default'] .pb-doodle-circuit,
+html[data-pb-theme='default'] .pb-backdrop-el {
+  display: none !important;
+}
+
+html[data-pb-theme='inmoment'] .pb-doodle-paper,
+html[data-pb-theme='inmoment'] .pb-doodle-circuit,
+html[data-pb-theme='inmoment'] .pb-backdrop-wash,
+html[data-pb-theme='inmoment'] .pb-backdrop-el {
+  display: none !important;
+}
+
+html[data-pb-theme='circuit'] .pb-doodle-paper,
+html[data-pb-theme='circuit'] .pb-backdrop-wash {
+  display: none !important;
+}
+
+.pb-page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  padding: clamp(1.25rem, 4vmin, 3rem);
+  padding-bottom: max(clamp(1.25rem, 4vmin, 3rem), env(safe-area-inset-bottom, 0px));
+  padding-inline: max(clamp(1.25rem, 4vmin, 3rem), env(safe-area-inset-left, 0px))
+    max(clamp(1.25rem, 4vmin, 3rem), env(safe-area-inset-right, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Shared kiosk “stage card” wrapper (capture / result / gallery). */
+.pb-kiosk-surface {
+  width: 100%;
+  max-width: min(1760px, 100%);
+  padding: clamp(1.35rem, 4.2vmin, 2.75rem);
+  background: var(--pb-card-bg);
+  border-radius: var(--pb-radius-xl);
+  border: 2px solid var(--pb-card-border);
+  box-shadow:
+    0 8px 48px rgba(43, 34, 24, 0.1),
+    0 22px 64px rgba(43, 34, 24, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.pb-card {
+  position: relative;
+  width: min(1180px, 100%);
+  padding: clamp(2rem, 5.5vmin, 4rem);
+  background: var(--pb-card-bg);
+  border-radius: var(--pb-radius-xl);
+  box-shadow:
+    0 8px 40px rgba(43, 34, 24, 0.1),
+    0 24px 56px rgba(43, 34, 24, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--pb-card-border);
+  text-align: center;
+}
+
+.pb-icon {
+  font-size: clamp(3.5rem, 12vw, 6.25rem);
+  line-height: 1;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Rectangular responsive logo (replaces emoji when uploaded in admin) */
+.pb-icon-logo {
+  width: auto;
+  height: auto;
+  max-width: min(400px, 82vw);
+  max-height: clamp(4rem, 14vmin, 8.5rem);
+  object-fit: contain;
+  display: block;
+  margin-inline: auto;
+  margin-bottom: 1rem;
+}
+
+.pb-title {
+  font-family: var(--pb-font-display);
+  font-weight: 600;
+  font-size: clamp(2.85rem, 8.5vmin, 4.75rem);
+  margin: 0 0 0.65rem;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.pb-sub {
+  font-size: clamp(1.3rem, 3.8vmin, 1.95rem);
+  opacity: 0.88;
+  margin: 0 0 clamp(2rem, 5vmin, 2.85rem);
+  line-height: 1.42;
+}
+
+.pb-label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  font-size: clamp(1.1rem, 2.9vmin, 1.35rem);
+  margin-bottom: 0.55rem;
+}
+
+.pb-input {
+  width: 100%;
+  font-size: clamp(1.35rem, 3.2vmin, 2rem);
+  padding: clamp(0.85rem, 2.6vmin, 1.25rem) 1.15rem;
+  min-height: var(--pb-touch-target);
+  border-radius: var(--pb-radius-md);
+  border: 2px solid rgba(61, 48, 32, 0.28);
+  background: rgba(255, 255, 255, 0.95);
+  font-family: inherit;
+}
+
+.pb-input-sm {
+  font-size: clamp(1.05rem, 2.8vmin, 1.35rem);
+  padding: 0.55rem 0.95rem;
+  min-height: 2.75rem;
+}
+
+.pb-msg {
+  color: var(--pb-msg);
+  margin-top: 0.75rem;
+  font-size: clamp(1.1rem, 3vmin, 1.38rem);
+  font-weight: 600;
+}
+
+.pb-loading {
+  font-size: clamp(1.65rem, 4.5vmin, 2.35rem);
+  font-weight: 600;
+}
+
+.pb-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1rem, 3vmin, 1.75rem);
+  margin-top: clamp(1.5rem, 4vmin, 2.35rem);
+}
+
+.pb-btn {
+  font-family: inherit;
+  font-size: clamp(1.28rem, 3.6vmin, 1.92rem);
+  font-weight: 600;
+  min-height: var(--pb-touch-target);
+  padding: 1rem clamp(2rem, 5vmin, 3rem);
+  border-radius: var(--pb-radius-lg);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.pb-btn:active {
+  transform: scale(0.98);
+}
+
+.pb-btn-primary {
+  background: linear-gradient(180deg, var(--pb-btn-primary-top), var(--pb-btn-primary-bottom));
+  color: var(--pb-btn-primary-text);
+  box-shadow:
+    0 8px 28px rgba(43, 34, 24, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.pb-btn-ghost {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--pb-ink);
+  border: 2px solid rgba(61, 48, 32, 0.32);
+}
+
+.pb-btn-small {
+  min-height: 2.5rem;
+  padding: 0.5rem 1.15rem;
+  font-size: clamp(1rem, 2.6vmin, 1.2rem);
+}
+
+a.pb-btn {
+  text-decoration: none;
+}
+
+a.pb-btn:focus-visible {
+  outline: 3px solid rgba(61, 48, 32, 0.45);
+  outline-offset: 3px;
+}
+
+/* Before theme CSS loads: hide legacy paper/doodle layer for default (Kia backdrop). */
+html[data-pb-theme='default'] .pb-doodle-paper,
+html[data-pb-theme='default'] .pb-doodle-circuit,
+html[data-pb-theme='default'] .pb-backdrop-wash,
+html[data-pb-theme='default'] .pb-backdrop-el {
+  display: none !important;
+}
+
+html[data-pb-theme='default'] body {
+  background-color: #030303;
+}
+
+html[data-pb-theme='zyn'] body {
+  background-color: #030712;
+  background-image:
+    linear-gradient(0deg, rgba(4, 15, 23, 0.5), rgba(4, 15, 23, 0.5)),
+    url('../public/zyn/mainbg.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Attract hero art — resolved/copied by Angular so Electron file:// works. */
+html[data-pb-theme='zyn'] .pb-zyn-hero-ring {
+  background: url('../public/zyn/center-bg.svg') no-repeat center / 100% 100%;
+}

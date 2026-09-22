@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ZYN Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      html, body { margin: 0; height: 100%; background: #0b1f18; color: #f4f7f5; font-family: system-ui, sans-serif; }
+      .stage { height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+      img { max-width: 100%; max-height: 100%; object-fit: contain; }
+      .empty { opacity: 0.7; font-size: 1.4rem; padding: 2rem; text-align: center; }
+      .gear { position: fixed; top: 12px; right: 12px; opacity: 0.25; background: transparent; color: inherit; border: 0; font-size: 1.4rem; cursor: pointer; }
+      .gear:hover { opacity: 1; }
+      .settings { position: fixed; inset: 0; background: rgba(0,0,0,0.72); display: none; align-items: center; justify-content: center; }
+      .settings.open { display: flex; }
+      .panel { background: #123528; padding: 1.4rem; border-radius: 16px; min-width: 320px; display: grid; gap: 0.6rem; }
+      input { padding: 0.5rem; font: inherit; }
+      button { padding: 0.55rem 0.8rem; font: inherit; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <button class="gear" id="gear" type="button" aria-label="Settings">⚙</button>
+    <div class="stage" id="stage"><p class="empty">Waiting for curated photos…</p></div>
+    <div class="settings" id="settings">
+      <form class="panel" id="form">
+        <h2>Kiosk server</h2>
+        <label>API base URL</label>
+        <input name="apiBase" placeholder="http://192.168.1.10:3040" />
+        <label>Token</label>
+        <input name="token" placeholder="zyn-display" />
+        <div>
+          <button type="submit">Save</button>
+          <button type="button" id="close">Close</button>
+        </div>
+      </form>
+    </div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,282 @@
+<div class="pb-cb-toolbar">
+  <div class="pb-cb-filters" role="group" aria-label="Photo type">
+    <button type="button" class="pb-cb-chip" [class.is-on]="kindFilter() === 'all'" (click)="setKind('all')">
+      {{ copy().history.filterAll }}
+    </button>
+    <button
+      type="button"
+      class="pb-cb-chip"
+      [class.is-on]="kindFilter() === 'physical'"
+      (click)="setKind('physical')"
+    >
+      {{ copy().history.filterPhysical }}
+    </button>
+    <button type="button" class="pb-cb-chip" [class.is-on]="kindFilter() === 'normal'" (click)="setKind('normal')">
+      {{ copy().history.filterDigital }}
+    </button>
+    <button
+      type="button"
+      class="pb-cb-chip"
+      [class.is-on]="kindFilter() === 'original'"
+      (click)="setKind('original')"
+    >
+      {{ copy().history.filterOriginal }}
+    </button>
+  </div>
+  <div class="pb-cb-filters" role="group" aria-label="Date">
+    <button type="button" class="pb-cb-chip" [class.is-on]="whenFilter() === 'all'" (click)="setWhen('all')">
+      {{ copy().history.whenAll }}
+    </button>
+    <button type="button" class="pb-cb-chip" [class.is-on]="whenFilter() === 'today'" (click)="setWhen('today')">
+      {{ copy().history.whenToday }}
+    </button>
+    <button
+      type="button"
+      class="pb-cb-chip"
+      [class.is-on]="whenFilter() === 'yesterday'"
+      (click)="setWhen('yesterday')"
+    >
+      {{ copy().history.whenYesterday }}
+    </button>
+    <button type="button" class="pb-cb-chip" [class.is-on]="whenFilter() === 'week'" (click)="setWhen('week')">
+      {{ copy().history.whenWeek }}
+    </button>
+    <button type="button" class="pb-cb-chip" [class.is-on]="whenFilter() === 'month'" (click)="setWhen('month')">
+      {{ copy().history.whenMonth }}
+    </button>
+    <button type="button" class="pb-cb-chip" [class.is-on]="whenFilter() === 'custom'" (click)="setWhen('custom')">
+      {{ copy().history.whenCustom }}
+    </button>
+  </div>
+  @if (whenFilter() === 'custom') {
+    <div class="pb-cb-dates">
+      <input class="pb-input pb-cb-date" type="date" [value]="customFrom()" (change)="onCustomFrom($event)" />
+      <input class="pb-input pb-cb-date" type="date" [value]="customTo()" (change)="onCustomTo($event)" />
+    </div>
+  }
+  <p class="pb-cb-count">{{ filtered().length }} photos</p>
+</div>
+
+@if (loading()) {
+  <p class="pb-cb-msg">{{ copy().result.loading }}</p>
+} @else if (err()) {
+  <p class="pb-cb-msg">{{ err() }}</p>
+} @else if (!filtered().length) {
+  <p class="pb-cb-msg">{{ copy().history.empty }}</p>
+} @else {
+  <div class="pb-cb-stage">
+    <div class="pb-cb-preview" [class.has-photo]="!!previewUrl()">
+      @if (previewUrl(); as src) {
+        <img [src]="src" alt="" />
+        @if (selected(); as sel) {
+          <p class="pb-cb-preview-cap">
+            <span class="pb-cb-kind" [class.is-physical]="viewingOriginals() ? sel.hasPhysical : sel.kind === 'physical' && kindFilter() !== 'normal'">
+              {{ viewLabel(sel) }}
+            </span>
+            @if (viewingOriginals() && sel.hasPhysical) {
+              <span class="pb-cb-kind is-physical">{{ copy().history.filterPhysical }}</span>
+            }
+            @if (viewingOriginals() && sel.hasFramed) {
+              <span class="pb-cb-kind">Framed</span>
+            }
+            <span>{{ sel.capturedAt | date: 'MMM d, y, h:mm a' }}</span>
+          </p>
+        }
+      } @else {
+        <p class="pb-cb-preview-ph">{{ copy().history.previewHint }}</p>
+      }
+    </div>
+    <div class="pb-cb-grid" role="list">
+    @for (photo of pageItems(); track photo.id) {
+      <button
+        type="button"
+        class="pb-cb-card"
+        role="listitem"
+        [class.is-on]="selectedId() === photo.id"
+        (click)="selectPhoto(photo)"
+      >
+        @if (thumbUrls()[thumbKey(photo)]; as thumb) {
+          <img [src]="thumb" alt="" />
+        } @else {
+          <span class="pb-cb-ph" aria-hidden="true"></span>
+        }
+        <span class="pb-cb-meta">
+          <span
+            class="pb-cb-kind"
+            [class.is-physical]="viewingOriginals() ? photo.hasPhysical : photo.kind === 'physical' && kindFilter() !== 'normal'"
+          >
+            {{ viewLabel(photo) }}
+          </span>
+          <span class="pb-cb-time">{{ photo.capturedAt | date: 'MMM d, h:mm a' }}</span>
+        </span>
+      </button>
+    }
+  </div>
+  </div>
+  <div class="pb-cb-pager">
+    <button type="button" class="pb-btn pb-btn-ghost pb-btn-sm" [disabled]="page() <= 1" (click)="goPage(-1)">
+      Prev
+    </button>
+    <span>Page {{ page() > pageCount() ? pageCount() : page() }} of {{ pageCount() }}</span>
+    <button
+      type="button"
+      class="pb-btn pb-btn-ghost pb-btn-sm"
+      [disabled]="page() >= pageCount()"
+      (click)="goPage(1)"
+    >
+      Next
+    </button>
+  </div>
+}
+
+<div class="pb-cb-actions">
+  @if (canMakeFramed()) {
+    <button
+      type="button"
+      class="pb-btn pb-btn-primary"
+      [disabled]="makeFramedBusy()"
+      (click)="openFramePick()"
+    >
+      @if (makeFramedBusy()) {
+        {{ copy().history.makingFramed }}
+      } @else if (selected()?.hasFramed) {
+        {{ copy().history.remakeFramed }}
+      } @else {
+        {{ copy().history.makeFramed }}
+      }
+    </button>
+  }
+  @if (canMakePhysical()) {
+    <button
+      type="button"
+      class="pb-btn"
+      [class.pb-btn-primary]="!canMakeFramed()"
+      [class.pb-btn-ghost]="canMakeFramed()"
+      [disabled]="makePhysicalBusy()"
+      (click)="openPhysicalAdjust()"
+    >
+      @if (makePhysicalBusy()) {
+        {{ copy().history.makingPhysical }}
+      } @else if (selected()?.hasPhysical) {
+        {{ copy().history.remakePhysical }}
+      } @else {
+        {{ copy().history.makePhysical }}
+      }
+    </button>
+  }
+  @if (printEnabled() && photos().length) {
+    <button
+      type="button"
+      class="pb-btn"
+      [class.pb-btn-primary]="!canMakePhysical() && !canMakeFramed()"
+      [class.pb-btn-ghost]="canMakePhysical() || canMakeFramed()"
+      [disabled]="!canPrint()"
+      (click)="printOnce()"
+    >
+      @if (printBusy()) {
+        {{ copy().result.printing }}
+      } @else if (printDone()) {
+        {{ copy().result.printed }}
+      } @else {
+        {{ copy().history.reprint }}
+      }
+    </button>
+  }
+  <button
+    type="button"
+    class="pb-btn pb-btn-ghost"
+    [disabled]="!selected() || deleteBusy()"
+    (click)="askDelete()"
+  >
+    {{ copy().history.deleteLabel }}
+  </button>
+</div>
+
+@if (makePhysicalErr(); as me) {
+  <p class="pb-cb-msg">{{ me }}</p>
+}
+
+@if (makeFramedErr(); as fe) {
+  <p class="pb-cb-msg">{{ fe }}</p>
+}
+
+@if (confirmDelete()) {
+  <div class="pb-cb-modal" role="dialog" aria-modal="true" aria-labelledby="pb-cb-del-title">
+    <div class="pb-cb-modal-card">
+      <p id="pb-cb-del-title">{{ copy().history.deleteConfirm }}</p>
+      <div class="pb-row">
+        <button type="button" class="pb-btn pb-btn-ghost" (click)="confirmDelete.set(false)">
+          {{ copy().history.cancel }}
+        </button>
+        <button type="button" class="pb-btn pb-btn-primary" [disabled]="deleteBusy()" (click)="confirmDeleteNow()">
+          {{ copy().history.deleteLabel }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (printErr(); as pe) {
+  <pb-print-trouble-dialog
+    [error]="pe"
+    [retrying]="printBusy()"
+    (closed)="printErr.set(null)"
+    (retry)="printOnce()"
+  />
+}
+
+@if (physicalAdjustOpen() && physicalAdjustSource()) {
+  <pb-physical-frame-adjust-dialog
+    [imagePath]="physicalAdjustSource()"
+    [busy]="makePhysicalBusy()"
+    (confirmed)="onPhysicalAdjustConfirm($event)"
+    (cancelled)="physicalAdjustOpen.set(false)"
+  />
+}
+
+@if (framePickOpen()) {
+  <div class="pb-cb-modal" role="dialog" aria-modal="true" aria-labelledby="pb-cb-frame-title">
+    <div class="pb-cb-modal-card pb-cb-frame-pick">
+      <p id="pb-cb-frame-title">{{ copy().history.pickFrameTitle }}</p>
+      <p class="pb-cb-frame-hint">{{ copy().history.pickFrameHint }}</p>
+      <div class="pb-cb-frame-grid">
+        @for (f of framePickList(); track f.filename) {
+          <button
+            type="button"
+            class="pb-cb-frame-opt"
+            [class.is-on]="framePickSelected() === f.filename"
+            [disabled]="makeFramedBusy()"
+            (click)="framePickSelected.set(f.filename)"
+          >
+            <img [src]="f.url" [alt]="f.label" />
+            <span>{{ f.label }}</span>
+          </button>
+        }
+      </div>
+      <div class="pb-row">
+        <button type="button" class="pb-btn pb-btn-ghost" [disabled]="makeFramedBusy()" (click)="closeFramePick()">
+          {{ copy().history.cancel }}
+        </button>
+        <button
+          type="button"
+          class="pb-btn pb-btn-primary"
+          [disabled]="makeFramedBusy() || !framePickSelected()"
+          (click)="confirmMakeFramed()"
+        >
+          {{ copy().history.applyFrame }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (frameAdjustOpen() && physicalAdjustSource() && framePickSelected()) {
+  <pb-frame-adjust-dialog
+    [imagePath]="physicalAdjustSource()"
+    [frameFile]="framePickSelected()!"
+    [busy]="makeFramedBusy()"
+    [confirmLabel]="copy().history.applyFrame"
+    (confirmed)="onFrameAdjustConfirm($event)"
+    (cancelled)="closeFrameAdjust()"
+  />
+}

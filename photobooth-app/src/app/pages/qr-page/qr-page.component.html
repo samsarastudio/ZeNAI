@@ -1,0 +1,54 @@
+<div class="pb-page pb-qr pb-kia-qr-page">
+  <div class="pb-kia-qr">
+    <header class="pb-kia-qr-brand">
+      @if (branding.logoSrc(); as logo) {
+        <img
+          class="pb-kia-logo"
+          [src]="logo"
+          [attr.alt]="copy().qr.title"
+          loading="eager"
+          decoding="async"
+        />
+      } @else {
+        <span class="pb-kia-logo-fallback" aria-hidden="true">{{ copy().qr.icon }}</span>
+      }
+      <p class="pb-kia-tagline">{{ copy().attract.tagline }}</p>
+    </header>
+
+    <div class="pb-kia-qr-stack">
+      <div class="pb-kia-qr-intro">
+        <h1 class="pb-kia-qr-title">{{ copy().qr.title }}</h1>
+        <p class="pb-kia-qr-lead">{{ copy().qr.subtitle }}</p>
+      </div>
+
+      <div class="pb-kia-qr-art-shell">
+        <div class="pb-kia-qr-visual">
+          <img
+            class="pb-kia-qr-tab"
+            src="kia/qr-panel.png"
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            decoding="async"
+          />
+          <img
+            class="pb-kia-qr-phone"
+            src="kia/qr-phone.png"
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      @if (scanSuccess()) {
+        <p class="pb-kia-qr-success" role="status">{{ copy().qr.scanSuccess }}</p>
+      } @else if (message()) {
+        <p class="pb-msg pb-kia-qr-msg">{{ message() }}</p>
+      }
+
+      <p class="pb-kia-qr-footer">{{ copy().qr.footer }}</p>
+    </div>
+  </div>
+</div>

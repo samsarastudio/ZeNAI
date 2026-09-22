@@ -1,0 +1,92 @@
+{
+  "name": "photobooth-aicore",
+  "version": "1.1.1",
+  "description": "ZYN Photobooth-AICore — Electron + Angular + Canon EDSDK / USB camera",
+  "main": "electron/main.cjs",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build --configuration production",
+    "electron:dev": "concurrently \"ng serve\" \"wait-on http://localhost:4200 && electron . --dev-server\"",
+    "electron:standalone": "electron .",
+    "electron:build": "npm run build && electron-builder --win dir && node scripts/package-deploy.cjs",
+    "electron:build:folder": "npm run build && electron-builder --win dir && node scripts/package-deploy.cjs",
+    "package:deploy": "node scripts/package-deploy.cjs"
+  },
+  "dependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/compiler": "^19.2.0",
+    "@angular/core": "^19.2.0",
+    "@angular/forms": "^19.2.0",
+    "@angular/platform-browser": "^19.2.0",
+    "@angular/platform-browser-dynamic": "^19.2.0",
+    "@angular/router": "^19.2.0",
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "form-data": "^4.0.0",
+    "nodemailer": "^6.9.16",
+    "qrcode": "^1.5.4",
+    "rxjs": "~7.8.0",
+    "sharp": "^0.33.5",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^19.2.25",
+    "@angular/cli": "^19.2.25",
+    "@angular/compiler-cli": "^19.2.0",
+    "@types/qrcode": "^1.5.6",
+    "concurrently": "^9.1.2",
+    "electron": "^34.5.8",
+    "electron-builder": "^25.1.8",
+    "typescript": "~5.7.2",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.zyn.photobooth.aicore",
+    "productName": "ZYN Photobooth",
+    "asarUnpack": [
+      "**/node_modules/sharp/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "themes/**/*",
+      "config/**/*",
+      "theme-template/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "bin",
+        "to": ".",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "themes",
+        "to": "themes"
+      },
+      {
+        "from": "config",
+        "to": "config"
+      },
+      {
+        "from": "theme-template",
+        "to": "theme-template"
+      }
+    ],
+    "win": {
+      "executableName": "ZYN-Photobooth",
+      "target": [
+        {
+          "target": "dir",
+          "arch": ["x64"]
+        }
+      ],
+      "signAndEditExecutable": false
+    }
+  }
+}

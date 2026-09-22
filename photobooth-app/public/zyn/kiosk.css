@@ -1,0 +1,588 @@
+/**
+ * ZYN kiosk theme — hangar / cyan Figma photobooth.
+ */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('fonts/PlusJakartaSans-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('fonts/PlusJakartaSans-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('fonts/PlusJakartaSans-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+:root {
+  --pb-font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --pb-font-display: "Plus Jakarta Sans", "Montserrat", system-ui, sans-serif;
+  --pb-attract-hero-fs: clamp(2.45rem, min(11vmin, 10.5vh), 5.15rem);
+  --pb-attract-sub-fs: clamp(0.9rem, min(3.05vmin, 2.95vh), 1.42rem);
+  --pb-attract-cta-fs: clamp(1.35rem, min(3.8vmin, 3.6vh), 1.7rem);
+  --pb-attract-cta-min-h: clamp(3.6rem, 8.5vmin, 5.1rem);
+  --pb-attract-cta-width: clamp(280px, 36vw, 560px);
+  --pb-bg-base: #030712;
+  --pb-ink: #f5f5f7;
+  --pb-ink-muted: rgba(245, 245, 247, 0.65);
+  --pb-card-bg: rgba(11, 20, 38, 0.78);
+  --pb-card-border: rgba(1, 179, 230, 0.35);
+  --pb-msg: #fda4af;
+  --pb-btn-primary-top: #01b3e6;
+  --pb-btn-primary-bottom: #01b3e6;
+  --pb-btn-primary-text: #ffffff;
+  --pb-kia-glow: rgba(0, 210, 255, 0.55);
+  --pb-kia-glow-soft: rgba(0, 210, 255, 0.22);
+  --zyn-cyan: #01b3e6;
+}
+
+html[data-pb-theme='zyn'] body {
+  color: var(--pb-ink);
+  background-color: #002d72;
+  background-image: url('mainbg.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: var(--pb-font-sans);
+}
+
+html[data-pb-theme='zyn'] .pb-doodle-paper,
+html[data-pb-theme='zyn'] .pb-doodle-circuit,
+html[data-pb-theme='zyn'] .pb-backdrop-wash,
+html[data-pb-theme='zyn'] .pb-backdrop-el {
+  display: none !important;
+}
+
+html[data-pb-theme='zyn'] .pb-page {
+  color: var(--pb-ink);
+}
+
+/* ─── Shared headings (Attract / QR / AI mode cards) ─── */
+html[data-pb-theme='zyn'] .pb-title,
+html[data-pb-theme='zyn'] .pb-kia-qr-title {
+  font-family: var(--pb-font-display);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  text-shadow: 0 0 42px rgba(255, 255, 255, 0.08);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-hero-title {
+  font-family: var(--pb-font-display);
+  font-weight: 800;
+  letter-spacing: 0.065em;
+  color: #ffffff;
+  text-shadow: 0 0 52px rgba(1, 179, 230, 0.18);
+}
+
+html[data-pb-theme='zyn'] .pb-sub,
+html[data-pb-theme='zyn'] .pb-kia-qr-lead {
+  font-family: var(--pb-font-sans);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-hero-sub {
+  font-family: var(--pb-font-display);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Attract ─── */
+html[data-pb-theme='zyn'] .pb-page.pb-kia-attract-page {
+  flex: 1;
+  align-items: stretch;
+  justify-content: center;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract {
+  position: relative;
+  --pb-attract-main-scale: 1;
+  --pb-attract-top-scale: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 1100px);
+  min-height: min(calc(100vh - clamp(2.5rem, 8vmin, 5rem)), 920px);
+  margin-inline: auto;
+  padding: clamp(1.25rem, 4vmin, 2.5rem) clamp(1.5rem, 5vmin, 3rem)
+    clamp(2.5rem, 7vmin, 4rem);
+  text-align: center;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.5rem, 1.8vmin, 0.85rem);
+  margin-bottom: clamp(1.5rem, 5vmin, 2.75rem);
+  transform: scale(var(--pb-attract-top-scale));
+  transform-origin: top center;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract-brand:has(.pb-kia-logo) .pb-kia-tagline {
+  margin-top: 0.1rem;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-logo {
+  max-height: none;
+  width: min(260px, 42vw);
+  filter: none;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-tagline {
+  margin: 0;
+  max-width: 30ch;
+  font-family: var(--pb-font-display);
+  font-size: clamp(0.74rem, min(1.95vmin, 1.85vh), 0.94rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-hero-title {
+  margin: 0;
+  font-size: calc(var(--pb-attract-hero-fs) * 1.08 * var(--pb-attract-main-scale));
+  line-height: 1.05;
+  max-width: 12ch;
+  white-space: pre-line;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-hero-ring {
+  background: url('center-bg.svg') no-repeat center / contain;
+  width: min(42vw, 720px);
+  min-height: min(28vw, 420px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8% 10%;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-hero-streak {
+  display: none;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-hero-sub {
+  margin: 0;
+  font-size: calc(var(--pb-attract-sub-fs) * var(--pb-attract-main-scale));
+  line-height: 1.52;
+  max-width: min(92vw, 26ch);
+  letter-spacing: 0.035em;
+  white-space: pre-line;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract-cta-wrap {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(2rem, 6vmin, 3.75rem);
+  padding-bottom: clamp(0.25rem, 1.5vmin, 0.75rem);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-attract-cta-wrap::after {
+  display: none;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-cta {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: var(--pb-attract-cta-width);
+  min-height: var(--pb-attract-cta-min-h);
+  padding: 0 clamp(1.5rem, 4.5vmin, 2.5rem);
+  border-radius: 88px;
+  text-decoration: none;
+  font-family: var(--pb-font-display);
+  font-size: var(--pb-attract-cta-fs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  border: 1.8px solid #01b3e6;
+  background: #01b3e6;
+  box-shadow: 0 0 28px rgba(0, 210, 255, 0.35);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-cta:hover {
+  border-color: #38e1ff;
+  box-shadow: 0 0 40px rgba(0, 210, 255, 0.55);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-cta-icon,
+html[data-pb-theme='zyn'] .pb-kia-cta-divider {
+  display: none;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-cta-label {
+  padding-left: 0.1rem;
+  font-weight: 500;
+}
+
+/* ─── QR ─── */
+html[data-pb-theme='zyn'] .pb-page.pb-kia-qr-page {
+  overflow-x: hidden;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr {
+  width: min(100%, 1240px);
+  padding: clamp(1.2rem, 4.5vmin, 2.6rem) clamp(1rem, 4vmin, 2rem) clamp(1rem, 3.5vmin, 1.8rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: clamp(1rem, 3vmin, 1.75rem);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-stack {
+  width: 100%;
+  max-width: min(960px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-intro {
+  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: clamp(0.35rem, 2vw, 1rem);
+  margin-bottom: clamp(1.35rem, 4.5vmin, 2.5rem);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-title {
+  margin: 0 0 clamp(0.55rem, 2vmin, 1rem);
+  font-size: clamp(2.15rem, 7.5vmin, 4.85rem);
+  line-height: 1.08;
+  max-width: 100%;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-lead {
+  margin: 0;
+  font-size: clamp(0.98rem, 2.55vmin, 1.32rem);
+  line-height: 1.45;
+  max-width: min(42ch, 100%);
+  margin-inline: auto;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-art-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  box-sizing: border-box;
+  /* Push tab + phone ~30% viewport lower so headline/subcopy stay clear */
+  margin-top: clamp(2rem, 30vh, 22rem);
+  padding: 0 clamp(0.35rem, 2vw, 1rem) clamp(1.25rem, 4vmin, 2.25rem);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-visual {
+  position: relative;
+  width: 100%;
+  max-width: min(812px, 92vw);
+  aspect-ratio: 2.28;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-tab {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(100%, 812px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.4));
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-phone {
+  position: absolute;
+  left: 50%;
+  bottom: -8%;
+  width: min(44%, 420px);
+  transform: translateX(-50%);
+  filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.55));
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-success {
+  margin: 0 0 clamp(0.65rem, 2vmin, 1rem);
+  font-size: clamp(1.05rem, 2.8vmin, 1.35rem);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(200, 255, 220, 0.95);
+  text-shadow: 0 0 24px rgba(120, 255, 180, 0.35);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-msg {
+  margin: 0 0 clamp(0.65rem, 2vmin, 1rem);
+  text-align: center;
+  max-width: 36ch;
+}
+
+@media (max-width: 1024px) {
+  html[data-pb-theme='zyn'] .pb-kia-hero-title {
+    white-space: normal;
+    max-width: min(94vw, 17ch);
+  }
+
+  html[data-pb-theme='zyn'] .pb-kia-qr-visual {
+    max-width: min(92vw, 680px);
+  }
+
+  html[data-pb-theme='zyn'] .pb-kia-qr-phone {
+    width: min(44%, 300px);
+  }
+}
+
+html[data-pb-theme='zyn'] .pb-kia-input {
+  background: rgba(0, 0, 0, 0.45);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+html[data-pb-theme='zyn'] .pb-kia-qr-footer {
+  margin: clamp(0.65rem, 2.2vmin, 1.1rem) 0 0;
+  font-size: clamp(0.95rem, 2.5vmin, 1.2rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.82);
+  letter-spacing: 0.01em;
+}
+
+/* ─── Capture / preview stage ─── */
+html[data-pb-theme='zyn'] .pb-kia-ready-title,
+html[data-pb-theme='zyn'] .pb-kia-ready-lead {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-stage {
+  background: rgba(6, 6, 8, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 22px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 80px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-stage-rule {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+html[data-pb-theme='zyn'] .pb-preview-wrap {
+  border: 2px solid rgba(0, 210, 255, 0.45);
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.25), inset 0 0 25px rgba(0, 210, 255, 0.08);
+  background: #050b14;
+}
+
+html[data-pb-theme='zyn'] .pb-count {
+  font-family: var(--pb-font-display);
+  color: #ffffff;
+  text-shadow:
+    0 0 28px rgba(255, 255, 255, 0.35),
+    0 0 60px rgba(255, 230, 200, 0.15);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-dot {
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-dot--mid {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-smile,
+html[data-pb-theme='zyn'] .pb-kia-wait-copy {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-capture-footer {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+html[data-pb-theme='zyn'] .pb-kia-style-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+html[data-pb-theme='zyn'] .pb-preview-placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+html[data-pb-theme='zyn'] .pb-hint {
+  color: #fda4af;
+}
+
+/* ─── Cards (AI mode, legacy) ─── */
+html[data-pb-theme='zyn'] .pb-card {
+  background: var(--pb-card-bg);
+  border: 1px solid var(--pb-card-border);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+html[data-pb-theme='zyn'] .pb-ai-mode-card {
+  max-width: min(42rem, 94vw);
+}
+
+/* ─── Buttons ─── */
+html[data-pb-theme='zyn'] .pb-btn-primary {
+  background: #01b3e6;
+  color: #ffffff;
+  border: 1.8px solid #01b3e6;
+  border-radius: 88px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 24px rgba(0, 210, 255, 0.3);
+}
+
+html[data-pb-theme='zyn'] .pb-btn-primary:disabled {
+  opacity: 0.45;
+  cursor: default;
+  box-shadow: none;
+}
+
+html[data-pb-theme='zyn'] .pb-btn-ghost {
+  background: transparent;
+  color: #ffffff;
+  border: 1.8px solid #ffffff;
+  border-radius: 88px;
+  font-weight: 800;
+}
+
+/* ─── Result / kiosk surfaces ─── */
+html[data-pb-theme='zyn'] .pb-kiosk-surface {
+  background: rgba(8, 8, 10, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+html[data-pb-theme='zyn'] .pb-result-title {
+  color: #ffffff;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+html[data-pb-theme='zyn'] .pb-result-frame {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+html[data-pb-theme='zyn'] .pb-path-hint {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+html[data-pb-theme='zyn'] .pb-thinking {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+html[data-pb-theme='zyn'] .pb-msg {
+  color: var(--pb-msg);
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-logo {
+  width: min(260px, 42vw);
+  height: auto;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-subtitle {
+  margin: 0;
+  font-size: clamp(1.8rem, 5.2vmin, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-subtitle-grad {
+  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-details-title {
+  margin: 0 0 0.75rem;
+  color: #fff;
+  font-size: clamp(2.4rem, 6.5vmin, 4.4rem);
+  font-weight: 800;
+  line-height: 0.95;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-tagline--left {
+  text-align: left;
+  letter-spacing: 0.22em;
+  white-space: pre-line;
+}
+
+html[data-pb-theme='zyn'] .pb-input {
+  background: rgba(18, 32, 60, 0.85);
+  border: 1px solid rgba(1, 179, 230, 0.45);
+  color: #fff;
+  border-radius: 0.65rem;
+  min-height: 3rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-pb-theme='zyn'] body {
+    background-attachment: scroll;
+  }
+}

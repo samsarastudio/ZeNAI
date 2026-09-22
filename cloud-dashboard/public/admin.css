@@ -1,0 +1,66 @@
+:root {
+  --bg: #030712;
+  --card: rgba(8, 28, 42, 0.78);
+  --panel: rgba(6, 22, 34, 0.88);
+  --text: #f2f8fc;
+  --muted: #8fb4c8;
+  --accent: #01b3e6;
+  --accent-deep: #0072bb;
+  --err: #ff8a8a;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--text);
+  font: 16px/1.45 system-ui, sans-serif;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(0deg, rgba(4, 15, 23, 0.55), rgba(4, 15, 23, 0.55)),
+    url('/zyn/mainbg.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+.shell { max-width: 980px; margin: 0 auto; padding: 1.4rem; }
+header { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.header-actions { display: flex; gap: 0.75rem; align-items: center; }
+.eyebrow { margin: 0; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-size: 0.75rem; }
+h1, h2 { margin: 0.2rem 0 0.8rem; }
+[hidden] { display: none !important; }
+.card { background: var(--card); padding: 1.2rem; border-radius: 16px; margin: 1rem 0; display: grid; gap: 0.45rem; border: 1px solid rgba(1, 179, 230, 0.18); backdrop-filter: blur(8px); }
+.section:not(.is-active) { display: none !important; }
+label { font-size: 0.85rem; color: var(--muted); }
+input, textarea { width: 100%; padding: 0.5rem 0.65rem; border-radius: 8px; border: 0; font: inherit; background: #f4fafc; color: #0a1e2a; }
+.btn { padding: 0.55rem 0.9rem; border: 0; border-radius: 8px; background: linear-gradient(90deg, var(--accent-deep), var(--accent)); color: #fff; font: inherit; cursor: pointer; width: fit-content; }
+.btn.ghost { background: transparent; color: var(--text); outline: 1px solid rgba(1, 179, 230, 0.45); }
+.meta { color: var(--muted); font-size: 0.9rem; }
+.err { color: var(--err); }
+.check { display: flex; gap: 0.5rem; align-items: center; color: var(--text); }
+nav { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.tab { background: var(--panel); color: var(--text); border: 0; border-radius: 999px; padding: 0.4rem 0.8rem; cursor: pointer; font: inherit; }
+.tab.active { background: linear-gradient(90deg, var(--accent-deep), var(--accent)); color: #fff; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.6rem; }
+.stats div { background: var(--panel); padding: 0.8rem; border-radius: 12px; border: 1px solid rgba(1, 179, 230, 0.14); }
+.stats strong { display: block; font-size: 1.4rem; }
+.photo-toolbar { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.photo-list, #releaseList, .job-list { display: grid; gap: 0.6rem; margin-top: 0.8rem; }
+.row { display: grid; grid-template-columns: 160px 1fr auto; gap: 0.7rem; align-items: center; background: var(--panel); padding: 0.6rem; border-radius: 12px; border: 1px solid rgba(1, 179, 230, 0.12); }
+.row.job-row { grid-template-columns: 120px 1fr; }
+.row img { width: 160px; height: 106px; object-fit: cover; border-radius: 8px; background: #07111a; cursor: zoom-in; }
+.row.job-row img { width: 120px; height: 120px; cursor: default; }
+.pill { display: inline-block; padding: 0.12rem 0.45rem; border-radius: 999px; background: #123448; font-size: 0.78rem; margin-right: 0.25rem; }
+.pill.running, .pill.queued, .pill.uploading, .pill.printing { background: #0a4a68; color: #b8ecff; }
+.pill.done { background: #0d3d52; color: #7fd9f5; }
+.pill.failed { background: #5a1a1a; color: var(--err); }
+.pill.idle, .pill.skipped { background: #0d1c28; color: var(--muted); }
+.row p { margin: 0; }
+.row .actions { display: grid; gap: 0.35rem; justify-items: stretch; }
+.lightbox { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: 1.2rem; }
+.lightbox[hidden] { display: none !important; }
+.lightbox-backdrop { position: absolute; inset: 0; background: rgba(3, 7, 18, 0.86); border: 0; cursor: pointer; }
+.lightbox-card { position: relative; z-index: 1; max-width: min(1100px, 96vw); margin: 0; display: grid; gap: 0.6rem; }
+.lightbox-card img { width: 100%; max-height: 78vh; object-fit: contain; border-radius: 12px; background: #07111a; }
+.lightbox-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+a { color: var(--accent); }

@@ -1,0 +1,16 @@
+.pb-qr .pb-row {
+  justify-content: center;
+}
+
+.pb-debug {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(61, 48, 32, 0.35);
+  text-align: left;
+}
+
+.pb-debug-label {
+  font-size: clamp(1rem, 2.6vmin, 1.2rem);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}

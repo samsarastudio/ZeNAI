@@ -1,0 +1,68 @@
+<div class="pb-ph-backdrop" (click)="close()" role="presentation"></div>
+<div class="pb-ph-panel" role="dialog" aria-modal="true" aria-label="Print history">
+  <header class="pb-ph-head">
+    <div>
+      <h2>Print history</h2>
+      <p>Preview AI photos and print again if needed.</p>
+    </div>
+    <button type="button" class="pb-ph-close" (click)="close()" aria-label="Close">×</button>
+  </header>
+
+  @if (loading()) {
+    <p class="pb-ph-msg">Loading…</p>
+  } @else if (err()) {
+    <p class="pb-ph-msg pb-ph-err">{{ err() }}</p>
+  } @else if (!printable().length) {
+    <p class="pb-ph-msg">No printable photos yet.</p>
+  } @else {
+    <div class="pb-ph-body">
+      <aside class="pb-ph-list">
+        @for (j of pageItems(); track j.id) {
+          <button
+            type="button"
+            class="pb-ph-row"
+            [class.is-on]="selectedId() === j.id"
+            (click)="selectJob(j)"
+          >
+            <span class="pb-ph-thumb">
+              @if (thumbUrls()[j.id]; as thumb) {
+                <img [src]="thumb" alt="" />
+              }
+            </span>
+            <span class="pb-ph-meta">
+              <strong>{{ j.canLabel || j.canId || 'Photo' }}</strong>
+              <small>{{ formatWhen(j.lastPrintAt || j.createdAt) }}</small>
+              <em>{{ j.printStatus || '—' }}</em>
+            </span>
+          </button>
+        }
+        <div class="pb-ph-pager">
+          <button type="button" [disabled]="page() <= 1" (click)="goPage(-1)">Prev</button>
+          <span>Page {{ page() }} of {{ pageCount() }}</span>
+          <button type="button" [disabled]="page() >= pageCount()" (click)="goPage(1)">Next</button>
+        </div>
+      </aside>
+
+      <section class="pb-ph-preview">
+        @if (previewUrl(); as url) {
+          <img [src]="url" alt="Print preview" />
+        } @else {
+          <p class="pb-ph-msg">Select a photo to preview.</p>
+        }
+        <div class="pb-ph-actions">
+          <button
+            type="button"
+            class="pb-ph-reprint"
+            [disabled]="!selected()?.aiPath || reprintBusy()"
+            (click)="reprint()"
+          >
+            {{ reprintBusy() ? 'Queuing…' : 'Print again' }}
+          </button>
+          @if (reprintMsg(); as msg) {
+            <span class="pb-ph-status">{{ msg }}</span>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</div>

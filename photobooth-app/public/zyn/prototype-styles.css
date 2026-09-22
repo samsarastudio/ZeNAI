@@ -1,0 +1,849 @@
+/* ==========================================================================
+   ZYN AI PHOTOBOOTH - PIXEL-PERFECT FIGMA REPLICATION
+   Exact colors, typography, glowing neon effects, and animations matching Figma.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+  font-style: normal;
+}
+
+:root {
+  /* Figma Exact Color Palette */
+  --zyn-cyan: #00d2ff;
+  --zyn-cyan-bright: #38e1ff;
+  --zyn-cyan-glow: rgba(0, 210, 255, 0.7);
+  --zyn-cyan-dark: #0088cc;
+
+  --zyn-bg-dark: #030712;
+  --zyn-bg-panel: rgba(11, 20, 38, 0.75);
+  --zyn-border-glow: rgba(0, 210, 255, 0.35);
+
+  /* Flavor Colors */
+  --flavor-green: #10b981;
+  --flavor-silver: #cbd5e1;
+  --flavor-cyan: #00d2ff;
+  --flavor-red: #ef4444;
+  --flavor-purple: #7c3aed;
+
+  /* Fonts */
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(0deg, rgba(4, 15, 23, 0.50) 0%, rgba(4, 15, 23, 0.50) 100%), url(<path-to-image>) lightgray 50% / cover no-repeat;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Atmospheric Hangar Background with Floor Reflection */
+.photobooth-container {
+  background: url('../assets/img/mainbg.svg') no-repeat;
+  background-image: linear-gradient(0deg, rgba(4, 15, 23, 0.50) 0%, rgba(4, 15, 23, 0.50) 100%), url(<path-to-image>) lightgray 50% / cover no-repeat;
+  background-size: cover;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.centered-content {
+  background: url('../assets/img/center-bg.svg') no-repeat;
+  background-size: 100% 100%;
+  width: 42vw;
+  height: 35vw;
+  position: relative;
+  top: -5vw
+}
+
+.centered-content h2 {
+  color: #FFF;
+  text-align: center;
+  font-size: 60px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.mainlogo {
+  width: 260px;
+  margin: 0 auto;
+}
+
+/* Typography & Glows */
+
+.zyn-header-subtitle {
+  text-align: center;
+  font-size: 52.8px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.zyn-header-subtitle-2 {
+  color: #FFF;
+  text-align: center;
+  font-family: "Plus Jakarta Sans";
+  font-size: 70.8px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+
+.zyn-header-subtitle-gradient {
+  background: linear-gradient(90deg, #0072BB 0%, #01B3E6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.zyn-tagline {
+  color: #FFF;
+  text-align: center;
+  font-family: "Plus Jakarta Sans";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 4.8px;
+}
+
+.zyn-tagline-2 {
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 4.8px;
+}
+
+.zyn-tagline-3 {
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.cameranote {
+  color: #FFF;
+  text-align: center;
+  font-family: "Plus Jakarta Sans";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  z-index: 3
+}
+
+.camerawarning {
+  color: #0072BB;
+  text-align: center;
+  font-family: "Plus Jakarta Sans";
+  font-size: 15.709px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  z-index: 3;
+}
+
+/* Screen 1: Glowing Dual Arc Ring */
+.arc-ring-wrapper {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .arc-ring-wrapper {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+.arc-graphic {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 16px rgba(0, 210, 255, 0.8)) drop-shadow(0 0 30px rgba(0, 210, 255, 0.4));
+  animation: arc-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes arc-pulse {
+  0% {
+    transform: scale(0.985);
+    filter: drop-shadow(0 0 14px rgba(0, 210, 255, 0.7)) drop-shadow(0 0 25px rgba(0, 210, 255, 0.3));
+  }
+
+  100% {
+    transform: scale(1.015);
+    filter: drop-shadow(0 0 22px rgba(0, 210, 255, 0.95)) drop-shadow(0 0 45px rgba(0, 210, 255, 0.5));
+  }
+}
+
+/* Figma Cyan Pill Button */
+.btn-zyn-pill {
+  border-radius: 88.228px;
+  border: 1.765px solid #01B3E6;
+  background: #01B3E6;
+  color: #fff;
+  color: #FFF;
+  font-size: 26.468px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  padding: 1.5rem 5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* White Retake Button */
+.btn-zyn-white {
+  border-radius: 88.228px;
+  border: 1.765px solid #FFF;
+  background: #FFF;
+  color: #0072BB;
+  font-family: "Plus Jakarta Sans";
+  font-size: 26.468px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  padding: 1.5rem 4rem;
+}
+
+.btn-zyn-white:hover {
+  background: #f8fafc;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Outline Secondary Button */
+.btn-zyn-outline {
+  border-radius: 88.228px;
+  border: 1.765px solid #FFF;
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 26.468px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  padding: 1.5rem 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-zyn-outline:hover {
+  border-color: #00d2ff;
+  color: #00d2ff;
+  background: rgba(15, 26, 48, 0.85);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Viewfinder Frame (Figma Screen 2, 3, 4) */
+.viewfinder-card {
+  width: 100%;
+  max-width: 50vw;
+  aspect-ratio: 16 / 10;
+  border-radius: 1.25rem;
+  border: 2px solid rgba(0, 210, 255, 0.45);
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.25), inset 0 0 25px rgba(0, 210, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  background-color: #050b14;
+  z-index: 1;
+}
+
+.capture-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 1rem;
+}
+
+.capture-layout .viewfinder-card {
+  flex: 1 1 auto;
+  width: 50vw;
+  margin: 0.75rem 0;
+}
+
+.custom-padding {
+  padding-left: 6vw;
+  padding-right: 6vw;
+}
+
+.countdown-panel {
+  flex: 0 0 clamp(12rem, 18vw, 18rem);
+  border-radius: 1rem;
+  background: rgba(7, 14, 31, 0.92);
+  box-shadow: inset 0 0 15px rgba(0, 210, 255, 0.08);
+  overflow: hidden;
+}
+
+.countdown-panel-enter {
+  animation: countdown-panel-slide-right 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes countdown-panel-slide-right {
+  from {
+    opacity: 0;
+    transform: translateX(-5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.countdown-number-change {
+  animation: countdown-number-slide-zoom 420ms ease-out both;
+}
+
+@keyframes countdown-number-slide-zoom {
+  0% {
+    opacity: 0;
+    transform: translateY(-1.25rem) scale(1);
+  }
+
+  55% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  78% {
+    transform: translateY(0) scale(1.035);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.countdown-ring {
+  width: min(15vw, 14rem);
+  height: min(15vw, 14rem);
+}
+
+/* Flavor Cans Grid & Selection Highlighting (Screen 5) */
+
+
+/* The Figma Highlight Box for Active Flavor */
+
+.flavor-img-wrapper {
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 27.121px;
+  border: 1.356px solid rgba(1, 179, 230, 0.50);
+}
+
+.flavor-box-wrapper.active {
+  transform: scale(1.05);
+}
+
+.flavor-box-wrapper.active .flavor-img-wrapper {
+  background: #01B3E6;
+  border: 2px solid rgba(0, 210, 255, 0.9);
+}
+
+.flavor-box-wrapper.active h3 {
+  color: #6BDEFF;
+}
+
+.flavour-slider {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.flavour-slider .slick-list {
+  overflow: visible;
+  padding: 0.75rem 0;
+}
+
+.flavor-slider-shell {
+  width: 100%;
+}
+
+.flavour-slider .flavor-box-wrapper img {
+  object-fit: contain;
+  width: 100%
+}
+
+.flavour-slider .slick-dots li button {
+  color: #DDDDDDB2
+}
+
+.flavour-slider .slick-dots li button:before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  color: #ffffff;
+  opacity: 0.5;
+}
+
+.flavour-slider .slick-track {
+  display: flex;
+  gap: 20px
+}
+
+.flavour-slider .slick-dots li.slick-active button:before {
+  opacity: 1;
+  color: #01B3E6
+}
+
+.flavor-box-wrapper h3 {
+  color: #FFF;
+  text-align: center;
+  font-family: "Plus Jakarta Sans";
+  font-size: 21.697px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  margin-top: 0.5rem;
+}
+
+.slick-dots {
+  bottom: -60px !important;
+}
+
+.slick-dots li button:before {
+  font-size: 12px;
+  opacity: 0.5;
+}
+
+.slick-active button:before {
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .flavour-slider .flavor-box-wrapper img {
+    width: min(70vw, 220px);
+    height: min(70vw, 220px);
+  }
+}
+
+/* Flavor Can Graphic Styling */
+.can-spearmint {
+  background: radial-gradient(circle at 35% 35%, #34d399 0%, #059669 65%, #064e3b 100%);
+  border: 3px solid #6ee7b7;
+  box-shadow: 0 10px 25px rgba(5, 150, 105, 0.4);
+}
+
+.can-smooth {
+  background: radial-gradient(circle at 35% 35%, #f1f5f9 0%, #cbd5e1 50%, #64748b 100%);
+  border: 3px solid #fef08a;
+  /* Golden top rim matching Figma */
+  box-shadow: 0 10px 25px rgba(148, 163, 184, 0.4);
+}
+
+.can-coolmint {
+  background: radial-gradient(circle at 35% 35%, #38e1ff 0%, #00b4d8 60%, #0077b6 100%);
+  border: 3px solid #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 210, 255, 0.6);
+}
+
+.can-ruby {
+  background: radial-gradient(circle at 35% 35%, #f87171 0%, #dc2626 65%, #7f1d1d 100%);
+  border: 3px solid #fca5a5;
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+}
+
+.can-violet {
+  background: radial-gradient(circle at 35% 35%, #a78bfa 0%, #6d28d9 65%, #3b0764 100%);
+  border: 3px solid #c4b5fd;
+  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.4);
+}
+
+/* Screen 6: Form Glassmorphic Card */
+.form-glass-card {
+  border-radius: 20px;
+  border: 1px solid rgba(1, 179, 230, 0.50);
+  background: rgba(1, 179, 230, 0.10);
+  backdrop-filter: blur(2px);
+}
+
+.form-heading {
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+  text-transform: uppercase;
+  margin-bottom: 5rem;
+  text-align: center
+}
+
+.form-label {
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+.form-field-input {
+  border-radius: 20px;
+  border: 1px solid #01B3E6;
+  background: #1A4057;
+  padding: 1.5rem 3rem;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 1.25rem;
+  width: 100%;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem
+}
+
+.form-field-input:focus {
+  outline: none;
+  border-color: var(--zyn-cyan);
+  box-shadow: 0 0 18px rgba(0, 210, 255, 0.45);
+  background: rgba(18, 32, 60, 0.95);
+}
+
+.form-field-input::placeholder {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.custom-checkbox {
+  background: none !important;
+  border-radius: 5px;
+  border: 1px solid #01B3E6;
+  width: 30px;
+  height: 30px;
+  aspect-ratio: 1/1;
+  position: relative;
+  z-index: 1;
+  display: block;
+  cursor: pointer;
+}
+
+.form-checkbox {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  aspect-ratio: 1/1;
+}
+
+.form-checkbox:checked+.custom-checkbox::after {
+  content: "\2713";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 30px;
+  font-size: 26px;
+  color: #ffffff;
+  line-height: 30px;
+  text-align: center;
+  background-color: #01B3E6;
+  border-radius: 5px;
+}
+
+.checkBoxLabel {
+  color: #FFF;
+  font-family: "Plus Jakarta Sans";
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+/* Screen 7 & 8: Tilted Polaroid Souvenir Card */
+.polaroid-souvenir {
+  padding: 3px;
+  border-radius: 20px;
+  border: 5px solid #6BDEFF;
+  background: #FFF;
+  transform: rotate(15deg);
+}
+
+/* Screen Transition State */
+.screen-view {
+  display: none;
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.screen-view.active {
+  display: flex;
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Developer Screen Pill */
+.dev-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.dev-pill:hover {
+  color: #ffffff;
+  border-color: var(--zyn-cyan);
+}
+
+.dev-pill.active {
+  background: var(--zyn-cyan);
+  color: #020813;
+  border-color: var(--zyn-cyan);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.7);
+}
+
+/* Responsive overrides: preserve the desktop design above. */
+@media (max-width: 1024px) {
+  .photobooth-container {
+    min-height: 100vh;
+    height: auto;
+  }
+
+  main {
+    min-height: 100vh;
+    padding: 2rem 1.5rem;
+  }
+
+  .zyn-header-subtitle {
+    font-size: clamp(2rem, 6vw, 3.3rem);
+  }
+
+  .zyn-header-subtitle-2 {
+    font-size: clamp(2.5rem, 7vw, 4.4rem);
+  }
+
+  .zyn-tagline,
+  .zyn-tagline-2,
+  .zyn-tagline-3,
+  .cameranote {
+    font-size: clamp(0.9rem, 2.3vw, 1.5rem);
+    letter-spacing: clamp(0.08rem, 0.6vw, 0.3rem);
+  }
+
+  .centered-content {
+    width: min(70vw, 34rem);
+    height: min(58vw, 28rem);
+  }
+
+  .viewfinder-card {
+    max-width: min(90vw, 50rem);
+  }
+
+  .capture-layout {
+    width: min(92vw, 50rem);
+  }
+
+  .form-field-input,
+  .btn-zyn-pill,
+  .btn-zyn-white,
+  .btn-zyn-outline {
+    font-size: 1rem;
+  }
+
+  .form-field-input {
+    padding: 1rem 1.25rem;
+  }
+
+  .btn-zyn-pill,
+  .btn-zyn-white,
+  .btn-zyn-outline {
+    padding: 1rem 2rem;
+  }
+
+  .polaroid-souvenir {
+    max-width: min(75vw, 24rem);
+  }
+}
+
+@media (max-width: 767px) {
+  main {
+    align-items: flex-start;
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .screen-view {
+    min-height: calc(100vh - 3rem);
+    padding: 1rem 0;
+  }
+
+  .centered-content {
+    width: 92vw;
+    height: 50vw;
+    max-height: 22rem;
+    top: -2vw;
+  }
+
+  .centered-content h2 {
+    font-size: clamp(2rem, 9vw, 3.5rem);
+  }
+
+  .viewfinder-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .capture-layout {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .capture-layout .viewfinder-card {
+    width: 100%;
+  }
+
+  .countdown-panel {
+    width: min(70vw, 14rem);
+    flex-basis: auto;
+  }
+
+  .countdown-ring {
+    width: min(54vw, 11rem);
+    height: min(54vw, 11rem);
+  }
+
+  .flavor-slider-shell {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+
+  .flavour-slider .flavor-box-wrapper img {
+    width: min(18vw, 7rem);
+    height: min(18vw, 7rem);
+  }
+
+  .flavor-box-wrapper {
+    padding: 0.25rem;
+  }
+
+  .flavor-box-wrapper h3 {
+    font-size: clamp(0.65rem, 2.2vw, 1rem);
+    margin-top: 0.25rem;
+  }
+
+  #screen-6 {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+
+  #screen-6>div {
+    width: 100%;
+  }
+
+  #screen-6 .form-glass-card {
+    padding: 1.25rem;
+  }
+
+  .form-heading {
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+  }
+
+  .form-label,
+  .checkBoxLabel {
+    font-size: 0.9rem;
+  }
+
+  #screen-6 form>.grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  #screen-6 form .btn-zyn-pill,
+  #screen-6 form .btn-zyn-outline {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  #screen-7 {
+    max-width: 100%;
+  }
+
+  #screen-7>.w-full {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    gap: 2rem;
+  }
+
+  #screen-7 .polaroid-souvenir {
+    max-width: min(78vw, 20rem);
+    transform: rotate(7deg);
+  }
+
+  #screen-7 .form-glass-card {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  #screen-7 .form-glass-card svg {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+  }
+
+  #screen-7 .btn-zyn-pill {
+    padding: 0.9rem 1.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+
+  .btn-zyn-pill,
+  .btn-zyn-white,
+  .btn-zyn-outline {
+    max-width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .flavour-slider .flavor-box-wrapper img {
+    width: 16vw;
+    height: 16vw;
+  }
+
+  .custom-checkbox,
+  .form-checkbox {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

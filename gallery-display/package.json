@@ -1,0 +1,26 @@
+{
+  "name": "zyn-gallery-display",
+  "version": "1.1.1",
+  "description": "Standalone ZYN photobooth gallery wall player",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win dir"
+  },
+  "private": true,
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.zyn.photobooth.gallery",
+    "productName": "ZYN Gallery Display",
+    "directories": { "output": "release" },
+    "files": ["main.cjs", "preload.cjs", "renderer.html", "renderer.js", "package.json"],
+    "win": {
+      "executableName": "ZYN-Gallery-Display",
+      "target": [{ "target": "dir", "arch": ["x64"] }],
+      "signAndEditExecutable": false
+    }
+  }
+}

@@ -1,0 +1,156 @@
+<div class="pb-page pb-capture pb-zyn-capture-page">
+  <div class="pb-zyn-screen pb-zyn-capture">
+    @if (branding.logoSrc(); as logo) {
+      <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
+    } @else {
+      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
+    }
+    <h1 class="pb-zyn-subtitle">
+      <span>AI</span>
+      <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
+    </h1>
+    <p class="pb-zyn-tagline">
+      {{ countdown() !== null && countdown()! > 0 ? copy().capture.smileHint : copy().capture.readySubtitle }}
+    </p>
+
+    <div
+      class="pb-capture-layout"
+      [class.pb-capture-layout--countdown]="countdown() !== null && countdown()! > 0"
+    >
+      <div
+        class="pb-preview-wrap pb-zyn-viewfinder"
+        [class.pb-preview-wrap--sized]="previewAspectRatio() !== null"
+        [class.pb-preview-wrap--empty]="showPreviewPlaceholder() || cameraFailed()"
+        [style.--preview-ar]="previewAspectRatio() ?? 1.5"
+      >
+        @if (showPreviewPlaceholder() || (capturing() && !useWebcam())) {
+          <div class="pb-preview pb-preview-placeholder">{{
+            capturing() ? copy().capture.capturing : copy().capture.starting
+          }}</div>
+        } @else if (cameraFailed()) {
+          <div class="pb-preview pb-preview-placeholder pb-preview-placeholder--error">
+            Camera needed
+          </div>
+        } @else if (useWebcam()) {
+          <video
+            #videoEl
+            class="pb-preview"
+            autoplay
+            playsinline
+            muted
+            (loadedmetadata)="onVideoMeta($event)"
+          ></video>
+        } @else if (sdkPreviewHasFrame()) {
+          <div class="pb-preview-stack">
+            <img
+              class="pb-preview pb-preview--sdk-live pb-preview-layer"
+              [class.pb-preview-layer--visible]="sdkPreviewActiveLayer() === 0"
+              [src]="sdkPreviewUrl0() ?? emptyPreviewSrc"
+              alt="Live preview"
+              decoding="sync"
+              draggable="false"
+              fetchpriority="low"
+              (load)="onSdkPreviewLayerDecoded($event, 0)"
+            />
+            <img
+              class="pb-preview pb-preview--sdk-live pb-preview-layer"
+              [class.pb-preview-layer--visible]="sdkPreviewActiveLayer() === 1"
+              [src]="sdkPreviewUrl1() ?? emptyPreviewSrc"
+              alt=""
+              decoding="sync"
+              draggable="false"
+              fetchpriority="low"
+              (load)="onSdkPreviewLayerDecoded($event, 1)"
+            />
+          </div>
+        }
+
+        <div class="pb-zyn-age-badge" aria-hidden="true">21+<br />Only</div>
+        <div class="pb-zyn-reticle" aria-hidden="true">
+          <span></span>
+        </div>
+        <p class="pb-zyn-cameranote">{{ copy().capture.footerHint }}</p>
+      </div>
+
+      @if (countdown() !== null && countdown()! > 0) {
+        <div class="pb-zyn-countdown-panel" aria-live="polite">
+          <div class="pb-zyn-countdown-ring">
+            <svg viewBox="0 0 200 200" class="pb-zyn-countdown-svg">
+              <circle cx="100" cy="100" r="80" class="pb-zyn-countdown-track" />
+              <circle
+                cx="100"
+                cy="100"
+                r="80"
+                class="pb-zyn-countdown-progress"
+                [style.stroke-dashoffset]="countdownDashOffset()"
+              />
+            </svg>
+            <span class="pb-count">{{ countdown() }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (cameraFailed()) {
+      <p class="pb-kia-wait-copy">{{ hint() }}</p>
+      @if (logFilePath(); as logPath) {
+        <p class="pb-hint">Offline log: {{ logPath }}</p>
+      }
+      <div class="pb-row pb-row-wrap">
+        <button type="button" class="pb-btn pb-btn-primary" (click)="retryCamera()">
+          Retry camera
+        </button>
+        <button type="button" class="pb-btn pb-btn-ghost" (click)="openLogs()">
+          Open logs folder
+        </button>
+      </div>
+    } @else if (!cameraReady()) {
+      <p class="pb-kia-wait-copy">{{ hint() || copy().capture.starting }}</p>
+    } @else if (countdown() !== null || capturing()) {
+      <button type="button" class="pb-btn pb-btn-primary" disabled>
+        {{ copy().capture.capturing }}
+      </button>
+    } @else {
+      <div class="pb-zyn-capture-consents" role="group" aria-label="Consents">
+        <div class="pb-zyn-consent">
+          <input
+            type="checkbox"
+            id="consent-marketing"
+            class="pb-zyn-consent-input"
+            [checked]="consentMarketing()"
+            (change)="consentMarketing.set($any($event.target).checked)"
+          />
+          <label class="pb-zyn-consent-label" for="consent-marketing">{{ copy().details.marketing }}</label>
+        </div>
+        <div class="pb-zyn-consent">
+          <input
+            type="checkbox"
+            id="consent-age"
+            class="pb-zyn-consent-input"
+            [checked]="consentAge()"
+            (change)="consentAge.set($any($event.target).checked)"
+          />
+          <label class="pb-zyn-consent-label" for="consent-age">{{ copy().details.age }}</label>
+        </div>
+        <div class="pb-zyn-consent">
+          <input
+            type="checkbox"
+            id="consent-image"
+            class="pb-zyn-consent-input"
+            [checked]="consentImageUse()"
+            (change)="consentImageUse.set($any($event.target).checked)"
+          />
+          <label class="pb-zyn-consent-label" for="consent-image">{{ copy().details.imageUse }}</label>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="pb-btn pb-btn-primary"
+        [disabled]="!consentsReady()"
+        (click)="takePhoto()"
+      >
+        {{ copy().capture.takePhoto }}
+      </button>
+    }
+  </div>
+</div>

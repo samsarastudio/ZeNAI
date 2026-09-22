@@ -1,0 +1,85 @@
+<div class="pb-page pb-ai-gallery">
+  <div class="pb-kiosk-surface pb-ai-gallery-inner">
+    <h1 class="pb-ai-gallery-title">{{ copy().result.aiGalleryTitle }}</h1>
+
+    @if (err(); as e) {
+      <p class="pb-msg">{{ e }}</p>
+      <a routerLink="/result" class="pb-btn pb-btn-ghost">{{ copy().result.galleryBackToResult }}</a>
+    } @else {
+      @if (heroSrc(); as heroUrl) {
+        <div class="pb-ai-gallery-layout">
+          <aside class="pb-ai-gallery-thumbs" aria-label="Thumbnail gallery">
+            <button
+              type="button"
+              class="pb-ai-gallery-thumb"
+              [class.pb-ai-gallery-thumb-active]="heroKind() === 'original'"
+              (click)="pickHero('original')"
+            >
+              @if (originalDataUrl(); as t) {
+                <img [src]="t" alt="" />
+              }
+              <span class="pb-ai-gallery-thumb-label">{{ copy().result.galleryThumbOriginal }}</span>
+            </button>
+            <button
+              type="button"
+              class="pb-ai-gallery-thumb"
+              [class.pb-ai-gallery-thumb-active]="heroKind() === 'ai'"
+              (click)="pickHero('ai')"
+            >
+              @if (aiDataUrl(); as t) {
+                <img [src]="t" alt="" />
+              }
+              <span class="pb-ai-gallery-thumb-label">{{ copy().result.galleryThumbAi }}</span>
+            </button>
+          </aside>
+
+          <div class="pb-ai-gallery-main">
+            <div class="pb-ai-gallery-frame" [style.--hero-ar]="heroAspectRatio() ?? 1">
+              <img
+                class="pb-ai-gallery-hero-img"
+                [src]="heroUrl"
+                alt=""
+                (load)="onHeroLoad($event)"
+              />
+            </div>
+          </div>
+        </div>
+      } @else {
+        <p class="pb-loading">{{ copy().result.loading }}</p>
+      }
+    }
+
+    <div class="pb-row pb-ai-gallery-actions">
+      <button type="button" class="pb-btn pb-btn-ghost" (click)="backToResult()">
+        {{ copy().result.galleryBackToResult }}
+      </button>
+      @if (showPrint()) {
+        <button
+          type="button"
+          class="pb-btn pb-btn-primary"
+          [disabled]="!canPrint()"
+          (click)="printOnce()"
+        >
+          @if (printBusy()) {
+            {{ copy().result.printing }}
+          } @else if (printDone()) {
+            {{ copy().result.printed }}
+          } @else {
+            {{ copy().result.print }}
+          }
+        </button>
+      }
+      <button type="button" class="pb-btn pb-btn-primary" (click)="finish()">
+        {{ copy().result.galleryFinish }}
+      </button>
+    </div>
+    @if (printErr(); as pe) {
+      <pb-print-trouble-dialog
+        [error]="pe"
+        [retrying]="printBusy()"
+        (closed)="printErr.set(null)"
+        (retry)="printOnce()"
+      />
+    }
+  </div>
+</div>

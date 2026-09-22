@@ -1,0 +1,36 @@
+.pb-page.pb-history {
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow: hidden;
+  align-items: stretch;
+  box-sizing: border-box;
+  padding: clamp(0.45rem, 1.8vmin, 1rem);
+}
+
+.pb-page.pb-history .pb-kiosk-surface.pb-history-inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(0.55rem, 2vmin, 1.1rem);
+}
+
+.pb-history-title {
+  flex: 0 0 auto;
+  font-family: var(--pb-font-display, 'Cormorant Garamond', Georgia, serif);
+  font-size: clamp(1.35rem, 4vmin, 2.65rem);
+  text-align: center;
+  margin: 0 0 clamp(0.4rem, 1.5vmin, 0.8rem);
+  line-height: 1.08;
+}
+
+.pb-history-actions {
+  flex: 0 0 auto;
+  justify-content: center;
+  gap: clamp(1rem, 3.5vmin, 2.25rem);
+  margin-top: clamp(0.35rem, 1.5vmin, 0.75rem);
+}

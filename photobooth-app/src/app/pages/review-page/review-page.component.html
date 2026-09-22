@@ -1,0 +1,41 @@
+<div class="pb-page pb-review pb-zyn-review-page">
+  <div class="pb-zyn-screen">
+    <header class="pb-zyn-header">
+      @if (branding.logoSrc(); as logo) {
+        <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
+      } @else {
+        <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
+      }
+      <h1 class="pb-zyn-subtitle">
+        <span>AI</span>
+        <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
+      </h1>
+      <p class="pb-zyn-tagline">LOOKS GREAT!</p>
+    </header>
+
+    <div class="pb-zyn-viewfinder pb-zyn-review-frame">
+      @if (previewUrl(); as src) {
+        <img class="pb-zyn-review-img" [src]="src" alt="Captured photo" />
+      } @else if (error()) {
+        <p class="pb-hint">{{ error() }}</p>
+      } @else {
+        <p class="pb-hint">Loading preview…</p>
+      }
+      <div class="pb-zyn-age-badge" aria-hidden="true">21+<br />Only</div>
+      <p class="pb-zyn-cameranote">{{ copy().capture.footerHint }}</p>
+    </div>
+
+    @if (error()) {
+      <p class="pb-msg">{{ error() }}</p>
+    }
+
+    <div class="pb-zyn-review-actions">
+      <button type="button" class="pb-btn pb-btn-retake" [disabled]="busy()" (click)="retake()">
+        {{ copy().result.retake }}
+      </button>
+      <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy() || !previewUrl()" (click)="confirm()">
+        {{ copy().result.confirmPhoto }}
+      </button>
+    </div>
+  </div>
+</div>

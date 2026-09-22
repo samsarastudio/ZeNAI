@@ -1,0 +1,59 @@
+<div class="pb-page pb-admin-login">
+  <div class="pb-card">
+    <h1 class="pb-title">Admin</h1>
+    <p class="pb-sub">Enter operator PIN</p>
+
+    <div class="pb-field-head">
+      <label class="pb-label" for="pin">PIN</label>
+      <button
+        type="button"
+        class="pb-info-tool"
+        [attr.aria-expanded]="pinInfoOpen()"
+        [attr.aria-controls]="'pin-info-panel'"
+        [attr.title]="
+          defaultPin()
+            ? 'Shipped default PIN (if you have not changed photobooth-config.json): ' + defaultPin()
+            : 'Loading default PIN hint…'
+        "
+        (click)="togglePinInfo()"
+      >
+        <span class="pb-sr-only">Default PIN hint</span>
+        <span aria-hidden="true">ⓘ</span>
+      </button>
+    </div>
+    <p
+      id="pin-info-panel"
+      class="pb-info-panel"
+      role="note"
+      [hidden]="!pinInfoOpen()"
+      [attr.aria-hidden]="!pinInfoOpen()"
+    >
+      @if (defaultPin(); as dp) {
+        Shipped default PIN is <strong>{{ dp }}</strong>. If an operator changed
+        <code>photobooth-config.json</code>, use that PIN instead.
+      } @else {
+        Loading default PIN…
+      }
+    </p>
+    <input
+      id="pin"
+      class="pb-input"
+      type="password"
+      inputmode="numeric"
+      autocomplete="current-password"
+      [(ngModel)]="pin"
+      (keyup.enter)="submit()"
+    />
+
+    @if (err(); as m) {
+      <p class="pb-msg">{{ m }}</p>
+    }
+
+    <div class="pb-row">
+      <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="submit()">
+        @if (busy()) { … } @else { Sign in }
+      </button>
+      <a routerLink="/" class="pb-btn pb-btn-ghost">Back</a>
+    </div>
+  </div>
+</div>

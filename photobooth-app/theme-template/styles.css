@@ -1,0 +1,17 @@
+/**
+ * My Brand — override tokens (see themes/default/styles.css for variable list).
+ *
+ * Backdrop: the app shell includes six layers — .pb-backdrop-el--1 … --6 — style them
+ * for floating doodles, grids, or LED strips (see themes/default and themes/circuit).
+ */
+:root {
+  /* Example: WordPress admin blue accent for controls only */
+  --pb-admin-accent: #2271b1;
+}
+
+/* Example: tweak primary button without touching Angular */
+/*
+.pb-btn-primary {
+  border-radius: 999px;
+}
+*/

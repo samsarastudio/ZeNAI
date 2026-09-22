@@ -1,0 +1,418 @@
+{
+  "activeThemeId": "zyn",
+  "adminPin": "2727",
+  "guestModes": {
+    "defaultEnabled": true,
+    "physicalFrameEnabled": false
+  },
+  "capture": {
+    "countdownSeconds": 5
+  },
+  "requireQrUnlock": false,
+  "aiGenerationEnabled": true,
+  "defaultAiModeId": null,
+  "photoFrames": {
+    "enabled": false,
+    "photoScale": 1,
+    "defaultFrameFile": null,
+    "guestFrameFiles": [],
+    "autoApplyFrame": false,
+    "guestAdjustPhoto": false,
+    "guestTextEnabled": false,
+    "guestTextOptional": true,
+    "guestTextMaxLength": 36,
+    "guestTextCreditLine": "",
+    "guestTextXPercent": 50,
+    "guestTextYPercent": 78,
+    "guestTextSizePercent": 3.4,
+    "guestTextColor": "#c9a36a",
+    "guestTextCreditColor": "#d8c4a0",
+    "guestTextAlign": "center",
+    "guestTextBrush": false,
+    "guestTextBrushOpacity": 0.22
+  },
+  "gallery": {
+    "enabled": true,
+    "apiBaseUrl": "http://127.0.0.1:3020",
+    "uploadToken": "zyn-upload",
+    "sessionPrefix": "zyn",
+    "uploadOriginal": false,
+    "uploadFramed": false,
+    "uploadAi": true,
+    "uploadPhysical": false
+  },
+  "debug": {
+    "enabled": false,
+    "showPreviewAfterGenerate": false
+  },
+  "print": {
+    "enabled": true,
+    "autoPrint": true,
+    "printerName": null,
+    "bleedScale": 1.02,
+    "framedEdgeInsetMm": 4,
+    "framedBottomExtraMm": 2.5,
+    "allowWifiPrinters": false,
+    "stampTime": true
+  },
+  "openAiApiUrl": "https://api.openai.com/v1",
+  "email": {
+    "enabled": false,
+    "provider": "sendgrid",
+    "apiUrl": "https://api.sendgrid.com/v3/mail/send",
+    "from": "",
+    "fromName": "ZYN Photobooth",
+    "subject": "Your ZYN photo",
+    "body": "Thanks for visiting the ZYN photobooth. Your photo is attached."
+  },
+  "display": {
+    "apiPort": 3040,
+    "apiToken": "zyn-display",
+    "filter": "today",
+    "tags": [],
+    "pickedIds": [],
+    "excludedIds": [],
+    "rangeFrom": null,
+    "rangeTo": null,
+    "intervalMs": 8000
+  },
+  "cans": [
+    {
+      "id": "cool-mint",
+      "label": "Arctic Mint",
+      "strength": "11mg",
+      "colorTreatment": "arctic mint blue",
+      "tag": "cool-mint",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 40.66,
+        "yPercent": 0.4,
+        "widthPercent": 18.86,
+        "heightPercent": 17.82
+      }
+    },
+    {
+      "id": "wintergreen",
+      "label": "Chill",
+      "strength": "1.5mg",
+      "colorTreatment": "chill silver",
+      "tag": "wintergreen",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 40.36,
+        "yPercent": 0.4,
+        "widthPercent": 19.58,
+        "heightPercent": 18.24
+      }
+    },
+    {
+      "id": "peppermint",
+      "label": "Peppermint Frost",
+      "strength": "9mg",
+      "colorTreatment": "peppermint frost blue",
+      "tag": "peppermint",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 40.44,
+        "yPercent": 0.4,
+        "widthPercent": 19.3,
+        "heightPercent": 18.22
+      }
+    },
+    {
+      "id": "spearmint",
+      "label": "Spearmint",
+      "strength": "6mg",
+      "colorTreatment": "spearmint green",
+      "tag": "spearmint",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 41.62,
+        "yPercent": 0.99,
+        "widthPercent": 16.25,
+        "heightPercent": 18.33
+      }
+    },
+    {
+      "id": "cinnamon",
+      "label": "Cinnamon",
+      "strength": "8mg",
+      "colorTreatment": "cinnamon burgundy",
+      "tag": "cinnamon",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 40.48,
+        "yPercent": 0.4,
+        "widthPercent": 18.79,
+        "heightPercent": 17.9
+      }
+    },
+    {
+      "id": "citrus",
+      "label": "Citrus",
+      "strength": "3mg",
+      "colorTreatment": "citrus lime",
+      "tag": "citrus",
+      "useInpainting": true,
+      "prompt": "Clean seamless head replacement: guest likeness at the same size as the original driver head (not larger). No oval outline. Keep the driver's body and scene.",
+      "inpaintPrompt": "CLEAN SEAMLESS HEAD REPLACEMENT. Image 1 is this can's F1 scene with a small guest-head reference on the driver. Image 2 is a tight crop of the guest's real head. Replace the driver head with the guest at NATURAL PROPORTION — the head must match the original driver head size relative to the shoulders (do not enlarge). Exact guest likeness: eyes, nose, mouth, jaw, skin, hair. Completely erase the old driver head/hair. NO oval outline, cutout edge, mask ring, or halo. Blend the neck into the suit collar only. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy guest clothing or booth background.",
+      "face": {
+        "xPercent": 40.73,
+        "yPercent": 0.4,
+        "widthPercent": 18.81,
+        "heightPercent": 18.31
+      }
+    }
+  ],
+  "aiModes": [
+    {
+      "id": "cool-mint",
+      "label": "Arctic Mint",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    },
+    {
+      "id": "wintergreen",
+      "label": "Chill",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    },
+    {
+      "id": "peppermint",
+      "label": "Peppermint Frost",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    },
+    {
+      "id": "spearmint",
+      "label": "Spearmint",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    },
+    {
+      "id": "cinnamon",
+      "label": "Cinnamon",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    },
+    {
+      "id": "citrus",
+      "label": "Citrus",
+      "useInpainting": true,
+      "randomizeBackground": false,
+      "inpaintPrompt": "HEAD SWAP ONLY. Image 1 is this can's F1 scene with a small guest-head oval on the driver. Image 2 is a tight crop of the guest's head. Replace ONLY the driver's head, hair, and face with the guest. Keep the guest's exact face, hair, skin tone, and likeness. Keep the driver's body, crossed arms, hands, racing suit, pose, car, pit, camera angle, and lighting unchanged. Do not copy the guest's clothing, pockets, torso, or booth background. Do not uncross the arms or invent a new body. Blend the neck naturally into the suit collar.",
+      "prompt": "Head-swap only: put the guest's head onto this can's F1 driver. Keep the driver's body and the scene."
+    }
+  ],
+  "branding": {
+    "logoFile": "zyn-logo.svg",
+    "aiLogoFile": null,
+    "brandName": "ZYN",
+    "applyBrandToAi": true
+  },
+  "camera": {
+    "source": "auto",
+    "sdkCameraIndex": 0,
+    "webcamDeviceId": null
+  },
+  "copy": {
+    "attract": {
+      "icon": "📷",
+      "tagline": "",
+      "mainScale": 1,
+      "topScale": 1,
+      "title": "WHEN PHOTO\nMEETS FINISH",
+      "subtitle": "",
+      "ctaLabel": "TAP TO START",
+      "startAria": "Tap to start",
+      "adminLink": "Admin"
+    },
+    "cans": {
+      "title": "CHOOSE YOUR ZYN",
+      "subtitle": "Select your flavor and suit up",
+      "back": "Back",
+      "continue": "SELECT"
+    },
+    "details": {
+      "title": "ALMOST THERE",
+      "subtitle": "A FEW DETAILS &\nYOU ARE READY",
+      "formHeading": "TELL US A BIT ABOUT YOURSELF",
+      "firstNameLabel": "First Name",
+      "lastNameLabel": "Last Name",
+      "firstNamePlaceholder": "",
+      "lastNamePlaceholder": "",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "",
+      "terms": "I agree to the Terms & Conditions and acknowledge the Privacy Policy.",
+      "age": "21+ confirmation",
+      "imageUse": "Image-use consent",
+      "marketing": "Marketing opt-in",
+      "continue": "CONTINUE",
+      "back": "BACK"
+    },
+    "thanks": {
+      "title": "THANK YOU!",
+      "subtitle": "",
+      "hint": "",
+      "inboxTitle": "",
+      "inboxBody": "",
+      "startOver": "START OVER"
+    },
+    "qr": {
+      "icon": "🔐",
+      "title": "Scan your QR",
+      "subtitle": "Hold your phone to the photobooth scanner to begin your photo experience.",
+      "scanSuccess": "QR verified",
+      "footer": "Have your registration QR ready.",
+      "codeLabel": "Code",
+      "ok": "OK",
+      "back": "Back",
+      "invalidCode": "Invalid code.",
+      "debugHint": "Debug — type ok then Enter",
+      "bypassCode": "1234"
+    },
+    "capture": {
+      "sideTitle": "How to pose",
+      "instructions": "LOOK AT THE CAMERA, BRING YOUR BEST SELF",
+      "starting": "Starting camera…",
+      "readyTitle": "PHOTOBOOTH",
+      "readySubtitle": "LOOK AT THE CAMERA, BRING YOUR BEST SELF",
+      "footerHint": "AI applies guest's face to F1 driver in chosen suit color",
+      "smileHint": "HOLD STILL, YOUR PHOTO IS BEING CAPTURED",
+      "capturing": "CAPTURING...",
+      "takePhoto": "TAKE PHOTO"
+    },
+    "result": {
+      "title": "Your photo",
+      "loading": "Loading…",
+      "savedPrefix": "Saved:",
+      "retake": "Retake",
+      "submit": "Done",
+      "confirmPhoto": "Done",
+      "generateAi": "Create AI version",
+      "generatingAi": "Creating your AI image…",
+      "aiPreviewTitle": "AI version",
+      "aiErrorPrefix": "AI generation failed:",
+      "aiGalleryTitle": "Your photos",
+      "galleryThumbOriginal": "Original",
+      "galleryThumbAi": "AI style",
+      "galleryBackToResult": "Back to photo",
+      "galleryFinish": "Finish",
+      "thinkingSummary": "Preparing your image",
+      "thinkingStepAnalyze": "Analysing framing and composition",
+      "thinkingStepPlan": "Applying your chosen style directions",
+      "thinkingStepBackground": "Selecting branded environment and compositing your photo",
+      "thinkingStepImage": "Rendering with the image API",
+      "thinkingFootnote": "This can take about 20 seconds.",
+      "share": "Share",
+      "sharing": "Sharing…",
+      "shareQrTitle": "Scan to save",
+      "shareQrHint": "Open the gallery on your phone.",
+      "shareBack": "Back",
+      "uploadFailed": "Upload failed",
+      "print": "Print",
+      "printing": "Printing…",
+      "printed": "Printed",
+      "printFailed": "Print failed",
+      "makePhysical": "Physical",
+      "remakePhysical": "Remake physical",
+      "makingPhysical": "Making physical…",
+      "physicalErrorPrefix": "Physical failed:",
+      "makeFramed": "Frame",
+      "remakeFramed": "Remake frame",
+      "makingFramed": "Making frame…",
+      "framedErrorPrefix": "Frame failed:"
+    },
+    "history": {
+      "title": "Photos",
+      "empty": "No photos yet.",
+      "back": "Back",
+      "ariaOpen": "Open photo history",
+      "filterAll": "All",
+      "filterPhysical": "Physical",
+      "filterDigital": "Digital",
+      "filterOriginal": "Original",
+      "whenAll": "All time",
+      "whenToday": "Today",
+      "whenYesterday": "Yesterday",
+      "whenWeek": "This week",
+      "whenMonth": "This month",
+      "whenCustom": "Custom",
+      "reprint": "Reprint",
+      "deleteLabel": "Delete",
+      "deleteConfirm": "Delete this photo?",
+      "cancel": "Cancel",
+      "previewHint": "Select a photo",
+      "originalLabel": "Original",
+      "makeFramed": "Make framed",
+      "remakeFramed": "Remake framed",
+      "makingFramed": "Making framed…",
+      "makePhysical": "Make physical",
+      "remakePhysical": "Remake physical",
+      "makingPhysical": "Making physical…",
+      "pickFrameTitle": "Choose a frame",
+      "pickFrameHint": "Applied to this original.",
+      "applyFrame": "Apply frame"
+    },
+    "aiMode": {
+      "title": "Pick your ZYN",
+      "subtitle": "Six flavors. Each one unlocks a unique F1 look.",
+      "back": "Back",
+      "plainPhotoLabel": "Skip AI"
+    },
+    "boothMode": {
+      "title": "Choose experience",
+      "subtitle": "Select how you want your photo.",
+      "defaultLabel": "Digital",
+      "defaultHint": "AI keepsake",
+      "physicalLabel": "Physical",
+      "physicalHint": "Cut sheet",
+      "back": "Back"
+    },
+    "frame": {
+      "title": "Choose a frame",
+      "subtitle": "Optional overlay.",
+      "continueLabel": "Continue",
+      "skipLabel": "Skip",
+      "applying": "Applying…"
+    },
+    "caption": {
+      "title": "Add a caption",
+      "subtitle": "Optional.",
+      "placeholder": "Your names",
+      "continueLabel": "Continue",
+      "skipLabel": "Skip",
+      "applying": "Applying…"
+    },
+    "frameAdjust": {
+      "title": "Adjust photo",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "physicalAdjust": {
+      "title": "Adjust photo",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
+  }
+}

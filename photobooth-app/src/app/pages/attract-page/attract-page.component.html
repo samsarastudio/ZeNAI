@@ -1,0 +1,39 @@
+<div class="pb-page pb-attract pb-zyn-attract-page">
+  <div class="pb-zyn-attract">
+    <header class="pb-zyn-attract-brand">
+      @if (branding.logoSrc(); as logo) {
+        <img class="pb-zyn-logo" [src]="logo" alt="ZYN" loading="eager" decoding="async" />
+      } @else {
+        <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
+      }
+    </header>
+
+    @if (apiKeyMissing()) {
+      <div class="pb-zyn-attract-alert" role="alert">
+        <strong>{{ copy().thanks.apiKeyMissing || 'API KEY MISSING' }}</strong>
+        <span>Set the OpenAI API key in Admin → AI before guests start.</span>
+      </div>
+    }
+
+    <div class="pb-zyn-hero-ring">
+      <h1 class="pb-zyn-hero-title">{{ copy().attract.title }}</h1>
+    </div>
+
+    <a [routerLink]="startLink" class="pb-btn pb-btn-primary pb-zyn-cta" [attr.aria-label]="copy().attract.startAria">
+      {{ copy().attract.ctaLabel }}
+    </a>
+
+    <button
+      type="button"
+      class="pb-attract-history"
+      aria-label="Print history"
+      (click)="openHistory()"
+    ></button>
+
+    <a routerLink="/admin" class="pb-attract-admin">{{ copy().attract.adminLink }}</a>
+  </div>
+</div>
+
+@if (historyOpen()) {
+  <pb-print-history-panel (closed)="closeHistory()" />
+}

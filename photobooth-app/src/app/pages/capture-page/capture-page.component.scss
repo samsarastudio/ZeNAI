@@ -1,0 +1,327 @@
+.pb-page.pb-zyn-capture-page {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 100vh;
+  min-height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
+  overflow: hidden;
+  padding: clamp(0.45rem, 1.8vmin, 1rem);
+}
+
+.pb-zyn-capture {
+  width: min(100%, 1600px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+  text-align: center;
+  box-sizing: border-box;
+  gap: clamp(0.45rem, 1.6vmin, 0.9rem);
+}
+
+.pb-zyn-logo {
+  width: min(220px, 36vw);
+  height: auto;
+}
+
+.pb-zyn-subtitle {
+  margin: 0;
+  font-size: clamp(1.8rem, 5.2vmin, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.pb-zyn-subtitle-grad {
+  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.pb-zyn-tagline {
+  margin: 0.2rem 0 0;
+  color: #fff;
+  font-size: clamp(0.95rem, 2.2vmin, 1.5rem);
+  letter-spacing: 0.28em;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.pb-capture-layout {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: min(92vw, 1200px);
+}
+
+.pb-capture-layout--countdown {
+  padding-inline: clamp(1rem, 4vw, 4rem);
+}
+
+.pb-zyn-viewfinder {
+  position: relative;
+  flex: 1 1 auto;
+  width: min(100%, 50vw, 920px);
+  aspect-ratio: 16 / 10;
+  max-height: min(58vh, 640px);
+  border-radius: 1.25rem;
+  border: 2px solid rgba(0, 210, 255, 0.45);
+  box-shadow:
+    0 0 30px rgba(0, 210, 255, 0.25),
+    inset 0 0 25px rgba(0, 210, 255, 0.08);
+  overflow: hidden;
+  background: #050b14;
+}
+
+.pb-preview-wrap {
+  --preview-ar: 1.6;
+}
+
+.pb-preview-stack {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pb-preview-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pb-preview-layer--visible {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.pb-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pb-preview-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  font-size: clamp(1.2rem, 3vmin, 1.65rem);
+  font-weight: 500;
+}
+
+.pb-zyn-countdown-panel {
+  flex: 0 0 clamp(12rem, 18vw, 18rem);
+  border-radius: 1rem;
+  background: rgba(7, 14, 31, 0.92);
+  box-shadow: inset 0 0 15px rgba(0, 210, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pb-countdown-enter 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pb-countdown-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.pb-zyn-countdown-ring {
+  position: relative;
+  width: min(15vw, 14rem);
+  height: min(15vw, 14rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pb-zyn-countdown-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.pb-zyn-countdown-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 8;
+}
+
+.pb-zyn-countdown-progress {
+  fill: none;
+  stroke: #00e5ff;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 502.65;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.pb-count {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(3rem, 8vmin, 4.5rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  user-select: none;
+}
+
+.pb-zyn-age-badge {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  width: 3.15rem;
+  height: 3.15rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #0072bb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pb-zyn-reticle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.3;
+}
+
+.pb-zyn-reticle span {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 1px dashed #38e1ff;
+  border-radius: 999px;
+  position: relative;
+}
+
+.pb-zyn-reticle span::after {
+  content: '';
+  position: absolute;
+  inset: 42%;
+  border-radius: 999px;
+  background: #38e1ff;
+}
+
+.pb-zyn-cameranote {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.35rem;
+  z-index: 3;
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(0.75rem, 1.6vmin, 1.1rem);
+  font-weight: 400;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+}
+
+.pb-zyn-capture-consents {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.85rem 1.5rem;
+  width: min(100%, 50vw);
+  text-align: left;
+  margin: 0.35rem 0;
+  pointer-events: auto;
+}
+
+.pb-zyn-consent {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-height: 2.75rem;
+  color: #fff;
+  font-size: clamp(0.85rem, 1.8vmin, 1.05rem);
+  line-height: 1.35;
+  pointer-events: auto;
+}
+
+.pb-zyn-consent-input {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin: 0;
+  accent-color: #01b3e6;
+  flex-shrink: 0;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.pb-zyn-consent-label {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0.35rem 0;
+  pointer-events: auto;
+}
+
+.pb-kia-wait-copy {
+  margin: 0;
+  font-size: clamp(0.88rem, 2.5vmin, 1.12rem);
+  line-height: 1.4;
+  font-weight: 400;
+  max-width: 28ch;
+}
+
+.pb-hint {
+  margin: 0;
+  font-size: clamp(0.85rem, 2.4vmin, 1rem);
+  font-weight: 600;
+  max-width: 28ch;
+}
+
+@media (max-width: 900px) {
+  .pb-capture-layout--countdown {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pb-zyn-countdown-panel {
+    width: min(100%, 18rem);
+    min-height: 10rem;
+  }
+
+  .pb-zyn-capture-consents {
+    width: min(100%, 92vw);
+    flex-direction: column;
+  }
+}

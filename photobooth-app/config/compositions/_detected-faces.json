@@ -1,0 +1,38 @@
+{
+  "cool-mint": {
+    "xPercent": 40.66,
+    "yPercent": 0.0,
+    "widthPercent": 18.86,
+    "heightPercent": 17.82
+  },
+  "wintergreen": {
+    "xPercent": 40.36,
+    "yPercent": 0.0,
+    "widthPercent": 19.58,
+    "heightPercent": 18.24
+  },
+  "cinnamon": {
+    "xPercent": 40.48,
+    "yPercent": 0.0,
+    "widthPercent": 18.79,
+    "heightPercent": 17.9
+  },
+  "spearmint": {
+    "xPercent": 41.62,
+    "yPercent": 0.99,
+    "widthPercent": 16.25,
+    "heightPercent": 18.33
+  },
+  "citrus": {
+    "xPercent": 40.73,
+    "yPercent": 0.0,
+    "widthPercent": 18.81,
+    "heightPercent": 18.31
+  },
+  "peppermint": {
+    "xPercent": 40.44,
+    "yPercent": 0.0,
+    "widthPercent": 19.3,
+    "heightPercent": 18.22
+  }
+}

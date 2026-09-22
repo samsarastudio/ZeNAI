@@ -1,0 +1,58 @@
+<div class="pb-page pb-details pb-zyn-details-page">
+  <div class="pb-zyn-details-layout">
+    <div class="pb-zyn-details-intro">
+      @if (branding.logoSrc(); as logo) {
+        <img class="pb-zyn-logo pb-zyn-logo--left" [src]="logo" alt="ZYN" />
+      } @else {
+        <img class="pb-zyn-logo pb-zyn-logo--left" src="zyn/logo.svg" alt="ZYN" />
+      }
+      <h1 class="pb-zyn-details-title">
+        ALMOST
+        <span class="pb-zyn-subtitle-grad">THERE</span>
+      </h1>
+      <p class="pb-zyn-tagline pb-zyn-tagline--left">{{ copy().details.subtitle }}</p>
+    </div>
+
+    <div class="pb-zyn-form-card">
+      <h3 class="pb-zyn-form-heading">{{ copy().details.formHeading }}</h3>
+      <div class="pb-zyn-name-row">
+        <label>
+          {{ copy().details.firstNameLabel }}
+          <input class="pb-input" type="text" [(ngModel)]="firstName" [placeholder]="copy().details.firstNamePlaceholder" />
+        </label>
+        <label>
+          {{ copy().details.lastNameLabel }}
+          <input class="pb-input" type="text" [(ngModel)]="lastName" [placeholder]="copy().details.lastNamePlaceholder" />
+        </label>
+      </div>
+      <label>
+        {{ copy().details.emailLabel }}
+        <input class="pb-input" type="email" [(ngModel)]="email" [placeholder]="copy().details.emailPlaceholder" />
+      </label>
+      <div class="pb-email-keys" aria-label="Email keyboard">
+        @for (ch of ['1','2','3','4','5','6','7','8','9','0']; track ch) {
+          <button type="button" (click)="typeChar(ch)">{{ ch }}</button>
+        }
+        @for (ch of ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m']; track ch) {
+          <button type="button" (click)="typeChar(ch)">{{ ch }}</button>
+        }
+        <button type="button" (click)="typeChar('@')">&#64;</button>
+        <button type="button" (click)="typeChar('.')">.</button>
+        <button type="button" (click)="typeChar('_')">_</button>
+        <button type="button" (click)="typeChar('-')">-</button>
+        <button type="button" (click)="backspace()">⌫</button>
+      </div>
+      <label class="pb-check"><input type="checkbox" [(ngModel)]="age" /> {{ copy().details.age }}</label>
+      <label class="pb-check"><input type="checkbox" [(ngModel)]="terms" /> {{ copy().details.terms }}</label>
+      <label class="pb-check"><input type="checkbox" [(ngModel)]="imageUse" /> {{ copy().details.imageUse }}</label>
+      <label class="pb-check"><input type="checkbox" [(ngModel)]="marketing" /> {{ copy().details.marketing }}</label>
+      @if (err(); as e) {
+        <p class="pb-msg">{{ e }}</p>
+      }
+      <div class="pb-row pb-zyn-form-actions">
+        <a routerLink="/cans" class="pb-btn pb-btn-ghost">{{ copy().details.back }}</a>
+        <button type="button" class="pb-btn pb-btn-primary" (click)="continue()">{{ copy().details.continue }}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,201 @@
+<div class="pb-page pb-result" [class.is-share-open]="shareOpen()" [class.is-preview]="isPreview()">
+  <div class="pb-kiosk-surface pb-result-inner">
+    <h1 class="pb-result-title">{{ copy().result.title }}</h1>
+
+    @if (imageDataUrl(); as src) {
+      <div class="pb-result-frame" [style.--result-ar]="resultAspectRatio() ?? 1.5">
+        <img
+          class="pb-result-img"
+          [src]="src"
+          alt="Captured photo"
+          (load)="onResultImgLoad($event)"
+        />
+      </div>
+    } @else {
+      @if (err(); as e) {
+        <p class="pb-msg">{{ e }}</p>
+      } @else {
+        <p class="pb-loading">{{ copy().result.loading }}</p>
+      }
+    }
+
+    @if (showAiSection()) {
+      <div class="pb-result-ai">
+        @if (aiGenerating()) {
+          <details class="pb-thinking" open>
+            <summary class="pb-thinking-sum">{{ copy().result.thinkingSummary }}</summary>
+            <p class="pb-thinking-timer">
+              Status:
+              @if (aiOvertime()) {
+                finalizing (elapsed {{ aiElapsedLabel() }})
+              } @else {
+                processing (ETA {{ aiEtaLabel() }}, elapsed {{ aiElapsedLabel() }})
+              }
+            </p>
+            <ol class="pb-thinking-steps">
+              <li [class.pb-thinking-done]="thinkingStep() >= 1">{{ copy().result.thinkingStepAnalyze }}</li>
+              @if (usesInpainting()) {
+                <li [class.pb-thinking-done]="thinkingStep() >= 2">{{ copy().result.thinkingStepBackground }}</li>
+                <li [class.pb-thinking-done]="thinkingStep() >= 3">{{ copy().result.thinkingStepPlan }}</li>
+                <li [class.pb-thinking-done]="thinkingStep() >= 4">{{ copy().result.thinkingStepImage }}</li>
+              } @else {
+                <li [class.pb-thinking-done]="thinkingStep() >= 2">{{ copy().result.thinkingStepPlan }}</li>
+                <li [class.pb-thinking-done]="thinkingStep() >= 3">{{ copy().result.thinkingStepImage }}</li>
+              }
+            </ol>
+            <p class="pb-thinking-foot">{{ copy().result.thinkingFootnote }}</p>
+          </details>
+          <p class="pb-loading pb-result-ai-status">{{ copy().result.generatingAi }}</p>
+        } @else if (aiErr()) {
+          <p class="pb-msg">{{ copy().result.aiErrorPrefix }} {{ aiErr() }}</p>
+        }
+
+        @if (!aiGenerating()) {
+          <button
+            type="button"
+            class="pb-btn pb-btn-primary pb-result-ai-btn"
+            [disabled]="!canRunAiGeneration()"
+            (click)="generateAi()"
+          >
+            {{ copy().result.generateAi }}
+          </button>
+          @if (!booth.openAiConfigured()) {
+            <p class="pb-hint pb-result-ai-hint">OpenAI API key must be set in Admin → AI.</p>
+          }
+        }
+      </div>
+    }
+
+    @if (showMakeFramed()) {
+      <div class="pb-result-physical">
+        <button
+          type="button"
+          class="pb-btn pb-btn-ghost pb-result-physical-btn"
+          [disabled]="makeFramedBusy()"
+          (click)="openMakeFramed()"
+        >
+          @if (makeFramedBusy()) {
+            {{ copy().result.makingFramed }}
+          } @else if (viewingFramedPhoto()) {
+            {{ copy().result.remakeFramed }}
+          } @else {
+            {{ copy().result.makeFramed }}
+          }
+        </button>
+      </div>
+    }
+
+    @if (showMakePhysical()) {
+      <div class="pb-result-physical">
+        @if (makePhysicalErr(); as pe) {
+          <p class="pb-msg">{{ copy().result.physicalErrorPrefix }} {{ pe }}</p>
+        }
+        <button
+          type="button"
+          class="pb-btn pb-btn-ghost pb-result-physical-btn"
+          [disabled]="makePhysicalBusy()"
+          (click)="openPhysicalAdjust()"
+        >
+          @if (makePhysicalBusy()) {
+            {{ copy().result.makingPhysical }}
+          } @else if (viewingPhysicalSheet()) {
+            {{ copy().result.remakePhysical }}
+          } @else {
+            {{ copy().result.makePhysical }}
+          }
+        </button>
+      </div>
+    }
+
+    <div class="pb-row pb-result-actions">
+      <button type="button" class="pb-btn pb-btn-ghost" (click)="retake()">{{ copy().result.retake }}</button>
+      @if (isPreview()) {
+        <button type="button" class="pb-btn pb-btn-primary" (click)="confirmPreview()">
+          {{ copy().result.confirmPhoto || copy().result.submit }}
+        </button>
+      } @else {
+        @if (showGalleryShare()) {
+          @if (canShare()) {
+            <button
+              type="button"
+              class="pb-btn pb-btn-primary"
+              [disabled]="shareBusy()"
+              (click)="openShare()"
+            >
+              {{ copy().result.share }}
+            </button>
+          } @else if (shareUploading()) {
+            <button type="button" class="pb-btn pb-btn-ghost" disabled>
+              {{ copy().result.sharing }}
+            </button>
+          } @else if (shareFailed()) {
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="shareBusy()"
+              (click)="retryShareUpload()"
+            >
+              {{ copy().result.uploadFailed }}
+            </button>
+          }
+        }
+        @if (showPrint()) {
+          <button
+            type="button"
+            class="pb-btn pb-btn-primary"
+            [disabled]="!canPrint()"
+            (click)="printOnce()"
+          >
+            @if (printBusy()) {
+              {{ copy().result.printing }}
+            } @else if (printDone()) {
+              {{ copy().result.printed }}
+            } @else {
+              {{ copy().result.print }}
+            }
+          </button>
+        }
+        <button type="button" class="pb-btn pb-btn-primary" (click)="submit()">{{ copy().result.submit }}</button>
+      }
+    </div>
+    @if (printErr(); as pe) {
+      <pb-print-trouble-dialog
+        [error]="pe"
+        [retrying]="printBusy()"
+        (closed)="printErr.set(null)"
+        (retry)="printOnce()"
+      />
+    }
+  </div>
+
+  @if (shareOpen()) {
+    <div class="pb-share-overlay" role="dialog" aria-modal="true" aria-labelledby="pbShareTitle">
+      <div class="pb-share-card">
+        <span class="pb-share-sprig pb-share-sprig-tl" aria-hidden="true"></span>
+        <span class="pb-share-sprig pb-share-sprig-tr" aria-hidden="true"></span>
+        <span class="pb-share-sprig pb-share-sprig-bl" aria-hidden="true"></span>
+        <span class="pb-share-sprig pb-share-sprig-br" aria-hidden="true"></span>
+        <p class="pb-share-brand">inmoment</p>
+        <h2 id="pbShareTitle">{{ copy().result.shareQrTitle }}</h2>
+        <p class="pb-hint pb-share-lead">{{ copy().result.shareQrHint }}</p>
+        @if (shareQrDataUrl(); as qr) {
+          <div class="pb-share-qr-frame">
+            <img class="pb-share-qr" [src]="qr" alt="Share QR code" />
+          </div>
+        }
+        <button type="button" class="pb-btn pb-btn-ghost pb-share-back" (click)="closeShare()">
+          {{ copy().result.shareBack }}
+        </button>
+      </div>
+    </div>
+  }
+</div>
+
+@if (physicalAdjustOpen() && physicalAdjustSource()) {
+  <pb-physical-frame-adjust-dialog
+    [imagePath]="physicalAdjustSource()"
+    [busy]="makePhysicalBusy()"
+    (confirmed)="onPhysicalAdjustConfirm($event)"
+    (cancelled)="physicalAdjustOpen.set(false)"
+  />
+}

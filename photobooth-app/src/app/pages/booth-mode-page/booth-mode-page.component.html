@@ -1,0 +1,40 @@
+<div class="pb-page pb-booth-mode">
+  <div class="pb-card pb-booth-mode-card">
+    @if (branding.logoSrc(); as logo) {
+      <img
+        class="pb-icon pb-icon-logo"
+        [src]="logo"
+        [attr.alt]="copy().boothMode.title"
+        loading="eager"
+        decoding="async"
+      />
+    } @else {
+      <span class="pb-icon" aria-hidden="true">📷</span>
+    }
+    <h1 class="pb-title">{{ copy().boothMode.title }}</h1>
+    <p class="pb-sub">{{ copy().boothMode.subtitle }}</p>
+
+    <ul class="pb-booth-mode-list" role="list">
+      @if (showDefault()) {
+        <li>
+          <button type="button" class="pb-booth-mode-btn" (click)="choose('default')">
+            <span class="pb-booth-mode-label">{{ copy().boothMode.defaultLabel }}</span>
+            <span class="pb-booth-mode-hint">{{ copy().boothMode.defaultHint }}</span>
+          </button>
+        </li>
+      }
+      @if (showPhysical()) {
+        <li>
+          <button type="button" class="pb-booth-mode-btn" (click)="choose('physicalFrame')">
+            <span class="pb-booth-mode-label">{{ copy().boothMode.physicalLabel }}</span>
+            <span class="pb-booth-mode-hint">{{ copy().boothMode.physicalHint }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <div class="pb-row">
+      <a routerLink="/" class="pb-btn pb-btn-ghost">{{ copy().boothMode.back }}</a>
+    </div>
+  </div>
+</div>

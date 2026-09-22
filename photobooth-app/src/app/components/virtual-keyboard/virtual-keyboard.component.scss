@@ -1,0 +1,48 @@
+.pb-vk {
+  width: min(920px, 96vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 12px 36px rgba(26, 26, 26, 0.08);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pb-vk-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.pb-vk-key {
+  appearance: none;
+  min-width: 2.55rem;
+  min-height: 3rem;
+  padding: 0 0.55rem;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  border-radius: 10px;
+  background: #fff;
+  color: #1a1a1a;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.pb-vk-key:active {
+  background: #f0f0f0;
+  transform: scale(0.97);
+}
+
+.pb-vk-wide {
+  min-width: 4.5rem;
+}
+
+.pb-vk-space {
+  flex: 1;
+  max-width: 28rem;
+}

@@ -1,0 +1,10 @@
+{
+  "id": "f1-pit-racer",
+  "title": "F1 driver at pit with car",
+  "face": {
+    "xPercent": 40.5,
+    "yPercent": 0.4,
+    "widthPercent": 19,
+    "heightPercent": 18
+  }
+}

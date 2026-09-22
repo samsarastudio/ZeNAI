@@ -1,0 +1,32 @@
+<div class="pb-page pb-preview">
+  <div class="pb-card pb-preview-card">
+    <h1 class="pb-title">Check generate</h1>
+    <p class="pb-sub">{{ status() }}</p>
+    @if (err(); as e) {
+      <p class="pb-msg">{{ e }}</p>
+    }
+    <div class="pb-preview-grid">
+      <figure>
+        <figcaption>Capture</figcaption>
+        @if (captureUrl(); as src) {
+          <img [src]="src" alt="Capture" />
+        } @else {
+          <div class="pb-preview-ph">Waiting…</div>
+        }
+      </figure>
+      <figure>
+        <figcaption>AI</figcaption>
+        @if (aiUrl(); as src) {
+          <img [src]="src" alt="Generated" />
+        } @else {
+          <div class="pb-preview-ph">{{ ready() ? 'No image' : 'Generating…' }}</div>
+        }
+      </figure>
+    </div>
+    <div class="pb-row">
+      <button type="button" class="pb-btn pb-btn-primary" (click)="continue()">
+        {{ ready() ? 'Continue' : 'Skip' }}
+      </button>
+    </div>
+  </div>
+</div>

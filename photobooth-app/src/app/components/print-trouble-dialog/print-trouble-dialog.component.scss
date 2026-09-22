@@ -1,0 +1,66 @@
+.pb-print-trouble-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  box-sizing: border-box;
+  padding: clamp(1rem, 4vmin, 2rem);
+  background: rgba(12, 12, 14, 0.62);
+  backdrop-filter: blur(2px);
+}
+
+.pb-print-trouble-card {
+  width: min(34rem, calc(100vw - 2rem));
+  max-height: min(92dvh, 40rem);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(1.2rem, 3vmin, 1.6rem);
+  border-radius: 16px;
+  background: rgba(18, 18, 22, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+  color: inherit;
+}
+
+.pb-print-trouble-card h2 {
+  margin: 0;
+  font-size: clamp(1.15rem, 2.8vmin, 1.4rem);
+  font-weight: 600;
+}
+
+.pb-print-trouble-error,
+.pb-print-trouble-status {
+  margin: 0;
+  font-size: clamp(0.88rem, 2.2vmin, 1rem);
+  line-height: 1.4;
+  opacity: 0.92;
+  word-break: break-word;
+}
+
+.pb-print-trouble-status {
+  opacity: 0.78;
+}
+
+.pb-print-trouble-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: clamp(0.88rem, 2.1vmin, 0.98rem);
+}
+
+.pb-print-trouble-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.pb-print-trouble-actions .pb-btn {
+  flex: 1 1 10rem;
+}

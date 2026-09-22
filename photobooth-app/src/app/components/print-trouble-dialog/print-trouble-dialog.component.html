@@ -1,0 +1,50 @@
+<div
+  class="pb-print-trouble-overlay"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="pbPrintTroubleTitle"
+  (click)="onClose()"
+>
+  <div class="pb-print-trouble-card" (click)="$event.stopPropagation()">
+    <h2 id="pbPrintTroubleTitle">Print failed</h2>
+    <p class="pb-print-trouble-error">{{ error() }}</p>
+    @if (status(); as st) {
+      <p class="pb-print-trouble-status">{{ st }}</p>
+    }
+    <label class="pb-print-trouble-check">
+      <input
+        type="checkbox"
+        [checked]="allowWifi()"
+        [disabled]="busy() || retrying()"
+        (change)="onWifiToggle($event)"
+      />
+      Show Wi‑Fi / network printers
+    </label>
+    <div class="pb-print-trouble-actions">
+      <button
+        type="button"
+        class="pb-btn pb-btn-ghost"
+        [disabled]="busy() || retrying()"
+        (click)="refreshPrinters()"
+      >
+        Refresh printers
+      </button>
+      <button
+        type="button"
+        class="pb-btn pb-btn-primary"
+        [disabled]="busy() || retrying()"
+        (click)="onRetry()"
+      >
+        {{ retrying() ? 'Printing…' : retryLabel() }}
+      </button>
+      <button
+        type="button"
+        class="pb-btn pb-btn-ghost"
+        [disabled]="busy() || retrying()"
+        (click)="onClose()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>

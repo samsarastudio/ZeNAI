@@ -1,0 +1,36 @@
+<div class="pb-page pb-ai-mode">
+  <div class="pb-card pb-ai-mode-card">
+    @if (branding.logoSrc(); as logo) {
+      <img
+        class="pb-icon pb-icon-logo"
+        [src]="logo"
+        [attr.alt]="copy().aiMode.title"
+        loading="eager"
+        decoding="async"
+      />
+    } @else {
+      <span class="pb-icon" aria-hidden="true">{{ copy().qr.icon }}</span>
+    }
+    <h1 class="pb-title">{{ copy().aiMode.title }}</h1>
+    <p class="pb-sub">{{ copy().aiMode.subtitle }}</p>
+
+    <ul class="pb-ai-mode-list" role="list">
+      <li>
+        <button type="button" class="pb-ai-mode-btn pb-ai-mode-btn--plain" (click)="choose(plainModeId)">
+          <span class="pb-ai-mode-label">{{ copy().aiMode.plainPhotoLabel }}</span>
+        </button>
+      </li>
+      @for (m of modes(); track m.id) {
+        <li>
+          <button type="button" class="pb-ai-mode-btn" (click)="choose(m.id)">
+            <span class="pb-ai-mode-label">{{ m.label }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <div class="pb-row">
+      <a routerLink="/qr" class="pb-btn pb-btn-ghost">{{ copy().aiMode.back }}</a>
+    </div>
+  </div>
+</div>
