@@ -96,7 +96,7 @@
   width: min(1560px, 100%);
   margin: 0 auto;
   display: grid;
-  gap: clamp(0.8rem, 2vmin, 1.2rem);
+  gap: clamp(0.85rem, 2vmin, 1.25rem);
   color: #f2f8fc;
 }
 
@@ -106,10 +106,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  padding: 0.8rem 1rem;
-  border-radius: 14px;
-  background: rgba(6, 22, 34, 0.72);
-  border: 1px solid rgba(1, 179, 230, 0.28);
+  padding: 0.85rem 1.05rem;
+  border-radius: 10px;
+  background: rgba(6, 22, 34, 0.78);
+  border: 1px solid rgba(1, 179, 230, 0.22);
 }
 
 .pb-admin-title {
@@ -123,13 +123,14 @@
 .pb-admin-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.45rem;
   align-items: center;
 }
 
 .pb-btn-sm {
-  padding: 0.42rem 0.72rem;
-  font-size: 0.88rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.86rem;
+  min-height: 2.15rem;
 }
 
 .pb-admin-dash a.pb-btn {
@@ -139,56 +140,85 @@
   justify-content: center;
 }
 
+/* Compact admin controls — override kiosk-scale / pill theme buttons */
+.pb-admin-dash .pb-btn {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.95rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.pb-admin-dash .pb-btn-primary {
+  box-shadow: none;
+}
+
+.pb-admin-dash .pb-btn-ghost {
+  background: transparent;
+  color: rgba(242, 248, 252, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.pb-admin-dash .pb-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
 .pb-admin-layout {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: clamp(0.8rem, 2.2vmin, 1.2rem);
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: clamp(0.85rem, 2.2vmin, 1.25rem);
   align-items: start;
 }
 
 .pb-admin-sidebar {
   position: sticky;
   top: clamp(0.8rem, 2vmin, 1.1rem);
-  padding: 0.9rem;
-  border-radius: 14px;
-  background: rgba(6, 22, 34, 0.72);
-  border: 1px solid rgba(1, 179, 230, 0.22);
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: rgba(6, 22, 34, 0.78);
+  border: 1px solid rgba(1, 179, 230, 0.18);
 }
 
 .pb-admin-sidebar-title {
-  margin: 0 0 0.7rem;
-  font-size: 0.72rem;
+  margin: 0 0 0.55rem;
+  padding: 0 0.35rem;
+  font-size: 0.68rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.11em;
-  opacity: 0.8;
+  letter-spacing: 0.12em;
+  opacity: 0.65;
 }
 
 .pb-admin-nav {
   display: grid;
-  gap: 0.48rem;
+  gap: 0.2rem;
 }
 
 .pb-tab {
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.92);
-  padding: 0.56rem 0.78rem;
-  border-radius: 10px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 0.5rem 0.7rem;
+  border-radius: 0 6px 6px 0;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   text-align: left;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
 
 .pb-tab:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .pb-tab-active {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(1, 179, 230, 0.14);
+  border-left-color: #01b3e6;
   color: #ffffff;
 }
 
@@ -197,55 +227,71 @@
 }
 
 .pb-admin-status {
-  margin: 0 0 0.9rem;
-  padding: 0.56rem 0.72rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 10px;
-  font-size: 0.9rem;
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  font-size: 0.88rem;
 }
 
 .pb-admin-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: clamp(0.7rem, 1.8vmin, 1rem);
+  gap: clamp(0.75rem, 1.8vmin, 1rem);
 }
 
 .pb-admin-card {
-  background: rgba(6, 22, 34, 0.72);
-  border: 1px solid rgba(1, 179, 230, 0.2);
-  border-radius: 12px;
-  padding: 0.95rem 1rem;
+  background: rgba(6, 22, 34, 0.78);
+  border: 1px solid rgba(1, 179, 230, 0.16);
+  border-radius: 10px;
+  padding: 1rem 1.1rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.32rem;
+  gap: 0.22rem;
 }
 
 .pb-admin-card h2 {
-  margin: 0 0 0.3rem;
-  font-size: 1rem;
+  margin: 0 0 0.45rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.95rem;
   font-family: var(--pb-font-display, "Inter", sans-serif);
   font-weight: 500;
   letter-spacing: 0.03em;
 }
 
 .pb-admin-card label {
-  font-size: 0.71rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.065em;
-  opacity: 0.82;
-  margin-top: 0.33rem;
+  letter-spacing: 0.06em;
+  opacity: 0.72;
+  margin-top: 0.45rem;
+}
+
+.pb-admin-card label:first-of-type {
+  margin-top: 0.15rem;
 }
 
 .pb-admin-card .pb-input {
-  font-size: 0.92rem;
-  min-height: 2.35rem;
-  padding: 0.44rem 0.62rem;
+  font-size: 0.9rem;
+  min-height: 2.25rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+}
+
+.pb-admin-card .pb-input:focus {
+  outline: none;
+  border-color: rgba(1, 179, 230, 0.45);
+  box-shadow: 0 0 0 1px rgba(1, 179, 230, 0.2);
 }
 
 .pb-textarea {
   resize: vertical;
-  min-height: 4.15rem;
+  min-height: 3.75rem;
 }
 
 .pb-hint {
@@ -561,10 +607,20 @@
 
   .pb-admin-nav {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
   }
 
   .pb-tab {
     text-align: center;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 6px;
+    padding: 0.45rem 0.4rem;
+  }
+
+  .pb-tab-active {
+    border-left-color: transparent;
+    border-bottom-color: #01b3e6;
   }
 
   .pb-can-face-grid {
@@ -689,8 +745,8 @@
   gap: 0.75rem;
   align-items: center;
   padding: 0.55rem 0.65rem;
-  border-radius: 12px;
-  border: 1px solid rgba(1, 179, 230, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(1, 179, 230, 0.16);
   background: rgba(6, 22, 34, 0.55);
 }
 
@@ -729,10 +785,34 @@
   gap: 0.3rem;
 }
 
+.pb-ai-job-progress {
+  margin: 0.35rem 0 0.15rem;
+  max-width: 28rem;
+}
+
+.pb-ai-job-progress-bar {
+  height: 0.4rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.pb-ai-job-progress-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #01b3e6;
+  transition: width 0.35s ease;
+}
+
+.pb-ai-job-progress-label {
+  margin: 0.3rem 0 0 !important;
+}
+
 .pb-ai-pill {
   display: inline-block;
   padding: 0.12rem 0.45rem;
-  border-radius: 999px;
+  border-radius: 6px;
   background: #123448;
   font-size: 0.75rem;
 }

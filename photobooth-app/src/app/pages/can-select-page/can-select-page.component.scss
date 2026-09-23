@@ -29,24 +29,24 @@
 
 .pb-zyn-subtitle {
   margin: 0;
-  font-size: clamp(1.8rem, 5.2vmin, 3.3rem);
+  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   color: #fff;
+  text-transform: uppercase;
 }
 
 .pb-zyn-subtitle-grad {
-  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  background: none;
 }
 
 .pb-zyn-tagline {
-  margin: 0.4rem 0 0;
+  margin: 0.85rem 0 0;
   color: #fff;
-  font-size: clamp(0.95rem, 2.2vmin, 1.5rem);
-  letter-spacing: 0.28em;
+  font-size: clamp(0.9rem, 2.2vmin, 1.5rem);
+  letter-spacing: 0.3em;
   font-weight: 400;
   text-transform: uppercase;
 }
@@ -80,23 +80,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.55rem;
-  padding: clamp(0.55rem, 1.4vmin, 0.85rem);
-  border: 2px solid transparent;
+  padding: clamp(0.35rem, 1vmin, 0.65rem);
+  border: none;
   background: transparent;
   color: #fff;
   cursor: pointer;
   font: inherit;
   border-radius: 1.5rem;
   overflow: visible;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .pb-zyn-flavor-card.is-active,
 .pb-zyn-flavor-card:hover {
   background: rgba(0, 210, 255, 0.12);
-  border-color: rgba(0, 210, 255, 0.55);
   box-shadow: 0 0 28px rgba(0, 210, 255, 0.35);
+  transform: scale(1.05);
+}
+
+.pb-zyn-flavor-card.is-active .pb-zyn-flavor-art,
+.pb-zyn-flavor-card:hover .pb-zyn-flavor-art {
+  background: #01b3e6;
+  border: 2px solid rgba(0, 210, 255, 0.9);
 }
 
 .pb-zyn-flavor-art {
@@ -106,6 +111,9 @@
   display: grid;
   place-items: center;
   overflow: visible;
+  border-radius: 27.121px;
+  border: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .pb-zyn-flavor-img {
@@ -117,21 +125,8 @@
   pointer-events: none;
 }
 
-.pb-zyn-flavor-card h3 {
-  margin: 0.15rem 0 0.2rem;
-  font-size: clamp(0.85rem, 1.8vmin, 1.25rem);
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-align: center;
-}
-
-.pb-zyn-flavor-card.is-active h3 {
-  color: #6bdeff;
-}
-
 .pb-zyn-flavor-actions {
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
 }
 
 @media (max-width: 1100px) {

@@ -1522,11 +1522,11 @@ async function prepareGuestHeadPng(sharpMod, absImage, outW, outH) {
   const meta = await sharpMod(absImage).metadata();
   const srcW = meta.width || outW;
   const srcH = meta.height || outH;
-  // Head + hair + upper neck only — keep crop tight so resize does not inflate the face.
-  const cropW = Math.max(8, Math.round(srcW * 0.5));
-  const cropH = Math.max(8, Math.round(srcH * 0.44));
+  // Include full beard / jaw / upper neck — prior 0.44 crop often cut facial hair.
+  const cropW = Math.max(8, Math.round(srcW * 0.56));
+  const cropH = Math.max(8, Math.round(srcH * 0.62));
   const left = Math.max(0, Math.round((srcW - cropW) / 2));
-  const top = Math.max(0, Math.round(srcH * 0.02));
+  const top = Math.max(0, Math.round(srcH * 0.01));
   const width = Math.min(cropW, srcW - left);
   const height = Math.min(cropH, srcH - top);
   return sharpMod(absImage)
@@ -1864,9 +1864,9 @@ const GPT_IMAGE_EDIT_MODELS = [
   'gpt-image-1.5',
 ];
 
-function gptImageEditQuality(model) {
+function gptImageEditQuality(model, preferMax = false) {
   // 2.5 family supports xhigh/max; gpt-image-2 / 1.5 use high.
-  if (String(model || '').includes('2.5')) return 'xhigh';
+  if (String(model || '').includes('2.5')) return preferMax ? 'max' : 'xhigh';
   return 'high';
 }
 
@@ -1911,8 +1911,9 @@ function buildEditPrompt(rawPrompt, options = {}) {
   let raw = applyBrandTokens(rawPrompt, brandName);
   const suffixParts = [];
   if (inpainting) {
+    // OpenAI prompting guide: assign reference roles + list identity constraints to preserve.
     suffixParts.push(
-      'CLEAN SEAMLESS HEAD REPLACEMENT. Match the guest head size to the original driver head — do not enlarge. Exact guest likeness from the guest-face reference (face, hair, skin). Completely remove the old driver head/hair with no oval outline, halo, cutout edge, or mask ring. Blend the neck naturally into the suit collar. Body, crossed arms, suit, car, pit, and camera stay identical to image 1.',
+      'Image 1 is the F1 scene to edit (head region only, per mask). Image 2 (guest-face.png) is the guest IDENTITY reference — copy that person exactly. CRITICAL IDENTITY LOCK: preserve exact facial features, skin tone, eye shape/color, nose, lips, jawline, freckles, wrinkles, and especially beard, mustache, goatee, stubble, and all facial hair exactly as in image 2 — do not clean-shave, thin, restyle, or invent facial hair. Match hair from image 2. Match guest head size to the original driver head — do not enlarge. Completely remove the old driver head/hair with no oval outline, halo, cutout edge, or mask ring. Blend the neck naturally into the suit collar. Body, crossed arms, suit, car, pit, and camera stay identical to image 1.',
     );
   } else {
     suffixParts.push(
@@ -1979,7 +1980,11 @@ async function callOpenAiImageEdit(
   apiBase = 'https://api.openai.com/v1',
   size = '1536x1024',
   maskBuf = null,
+  options = {},
 ) {
+  const preferMax = !!options.preferMax;
+  const onProgress =
+    typeof options.onProgress === 'function' ? options.onProgress : null;
   const parseJsonSafe = (text) => {
     try {
       return JSON.parse(text);
@@ -1998,9 +2003,21 @@ async function callOpenAiImageEdit(
   let lastErr = 'GPT image edit failed.';
 
   for (const model of gptModels) {
-    const qualities = String(model).includes('2.5') ? ['xhigh', 'high'] : ['high'];
+    const qualities = String(model).includes('2.5')
+      ? preferMax
+        ? ['max', 'xhigh', 'high']
+        : ['xhigh', 'high']
+      : ['high'];
     let modelOk = false;
     for (const quality of qualities) {
+      onProgress &&
+        onProgress({
+          phase: 'openai_request',
+          label: `OpenAI ${model} (${quality})…`,
+          progress: 55,
+          model,
+          quality,
+        });
       const form = buildGptImageEditForm(
         FormData,
         pngBuf,
@@ -2017,6 +2034,14 @@ async function callOpenAiImageEdit(
         json = gptJson;
         modelUsed = model;
         modelOk = true;
+        onProgress &&
+          onProgress({
+            phase: 'openai_response',
+            label: `Received image from ${model}`,
+            progress: 85,
+            model,
+            quality,
+          });
         break;
       }
       lastErr = makeErr(gptRes.statusCode, gptJson, gptRes.body);
@@ -2031,6 +2056,13 @@ async function callOpenAiImageEdit(
 
   if (!json) {
     // DALL·E 2 edits: single image only (no reference-image array). Logo is already composited locally.
+    onProgress &&
+      onProgress({
+        phase: 'openai_fallback',
+        label: 'Falling back to dall-e-2…',
+        progress: 60,
+        model: 'dall-e-2',
+      });
     const dallePrompt =
       fullPrompt.length > 1000 ? fullPrompt.slice(0, 1000) : fullPrompt;
     const form = new FormData();
@@ -2834,6 +2866,13 @@ ipcMain.handle('file:saveJpeg', async (_e, fullPath, base64Body) => {
 });
 
 async function generateAiImage(payload) {
+  const onProgress =
+    typeof payload?.onProgress === 'function' ? payload.onProgress : null;
+  const report = (phase, label, progress, extra = {}) => {
+    try {
+      onProgress && onProgress({ phase, label, progress, ...extra });
+    } catch (_) {}
+  };
   appendAppLog('info', 'openai', 'generateImage start', {
     modeId: payload?.modeId,
     useInpainting: !!payload?.useInpainting,
@@ -2852,6 +2891,7 @@ async function generateAiImage(payload) {
         error: 'Server dependencies missing: run npm install sharp form-data in the app folder.',
       };
     }
+    report('prepare', 'Preparing capture…', 5);
     const imagePath =
       payload && typeof payload.imagePath === 'string' ? payload.imagePath : '';
     const prompt = payload && typeof payload.prompt === 'string' ? payload.prompt : '';
@@ -2887,6 +2927,7 @@ async function generateAiImage(payload) {
     let faceForLock = null;
 
     if (useInpainting && modeId) {
+      report('compose', 'Building F1 scene + guest face ref…', 15);
       const resolved = resolveCanComposition(modeId);
       if (!resolved?.imagePath) {
         return {
@@ -2900,7 +2941,9 @@ async function generateAiImage(payload) {
       faceForLock = face;
       // Erase driver head only — do not paste an oval guest cutout (that caused hard edges).
       pngBuf = await buildHeadEraseScene(sharpMod, resolved.imagePath, face);
-      const faceRef = await prepareGuestHeadPng(sharpMod, absImage, 768, 768);
+      report('face_ref', 'Preparing guest identity reference…', 28);
+      // Larger ref + beard-inclusive crop for likeness (OpenAI identity preservation).
+      const faceRef = await prepareGuestHeadPng(sharpMod, absImage, 1024, 1024);
       extraImages.push({ buf: faceRef, filename: 'guest-face.png' });
       effectivePrompt = inpaintPrompt || prompt;
       appendAppLog('info', 'openai', 'head-swap composition', {
@@ -2911,6 +2954,7 @@ async function generateAiImage(payload) {
         inputStyle: 'erase+mask+face-ref',
       });
     } else {
+      report('compose', 'Preparing photo for edit…', 20);
       pngBuf = await preparePersonPng(sharpMod, absImage);
     }
 
@@ -2933,6 +2977,7 @@ async function generateAiImage(payload) {
       (pngMeta.height || 0) > (pngMeta.width || 0) ? '1024x1536' : '1536x1024';
     let maskBuf = null;
     if (useInpainting && faceForLock) {
+      report('mask', 'Building head edit mask…', 40);
       maskBuf = await buildHeadEditMaskPng(
         sharpMod,
         pngMeta.width || 1536,
@@ -2940,6 +2985,7 @@ async function generateAiImage(payload) {
         faceForLock,
       );
     }
+    report('openai_request', 'Calling OpenAI Images edits…', 50);
     const editRes = await callOpenAiImageEdit(
       apiKey,
       pngBuf,
@@ -2951,6 +2997,14 @@ async function generateAiImage(payload) {
         'https://api.openai.com/v1',
       gptSize,
       maskBuf,
+      {
+        preferMax: useInpainting,
+        onProgress: (p) =>
+          report(p.phase || 'openai_request', p.label || 'OpenAI…', p.progress ?? 55, {
+            model: p.model,
+            quality: p.quality,
+          }),
+      },
     );
     if (!editRes.ok) {
       appendAppLog('error', 'openai', 'image edit failed', editRes.error);
@@ -2960,6 +3014,7 @@ async function generateAiImage(payload) {
     // With gpt-image-2.5-sunburst + mask, trust the model seam more; only soft-lock body for older models.
     const trustAiSeam = String(editRes.model || '').includes('2.5');
     if (useInpainting && scenePathForLock && !trustAiSeam) {
+      report('composite', 'Locking head onto original scene…', 90);
       outBuf = await blendHeadOntoOriginalScene(sharpMod, scenePathForLock, outBuf, faceForLock);
       appendAppLog('info', 'openai', 'head locked onto original scene', {
         face: faceForLock,
@@ -2970,6 +3025,7 @@ async function generateAiImage(payload) {
         model: editRes.model,
       });
     }
+    report('save', 'Saving AI image…', 95);
     const dir = path.dirname(absImage);
     const base = path.basename(absImage, path.extname(absImage));
     const outPath = path.join(dir, `${base}_ai.png`);
@@ -2979,6 +3035,7 @@ async function generateAiImage(payload) {
       outPath,
       inpainting: useInpainting,
     });
+    report('done', 'AI complete', 100, { model: editRes.model });
     return {
       ok: true,
       path: outPath,
@@ -4017,6 +4074,10 @@ async function pushBoothJobStatus(job) {
       canId: job.canId || null,
       canLabel: job.canLabel || null,
       aiStatus: job.aiStatus || 'queued',
+      aiPhase: job.aiPhase || null,
+      aiPhaseLabel: job.aiPhaseLabel || null,
+      aiProgress: Number.isFinite(job.aiProgress) ? job.aiProgress : null,
+      aiModel: job.aiModel || null,
       printStatus: job.printStatus || 'idle',
       uploadStatus: job.uploadStatus || 'idle',
       lastError: job.lastError || null,

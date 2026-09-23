@@ -4,6 +4,12 @@ Photo upload host, guest email (SendGrid), and kiosk OTA packages.
 
 This is the service the Windows kiosk talks to. It is not bundled inside `ZYN-Photobooth.exe`.
 
+## Production server install
+
+For a DigitalOcean / Linux host (systemd, firewall, Nginx/HTTPS, updates), see **[INSTALL.md](./INSTALL.md)**.
+
+A ready-to-upload package is built as `builds/ZYN-Cloud-Dashboard-*-server-*.zip` (source only — no `node_modules`, `.env`, or `data/`).
+
 ## Run (this PC or a LAN/cloud host)
 
 ```bash

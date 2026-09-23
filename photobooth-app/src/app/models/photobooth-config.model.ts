@@ -539,9 +539,9 @@ export const NEWSPAPER_AI_PROMPT =
 
 export interface PhotoboothCameraConfig {
   /**
-   * auto — Canon SDK when `edsdk-bridge.exe` is present, otherwise system webcam.
-   * sdk — force Canon SDK (falls back to webcam if bridge unavailable).
-   * webcam — force system camera (debug).
+   * auto — Canon SDK when `edsdk-bridge.exe` is present, otherwise USB / system camera.
+   * sdk — force Canon SDK (falls back to system camera if bridge unavailable).
+   * webcam — force USB / system camera (production option for high-end USB webcams).
    */
   source: 'auto' | 'sdk' | 'webcam';
   /** Index from EDSDK `list` when using the Canon bridge. */
@@ -790,10 +790,10 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     inboxTitle: '',
     inboxBody: '',
     startOver: 'START OVER',
-    processing: 'CREATING YOUR PHOTO…',
+    processing: 'YOUR PHOTO\nIS PRINTING',
     printed: 'YOUR PHOTO\nIS PRINTING',
-    printError: 'PRINTER NOT READY',
-    backendOffline: 'CLOUD OFFLINE — PHOTO SAVED ON BOOTH',
+    printError: 'SOMETHING WENT WRONG',
+    backendOffline: '',
     apiKeyMissing: 'API KEY MISSING',
   },
   qr: {
@@ -816,7 +816,7 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     starting: 'Starting camera…',
     readyTitle: 'PHOTOBOOTH',
     readySubtitle: 'LOOK AT THE CAMERA, BRING YOUR BEST SELF',
-    footerHint: "AI applies guest's face to F1 driver in chosen suit color",
+    footerHint: 'AI applies guest’s face to F1 driver in chosen suit color',
     smileHint: 'HOLD STILL, YOUR PHOTO IS BEING CAPTURED',
     capturing: 'CAPTURING...',
     takePhoto: 'TAKE PHOTO',
@@ -852,7 +852,7 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     uploadFailed: 'Could not upload to gallery',
     print: 'Print',
     printing: 'Printing…',
-    printed: 'Printed',
+    printed: 'YOUR PHOTO\nIS PRINTING',
     printFailed: 'Print failed',
     makePhysical: 'Make physical sheet',
     remakePhysical: 'Remake physical sheet',

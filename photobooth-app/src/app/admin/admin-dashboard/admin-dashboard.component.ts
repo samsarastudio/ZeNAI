@@ -107,6 +107,11 @@ interface BoothJobItem {
   canId?: string | null;
   canLabel?: string | null;
   aiStatus?: string;
+  aiPhase?: string | null;
+  aiPhaseLabel?: string | null;
+  aiProgress?: number | null;
+  aiModel?: string | null;
+  aiStartedAt?: string | null;
   printStatus?: string;
   emailStatus?: string;
   uploadStatus?: string;
@@ -1823,6 +1828,22 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const t = Date.parse(iso);
     if (!Number.isFinite(t)) return String(iso);
     return new Date(t).toLocaleString();
+  }
+
+  formatAiElapsed(j: BoothJobItem): string {
+    if (j.aiStatus !== 'running' || !j.aiStartedAt) return '';
+    const start = Date.parse(j.aiStartedAt);
+    if (!Number.isFinite(start)) return '';
+    const sec = Math.max(0, Math.round((Date.now() - start) / 1000));
+    if (sec < 60) return `${sec}s`;
+    return `${Math.floor(sec / 60)}m ${sec % 60}s`;
+  }
+
+  aiProgressPct(j: BoothJobItem): number {
+    if (j.aiStatus === 'done') return 100;
+    if (j.aiStatus !== 'running') return 0;
+    const n = Number(j.aiProgress);
+    return Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : 8;
   }
 
   async kickJobs(): Promise<void> {

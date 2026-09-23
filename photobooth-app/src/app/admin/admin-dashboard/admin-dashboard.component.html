@@ -58,18 +58,8 @@
       <div class="pb-admin-grid">
         <section class="pb-admin-card">
           <h2>Attract</h2>
-          <label>Icon</label>
-          <input class="pb-input" [(ngModel)]="draft.attract.icon" />
-          <label>Tagline</label>
-          <input class="pb-input" [(ngModel)]="draft.attract.tagline" />
           <label>Title</label>
           <input class="pb-input" [(ngModel)]="draft.attract.title" />
-          <label>Subtitle</label>
-          <input class="pb-input" [(ngModel)]="draft.attract.subtitle" />
-          <label>Main text scale (0.6 - 1.6)</label>
-          <input class="pb-input" type="number" min="0.6" max="1.6" step="0.05" [(ngModel)]="draft.attract.mainScale" />
-          <label>Top block scale (logo + tagline, 0.6 - 1.6)</label>
-          <input class="pb-input" type="number" min="0.6" max="1.6" step="0.05" [(ngModel)]="draft.attract.topScale" />
           <label>CTA label</label>
           <input class="pb-input" [(ngModel)]="draft.attract.ctaLabel" />
           <label>Start (aria)</label>
@@ -79,47 +69,61 @@
         </section>
 
         <section class="pb-admin-card">
-          <h2>QR / unlock</h2>
-          <label>Icon</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.icon" />
+          <h2>Cans</h2>
           <label>Title</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.title" />
+          <input class="pb-input" [(ngModel)]="draft.cans.title" />
           <label>Subtitle</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.subtitle" />
-          <label>Scan success message</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.scanSuccess" />
-          <label>Footer line</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.footer" />
-          <label>Code label</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.codeLabel" />
-          <label>OK button</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.ok" />
-          <label>Back button</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.back" />
-          <label>Invalid code message</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.invalidCode" />
-          <label>Debug hint</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.debugHint" />
-          <label>Bypass code</label>
-          <input class="pb-input" [(ngModel)]="draft.qr.bypassCode" />
+          <input class="pb-input" [(ngModel)]="draft.cans.subtitle" />
+          <label>Continue</label>
+          <input class="pb-input" [(ngModel)]="draft.cans.continue" />
+        </section>
+
+        <section class="pb-admin-card">
+          <h2>Details</h2>
+          <label>Subtitle</label>
+          <input class="pb-input" [(ngModel)]="draft.details.subtitle" />
+          <label>Form heading</label>
+          <input class="pb-input" [(ngModel)]="draft.details.formHeading" />
+          <label>First name label</label>
+          <input class="pb-input" [(ngModel)]="draft.details.firstNameLabel" />
+          <label>First name placeholder</label>
+          <input class="pb-input" [(ngModel)]="draft.details.firstNamePlaceholder" />
+          <label>Last name label</label>
+          <input class="pb-input" [(ngModel)]="draft.details.lastNameLabel" />
+          <label>Last name placeholder</label>
+          <input class="pb-input" [(ngModel)]="draft.details.lastNamePlaceholder" />
+          <label>Email label</label>
+          <input class="pb-input" [(ngModel)]="draft.details.emailLabel" />
+          <label>Email placeholder</label>
+          <input class="pb-input" [(ngModel)]="draft.details.emailPlaceholder" />
+          <label>Terms</label>
+          <input class="pb-input" [(ngModel)]="draft.details.terms" />
+          <label>Age</label>
+          <input class="pb-input" [(ngModel)]="draft.details.age" />
+          <label>Image use</label>
+          <input class="pb-input" [(ngModel)]="draft.details.imageUse" />
+          <label>Marketing</label>
+          <input class="pb-input" [(ngModel)]="draft.details.marketing" />
+          <label>Continue</label>
+          <input class="pb-input" [(ngModel)]="draft.details.continue" />
+          <label>Back</label>
+          <input class="pb-input" [(ngModel)]="draft.details.back" />
         </section>
 
         <section class="pb-admin-card">
           <h2>Capture</h2>
-          <label>Side title</label>
-          <input class="pb-input" [(ngModel)]="draft.capture.sideTitle" />
-          <label>Instructions</label>
-          <textarea class="pb-input pb-textarea" rows="3" [(ngModel)]="draft.capture.instructions"></textarea>
-          <label>Starting camera placeholder</label>
-          <input class="pb-input" [(ngModel)]="draft.capture.starting" />
-          <label>Ready title</label>
-          <input class="pb-input" [(ngModel)]="draft.capture.readyTitle" />
           <label>Ready subtitle</label>
           <input class="pb-input" [(ngModel)]="draft.capture.readySubtitle" />
           <label>Footer hint</label>
           <input class="pb-input" [(ngModel)]="draft.capture.footerHint" />
           <label>Smile hint</label>
           <input class="pb-input" [(ngModel)]="draft.capture.smileHint" />
+          <label>Starting camera</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.starting" />
+          <label>Capturing</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.capturing" />
+          <label>Take photo</label>
+          <input class="pb-input" [(ngModel)]="draft.capture.takePhoto" />
           <label>Countdown (seconds)</label>
           <input
             class="pb-input"
@@ -133,88 +137,28 @@
         </section>
 
         <section class="pb-admin-card">
-          <h2>Result</h2>
-          <label>Title</label>
-          <input class="pb-input" [(ngModel)]="draft.result.title" />
-          <label>Loading</label>
-          <input class="pb-input" [(ngModel)]="draft.result.loading" />
-          <label>Saved prefix</label>
-          <input class="pb-input" [(ngModel)]="draft.result.savedPrefix" />
+          <h2>Review</h2>
           <label>Retake</label>
           <input class="pb-input" [(ngModel)]="draft.result.retake" />
-          <label>Submit</label>
-          <input class="pb-input" [(ngModel)]="draft.result.submit" />
-          <label>Create AI version (button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.generateAi" />
-          <label>Generating AI (status)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.generatingAi" />
-          <label>AI preview title</label>
-          <input class="pb-input" [(ngModel)]="draft.result.aiPreviewTitle" />
-          <label>AI error prefix</label>
-          <input class="pb-input" [(ngModel)]="draft.result.aiErrorPrefix" />
-          <label>AI gallery page title</label>
-          <input class="pb-input" [(ngModel)]="draft.result.aiGalleryTitle" />
-          <label>Gallery thumbnail — original</label>
-          <input class="pb-input" [(ngModel)]="draft.result.galleryThumbOriginal" />
-          <label>Gallery thumbnail — AI</label>
-          <input class="pb-input" [(ngModel)]="draft.result.galleryThumbAi" />
-          <label>Gallery “back to photo”</label>
-          <input class="pb-input" [(ngModel)]="draft.result.galleryBackToResult" />
-          <label>Gallery finish</label>
-          <input class="pb-input" [(ngModel)]="draft.result.galleryFinish" />
-          <label>Print (one-shot button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.print" />
-          <label>Printing status</label>
-          <input class="pb-input" [(ngModel)]="draft.result.printing" />
-          <label>Printed status</label>
-          <input class="pb-input" [(ngModel)]="draft.result.printed" />
-          <label>Print failed prefix</label>
-          <input class="pb-input" [(ngModel)]="draft.result.printFailed" />
-          <label>Make physical sheet (button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.makePhysical" />
-          <label>Remake physical sheet (button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.remakePhysical" />
-          <label>Creating physical sheet (status)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.makingPhysical" />
-          <label>Physical sheet error prefix</label>
-          <input class="pb-input" [(ngModel)]="draft.result.physicalErrorPrefix" />
-          <label>Make framed (button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.makeFramed" />
-          <label>Remake framed (button)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.remakeFramed" />
-          <label>Applying frame (status)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.makingFramed" />
-          <label>AI progress panel title</label>
-          <input class="pb-input" [(ngModel)]="draft.result.thinkingSummary" />
-          <label>Progress step 1</label>
-          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepAnalyze" />
-          <label>Progress step 2 (inpainting background)</label>
-          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepBackground" />
-          <label>Progress step 3</label>
-          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepPlan" />
-          <label>Progress step 4</label>
-          <input class="pb-input" [(ngModel)]="draft.result.thinkingStepImage" />
-          <label>Progress footnote</label>
-          <textarea class="pb-input pb-textarea" rows="2" [(ngModel)]="draft.result.thinkingFootnote"></textarea>
+          <label>Confirm photo</label>
+          <input class="pb-input" [(ngModel)]="draft.result.confirmPhoto" />
         </section>
 
         <section class="pb-admin-card">
-          <h2>AI mode screen</h2>
-          <label>Title</label>
-          <input class="pb-input" [(ngModel)]="draft.aiMode.title" />
-          <label>Subtitle</label>
-          <input class="pb-input" [(ngModel)]="draft.aiMode.subtitle" />
-          <label>Back</label>
-          <input class="pb-input" [(ngModel)]="draft.aiMode.back" />
-          <label>Plain photo option (Photocapture / Default)</label>
-          <input class="pb-input" [(ngModel)]="draft.aiMode.plainPhotoLabel" />
-          <p class="pb-hint pb-hint-tight">
-            Shown first on the style screen; picks a normal booth photo with no AI step on the result page.
-          </p>
+          <h2>Thanks</h2>
+          <label>Printed headline</label>
+          <textarea class="pb-input pb-textarea" rows="2" [(ngModel)]="draft.thanks.printed"></textarea>
+          <p class="pb-hint pb-hint-tight">Use a line break for two lines (e.g. YOUR PHOTO / IS PRINTING).</p>
+          <label>Start over</label>
+          <input class="pb-input" [(ngModel)]="draft.thanks.startOver" />
+          <label>API key missing</label>
+          <input class="pb-input" [(ngModel)]="draft.thanks.apiKeyMissing" />
+          <label>Print / error</label>
+          <input class="pb-input" [(ngModel)]="draft.thanks.printError" />
         </section>
       </div>
       <div class="pb-admin-footer">
-        <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveCopy()">Save capture settings</button>
+        <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveCopy()">Save copy</button>
       </div>
     }
 
@@ -1083,6 +1027,29 @@
                     <span class="pb-ai-pill" [attr.data-st]="j.uploadStatus">Upload: {{ j.uploadStatus || 'idle' }}</span>
                     <span class="pb-ai-pill" [attr.data-st]="j.printStatus">Print: {{ j.printStatus || 'idle' }}</span>
                   </p>
+                  @if (j.aiStatus === 'running' || j.aiPhaseLabel || j.aiModel) {
+                    <div class="pb-ai-job-progress">
+                      <div class="pb-ai-job-progress-bar" aria-hidden="true">
+                        <span [style.width.%]="aiProgressPct(j)"></span>
+                      </div>
+                      <p class="pb-hint pb-ai-job-progress-label">
+                        @if (j.aiPhaseLabel) {
+                          {{ j.aiPhaseLabel }}
+                        } @else if (j.aiStatus === 'running') {
+                          Generating…
+                        }
+                        @if (j.aiStatus === 'running') {
+                          · {{ aiProgressPct(j) }}%
+                          @if (formatAiElapsed(j); as elapsed) {
+                            · {{ elapsed }}
+                          }
+                        }
+                        @if (j.aiModel) {
+                          · {{ j.aiModel }}
+                        }
+                      </p>
+                    </div>
+                  }
                   <p class="pb-hint">
                     {{ formatJobWhen(j.updatedAt || j.createdAt) }}
                     @if (j.lastError) {
@@ -1522,12 +1489,13 @@
           <h2>Camera source</h2>
           <p class="pb-hint">
             Choose which camera the booth uses for capture. When the Canon EDSDK bridge is installed,
-            <strong>Auto</strong> uses the SDK; otherwise the system webcam is used. Force webcam for
-            debugging without a DSLR.
+            <strong>Auto</strong> uses the SDK; otherwise the system camera is used. Choose
+            <strong>USB / system camera</strong> for a dedicated high-end USB webcam (production setups
+            without a DSLR).
           </p>
           <p class="pb-hint pb-hint-tight">
             @if (draftCamera.source === 'webcam') {
-              System camera is selected. Canon SDK is not used for capture.
+              USB / system camera is selected. Canon SDK is not used for capture.
             } @else if (hasBridge()) {
               Canon EDSDK bridge detected on this machine.
             } @else {
@@ -1538,9 +1506,9 @@
 
           <label>Source mode</label>
           <select class="pb-input" [(ngModel)]="draftCamera.source">
-            <option value="auto">Auto — SDK when available, else webcam</option>
-            <option value="sdk" [disabled]="!hasBridge()">Force Canon SDK</option>
-            <option value="webcam">Force system webcam (debug)</option>
+            <option value="auto">Auto — Canon SDK when available, else system camera</option>
+            <option value="sdk" [disabled]="!hasBridge()">Canon SDK (DSLR)</option>
+            <option value="webcam">USB / system camera</option>
           </select>
 
           @if (hasBridge() && (draftCamera.source === 'auto' || draftCamera.source === 'sdk')) {
@@ -1566,7 +1534,7 @@
           }
 
           @if (draftCamera.source === 'webcam' || draftCamera.source === 'auto' || !hasBridge()) {
-            <label>System webcam</label>
+            <label>USB / system camera device</label>
             <div class="pb-row pb-row-wrap">
               <select class="pb-input" [(ngModel)]="draftCamera.webcamDeviceId">
                 <option [ngValue]="null">Default (browser picks)</option>

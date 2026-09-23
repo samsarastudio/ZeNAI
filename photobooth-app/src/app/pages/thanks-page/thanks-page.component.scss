@@ -4,53 +4,60 @@
 }
 
 .pb-zyn-thanks {
-  width: min(100%, 980px);
+  width: min(100%, 1100px);
+  min-height: min(92vh, 920px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   text-align: center;
   gap: 1.25rem;
+  padding: clamp(0.75rem, 2vmin, 1.5rem) 0;
+  box-sizing: border-box;
 }
 
 .pb-zyn-logo {
   width: min(220px, 36vw);
   height: auto;
+  margin-bottom: 0.35rem;
 }
 
 .pb-zyn-subtitle {
   margin: 0;
-  font-size: clamp(1.8rem, 5.2vmin, 3.3rem);
+  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   color: #fff;
+  text-transform: uppercase;
 }
 
 .pb-zyn-subtitle-grad {
-  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  background: none;
 }
 
 .pb-zyn-thanks-hero {
   display: grid;
   place-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
   min-height: 35vh;
-  margin: 1.5rem 0;
+  margin: clamp(2rem, 5vh, 5rem) 0;
+  flex: 1 1 auto;
 }
 
 .pb-zyn-thanks-tick {
   width: min(10rem, 22vw);
   height: auto;
+  margin-bottom: 0.5rem;
 }
 
 .pb-zyn-thanks-title {
   margin: 0;
   color: #fff;
-  font-size: clamp(2.4rem, 7vmin, 4.4rem);
+  font-size: clamp(2.6rem, 7.5vmin, 4.4rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   line-height: 1.05;
   display: flex;
@@ -60,7 +67,6 @@
 
 .pb-zyn-thanks-line {
   color: #fff;
-  -webkit-text-fill-color: #fff;
 }
 
 .pb-zyn-thanks-hint {

@@ -243,15 +243,15 @@
       "topScale": 1,
       "title": "WHEN PHOTO\nMEETS FINISH",
       "subtitle": "",
-      "ctaLabel": "TAP TO START",
-      "startAria": "Tap to start",
+      "ctaLabel": "START NOW",
+      "startAria": "Start now",
       "adminLink": "Admin"
     },
     "cans": {
       "title": "CHOOSE YOUR ZYN",
-      "subtitle": "Select your flavor and suit up",
+      "subtitle": "A SAME NICOTINE, A DIFFERENT DRIVE.",
       "back": "Back",
-      "continue": "SELECT"
+      "continue": "CONTINUE"
     },
     "details": {
       "title": "ALMOST THERE",
@@ -271,12 +271,17 @@
       "back": "BACK"
     },
     "thanks": {
-      "title": "THANK YOU!",
+      "title": "YOUR PHOTO\nIS PRINTING",
       "subtitle": "",
       "hint": "",
       "inboxTitle": "",
       "inboxBody": "",
-      "startOver": "START OVER"
+      "startOver": "START OVER",
+      "processing": "YOUR PHOTO\nIS PRINTING",
+      "printed": "YOUR PHOTO\nIS PRINTING",
+      "printError": "SOMETHING WENT WRONG",
+      "apiKeyMissing": "API KEY MISSING",
+      "backendOffline": ""
     },
     "qr": {
       "icon": "🔐",
@@ -297,7 +302,7 @@
       "starting": "Starting camera…",
       "readyTitle": "PHOTOBOOTH",
       "readySubtitle": "LOOK AT THE CAMERA, BRING YOUR BEST SELF",
-      "footerHint": "AI applies guest's face to F1 driver in chosen suit color",
+      "footerHint": "AI applies guest’s face to F1 driver in chosen suit color",
       "smileHint": "HOLD STILL, YOUR PHOTO IS BEING CAPTURED",
       "capturing": "CAPTURING...",
       "takePhoto": "TAKE PHOTO"
@@ -306,9 +311,9 @@
       "title": "Your photo",
       "loading": "Loading…",
       "savedPrefix": "Saved:",
-      "retake": "Retake",
+      "retake": "RETAKE PHOTO",
       "submit": "Done",
-      "confirmPhoto": "Done",
+      "confirmPhoto": "LOOKS GOOD!",
       "generateAi": "Create AI version",
       "generatingAi": "Creating your AI image…",
       "aiPreviewTitle": "AI version",
@@ -332,7 +337,7 @@
       "uploadFailed": "Upload failed",
       "print": "Print",
       "printing": "Printing…",
-      "printed": "Printed",
+      "printed": "YOUR PHOTO\nIS PRINTING",
       "printFailed": "Print failed",
       "makePhysical": "Physical",
       "remakePhysical": "Remake physical",

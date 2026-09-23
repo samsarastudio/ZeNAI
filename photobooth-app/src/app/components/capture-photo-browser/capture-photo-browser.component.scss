@@ -21,21 +21,22 @@
 
 .pb-cb-chip {
   margin: 0;
-  padding: 0.35rem 0.7rem;
-  border-radius: 999px;
-  border: 2px solid rgba(61, 48, 32, 0.22);
-  background: rgba(255, 255, 255, 0.88);
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(1, 179, 230, 0.28);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(242, 248, 252, 0.9);
   font: inherit;
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  min-height: 2.2rem;
+  min-height: 2.1rem;
 }
 
 .pb-cb-chip.is-on {
-  border-color: rgba(61, 48, 32, 0.75);
-  background: #2b2218;
-  color: #f7f1e8;
+  border-color: rgba(1, 179, 230, 0.55);
+  background: rgba(1, 179, 230, 0.18);
+  color: #f2f8fc;
 }
 
 .pb-cb-dates {
@@ -77,7 +78,7 @@
   border-radius: 16px;
   background:
     radial-gradient(ellipse 80% 70% at 50% 45%, #252525 0%, #0c0c0c 62%, #060606 100%);
-  border: 3px solid rgba(61, 48, 32, 0.2);
+  border: 1px solid rgba(1, 179, 230, 0.2);
   overflow: hidden;
   padding: 0.45rem 0.55rem 0.4rem;
 }
@@ -133,17 +134,19 @@
   gap: 0.28rem;
   margin: 0;
   padding: 0.35rem;
-  border: 2px solid rgba(61, 48, 32, 0.18);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(1, 179, 230, 0.2);
+  border-radius: 8px;
+  background: rgba(6, 22, 34, 0.55);
+  color: #f2f8fc;
   cursor: pointer;
   font: inherit;
   text-align: left;
 }
 
 .pb-cb-card.is-on {
-  border-color: rgba(61, 48, 32, 0.8);
-  box-shadow: 0 6px 16px rgba(43, 34, 24, 0.14);
+  border-color: rgba(1, 179, 230, 0.55);
+  background: rgba(1, 179, 230, 0.12);
+  box-shadow: none;
 }
 
 .pb-cb-card img,

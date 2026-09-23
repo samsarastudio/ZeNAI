@@ -550,10 +550,7 @@ html[data-pb-theme='zyn'] .pb-zyn-subtitle {
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-subtitle-grad {
-  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-details-title {

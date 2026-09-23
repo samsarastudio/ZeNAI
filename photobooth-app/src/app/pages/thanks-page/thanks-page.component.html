@@ -5,10 +5,7 @@
     } @else {
       <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
     }
-    <h1 class="pb-zyn-subtitle">
-      <span>AI</span>
-      <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
-    </h1>
+    <h1 class="pb-zyn-subtitle">AI PHOTOBOOTH</h1>
 
     <div class="pb-zyn-thanks-hero">
       @if (printStatus() === 'failed' || aiStatus() === 'failed' || backendReachable() === false) {
@@ -18,15 +15,11 @@
       }
       <h2 class="pb-zyn-thanks-title">
         @for (line of headline().split('\n'); track $index) {
-          @if ($index === 0) {
-            <span class="pb-zyn-thanks-line">{{ line }}</span>
-          } @else {
-            <span class="pb-zyn-subtitle-grad">{{ line }}</span>
-          }
+          <span class="pb-zyn-thanks-line">{{ line }}</span>
         }
       </h2>
-      @if (statusHint()) {
-        <p class="pb-zyn-thanks-hint">{{ statusHint() }}</p>
+      @if (guestStatusHint(); as hint) {
+        <p class="pb-zyn-thanks-hint">{{ hint }}</p>
       }
     </div>
 

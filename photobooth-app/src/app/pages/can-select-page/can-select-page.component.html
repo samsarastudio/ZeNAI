@@ -6,10 +6,7 @@
       } @else {
         <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
       }
-      <h1 class="pb-zyn-subtitle">
-        <span>AI</span>
-        <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
-      </h1>
+      <h1 class="pb-zyn-subtitle">{{ copy().cans.title }}</h1>
       <p class="pb-zyn-tagline">{{ copy().cans.subtitle }}</p>
     </header>
 
@@ -25,7 +22,6 @@
             <span class="pb-zyn-flavor-art">
               <img class="pb-zyn-flavor-img" [src]="artFor(c.id)" [alt]="c.displayLabel" />
             </span>
-            <h3>{{ c.displayLabel }}</h3>
           </button>
         </li>
       }

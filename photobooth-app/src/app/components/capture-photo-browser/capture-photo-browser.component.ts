@@ -9,7 +9,6 @@ import { PhysicalFrameLayoutService } from '../../services/physical-frame-layout
 import type { PhysicalPhotoCrop } from '../../models/physical-frame-layout';
 import { FrameAdjustDialogComponent } from '../frame-adjust-dialog/frame-adjust-dialog.component';
 
-export type CaptureKindFilter = 'all' | 'physical' | 'normal' | 'original';
 export type CaptureWhenFilter = 'all' | 'today' | 'yesterday' | 'week' | 'month' | 'custom';
 
 @Component({
@@ -40,7 +39,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
   readonly err = signal<string | null>(null);
   readonly loading = signal(true);
 
-  readonly kindFilter = signal<CaptureKindFilter>('all');
   readonly whenFilter = signal<CaptureWhenFilter>('all');
   readonly customFrom = signal('');
   readonly customTo = signal('');
@@ -71,18 +69,10 @@ export class CapturePhotoBrowserComponent implements OnInit {
   );
 
   readonly filtered = computed(() => {
-    const kind = this.kindFilter();
     const when = this.whenFilter();
     const fromMs = this.rangeStartMs(when);
     const toMs = this.rangeEndMs(when);
     return this.photos().filter((p) => {
-      if (kind === 'physical') {
-        if ((p.kind || (p.layoutMode === 'physicalFrame' ? 'physical' : 'normal')) !== 'physical')
-          return false;
-      } else if (kind === 'normal') {
-        // Digital: framed / AI / unframed — including captures that also have a physical sheet.
-        if (!p.hasFramed && (p.kind || 'normal') === 'physical') return false;
-      }
       const t = Date.parse(p.capturedAt);
       if (!Number.isFinite(t)) return true;
       if (fromMs != null && t < fromMs) return false;
@@ -108,15 +98,10 @@ export class CapturePhotoBrowserComponent implements OnInit {
     () => this.printEnabled() && !!this.selected() && !this.printBusy() && !this.printDone(),
   );
 
-  readonly canMakePhysical = computed(
-    () => this.kindFilter() === 'original' && !!this.selected(),
-  );
+  readonly canMakePhysical = computed(() => !!this.selected());
 
-  readonly canMakeFramed = computed(
-    () => this.kindFilter() === 'original' && !!this.selected(),
-  );
+  readonly canMakeFramed = computed(() => !!this.selected());
 
-  readonly viewingOriginals = computed(() => this.kindFilter() === 'original');
   readonly physicalAdjustSource = computed(() => {
     const photo = this.selected();
     return photo ? this.sourceOriginal(photo) : '';
@@ -160,12 +145,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
     } finally {
       this.loading.set(false);
     }
-  }
-
-  setKind(kind: CaptureKindFilter): void {
-    this.kindFilter.set(kind);
-    this.page.set(1);
-    void this.afterFilterChange();
   }
 
   setWhen(when: CaptureWhenFilter): void {
@@ -223,16 +202,10 @@ export class CapturePhotoBrowserComponent implements OnInit {
   }
 
   viewPath(photo: PbCaptureHistoryItem): string {
-    if (this.viewingOriginals()) return this.sourceOriginal(photo);
-    if (this.kindFilter() === 'normal' && photo.hasFramed) {
-      return photo.framedPath || photo.displayPath.replace(/_physical\.png$/i, '_framed.png');
-    }
     return photo.displayPath;
   }
 
   viewLabel(photo: PbCaptureHistoryItem): string {
-    if (this.viewingOriginals()) return this.copy().history.originalLabel;
-    if (this.kindFilter() === 'normal' && photo.hasFramed) return 'Framed';
     return photo.label;
   }
 
@@ -265,12 +238,10 @@ export class CapturePhotoBrowserComponent implements OnInit {
     }
     this.printBusy.set(true);
     try {
-      const originals = this.viewingOriginals();
-      const viewingFramed = this.kindFilter() === 'normal' && !!photo.hasFramed;
       const r = await window.pbApi.printPhoto({
         filePath: this.viewPath(photo),
         deviceName: this.booth.print().printerName || undefined,
-        layoutMode: originals || viewingFramed ? undefined : photo.layoutMode,
+        layoutMode: photo.layoutMode,
       });
       if (!r.ok) {
         this.printErr.set(r.error ?? 'Print failed.');
@@ -310,7 +281,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
       }
       this.physicalAdjustOpen.set(false);
       await this.reload();
-      this.setKind('physical');
     } catch (e) {
       this.makePhysicalErr.set(String(e));
     } finally {
@@ -396,7 +366,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
       this.previewUrls.set({});
       const id = this.selectedId();
       await this.reload();
-      this.setKind('normal');
       const item = this.photos().find((p) => p.id === id);
       if (item) await this.selectPhoto(item);
     } catch (e) {

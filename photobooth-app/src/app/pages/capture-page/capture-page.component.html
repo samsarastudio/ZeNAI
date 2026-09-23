@@ -5,10 +5,7 @@
     } @else {
       <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
     }
-    <h1 class="pb-zyn-subtitle">
-      <span>AI</span>
-      <span class="pb-zyn-subtitle-grad">PHOTOBOOTH</span>
-    </h1>
+    <h1 class="pb-zyn-subtitle">AI PHOTOBOOTH</h1>
     <p class="pb-zyn-tagline">
       {{ countdown() !== null && countdown()! > 0 ? copy().capture.smileHint : copy().capture.readySubtitle }}
     </p>
@@ -19,9 +16,7 @@
     >
       <div
         class="pb-preview-wrap pb-zyn-viewfinder"
-        [class.pb-preview-wrap--sized]="previewAspectRatio() !== null"
         [class.pb-preview-wrap--empty]="showPreviewPlaceholder() || cameraFailed()"
-        [style.--preview-ar]="previewAspectRatio() ?? 1.5"
       >
         @if (showPreviewPlaceholder() || (capturing() && !useWebcam())) {
           <div class="pb-preview pb-preview-placeholder">{{
@@ -65,10 +60,14 @@
           </div>
         }
 
+        <img
+          class="pb-zyn-camera-overlay"
+          src="zyn/cameraoverlay.png"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
         <div class="pb-zyn-age-badge" aria-hidden="true">21+<br />Only</div>
-        <div class="pb-zyn-reticle" aria-hidden="true">
-          <span></span>
-        </div>
         <p class="pb-zyn-cameranote">{{ copy().capture.footerHint }}</p>
       </div>
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const AI_TIMEOUT_MS = 120000;
+const AI_TIMEOUT_MS = 240000;
 const MAX_AI_ATTEMPTS = 3;
 const MAX_EMAIL_ATTEMPTS = 3;
 /** Soft cap before longer cooldown; jobs keep retrying so uploads/prints are not dropped. */
@@ -289,9 +289,26 @@ function createJobPipeline(opts) {
       j.aiStatus = 'running';
       j.aiStartedAt = nowIso();
       j.aiAttempts = (j.aiAttempts || 0) + 1;
+      j.aiPhase = 'starting';
+      j.aiPhaseLabel = 'Starting AI…';
+      j.aiProgress = 2;
+      j.aiModel = null;
       j.updatedAt = nowIso();
     });
     notifyCloud(job.id);
+    const setAiProgress = (info) => {
+      mutate((d) => {
+        const j = findJob(d.jobs, job.id);
+        if (!j || j.aiStatus !== 'running') return;
+        if (info.phase) j.aiPhase = String(info.phase);
+        if (info.label) j.aiPhaseLabel = String(info.label);
+        if (Number.isFinite(info.progress)) {
+          j.aiProgress = Math.max(0, Math.min(100, Math.round(Number(info.progress))));
+        }
+        if (info.model) j.aiModel = String(info.model);
+        j.updatedAt = nowIso();
+      });
+    };
     try {
       const can =
         (cfg.cans || []).find((c) => c.id === job.canId) ||
@@ -306,6 +323,7 @@ function createJobPipeline(opts) {
           randomizeBackground: false,
           inpaintPrompt: can.inpaintPrompt || can.prompt,
           face: can.face || null,
+          onProgress: setAiProgress,
         }),
         new Promise((_, reject) =>
           setTimeout(() => reject(new Error('AI timed out')), AI_TIMEOUT_MS),
@@ -320,6 +338,10 @@ function createJobPipeline(opts) {
         j.aiStatus = 'done';
         j.aiPath = result.path;
         j.aiStartedAt = null;
+        j.aiPhase = 'done';
+        j.aiPhaseLabel = 'AI complete';
+        j.aiProgress = 100;
+        j.aiModel = result.model || j.aiModel || null;
         j.lastError = null;
         j.updatedAt = nowIso();
         const galleryOn = !!(cfg.gallery?.enabled && cfg.gallery?.apiBaseUrl && cfg.gallery?.uploadToken);
@@ -341,7 +363,7 @@ function createJobPipeline(opts) {
         }
       });
       notifyCloud(job.id);
-      log && log('info', 'jobs', 'AI done', { id: job.id, path: result.path });
+      log && log('info', 'jobs', 'AI done', { id: job.id, path: result.path, model: result.model });
     } catch (e) {
       const msg = String(e?.message || e);
       const apiKeyMissing = /api key not configured|openai api key/i.test(msg);
@@ -349,6 +371,9 @@ function createJobPipeline(opts) {
         const j = findJob(d.jobs, job.id);
         if (!j) return;
         j.aiStartedAt = null;
+        j.aiPhase = 'failed';
+        j.aiPhaseLabel = apiKeyMissing ? 'API key missing' : 'AI failed';
+        j.aiProgress = 0;
         j.lastError = apiKeyMissing
           ? 'OpenAI API key not configured. Set it in Admin → AI.'
           : msg;

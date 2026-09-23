@@ -3,10 +3,60 @@
   justify-content: center;
 }
 
+.pb-zyn-screen {
+  width: min(100%, 1680px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2.2vmin, 1.5rem);
+  text-align: center;
+}
+
+.pb-zyn-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.35rem;
+}
+
+.pb-zyn-logo {
+  width: min(220px, 36vw);
+  height: auto;
+  margin-bottom: 0.35rem;
+}
+
+.pb-zyn-subtitle {
+  margin: 0;
+  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.pb-zyn-subtitle-grad {
+  color: #fff;
+  -webkit-text-fill-color: #fff;
+  background: none;
+}
+
+.pb-zyn-tagline {
+  margin: 0.85rem 0 0;
+  color: #fff;
+  font-size: clamp(0.9rem, 2.2vmin, 1.5rem);
+  letter-spacing: 0.3em;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
 .pb-zyn-review-frame {
   position: relative;
-  width: min(50vw, 920px);
-  aspect-ratio: 16 / 10;
+  flex: 0 0 auto;
+  width: min(32vmin, 360px);
+  max-width: min(42vw, 380px);
+  max-height: min(52vh, 560px);
+  aspect-ratio: 5 / 6;
   border-radius: 1.25rem;
   border: 2px solid rgba(0, 210, 255, 0.45);
   box-shadow:
@@ -17,6 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0.5rem 0;
 }
 
 .pb-zyn-review-img {
@@ -25,13 +76,50 @@
   object-fit: cover;
 }
 
+.pb-zyn-age-badge {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  width: 3.15rem;
+  height: 3.15rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #0072bb;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.05;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pb-zyn-cameranote {
+  position: absolute;
+  left: 20%;
+  right: auto;
+  bottom: 0;
+  z-index: 3;
+  margin: 0 0 0.35rem;
+  max-width: 60%;
+  width: 60%;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(0.7rem, 1.35vmin, 0.85rem);
+  font-weight: 400;
+  line-height: 1.2;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.65);
+}
+
 .pb-zyn-review-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: clamp(1rem, 2.5vmin, 1.75rem);
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .pb-btn-retake {

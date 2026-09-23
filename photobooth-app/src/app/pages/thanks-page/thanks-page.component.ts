@@ -29,45 +29,29 @@ export class ThanksPageComponent implements OnInit, OnDestroy {
   readonly headline = computed(() => {
     const c = this.copy().thanks;
     const ai = this.aiStatus();
-    const print = this.printStatus();
     if (ai === 'failed' && isApiKeyError(this.lastError())) {
       return c.apiKeyMissing || 'API KEY MISSING';
     }
     if (ai === 'failed') return c.printError || 'SOMETHING WENT WRONG';
-    if (ai !== 'done') return c.processing || 'CREATING YOUR PHOTO…';
-    if (this.printEnabled()) {
-      if (print === 'failed') return c.printError || 'PRINTER NOT READY';
-      if (print === 'done' || print === 'printing' || print === 'queued') {
-        return c.printed || c.title || 'YOUR PHOTO\nIS PRINTING';
-      }
-      if (print === 'skipped' || print === 'idle') {
-        return c.printed || 'YOUR PHOTO\nIS READY';
-      }
+    if (this.printEnabled() && this.printStatus() === 'failed') {
+      return c.printError || 'SOMETHING WENT WRONG';
     }
-    return c.title || 'THANK YOU!';
+    // Match reference screen-6: always "YOUR PHOTO / IS PRINTING"
+    return c.printed || c.processing || c.title || 'YOUR PHOTO\nIS PRINTING';
   });
 
-  readonly statusHint = computed(() => {
+  /** Guest-facing hint — errors only (no AI/upload phase chatter). */
+  readonly guestStatusHint = computed(() => {
     const err = this.lastError();
     const print = this.printStatus();
-    const upload = this.uploadStatus();
-    const backend = this.backendReachable();
-    const bits: string[] = [];
     if (this.printEnabled() && print === 'failed') {
-      bits.push(err || this.copy().thanks.printError || 'Set a printer in Admin → Print.');
-    } else if (this.printEnabled() && print === 'queued') {
-      bits.push('Waiting for printer…');
-    } else if (this.printEnabled() && print === 'printing') {
-      bits.push('Sending to printer…');
+      return err || this.copy().thanks.printError || 'Set a printer in Admin → Print.';
     }
-    if (backend === false) {
-      bits.push(this.copy().thanks.backendOffline || 'Cloud offline — photo saved on booth.');
-    } else if (upload === 'queued' || upload === 'uploading') {
-      bits.push('Uploading to cloud…');
-    }
-    if (this.aiStatus() === 'failed' && err) bits.push(err);
-    return bits.join(' · ');
+    if (this.aiStatus() === 'failed' && err) return err;
+    return '';
   });
+
+  readonly statusHint = this.guestStatusHint;
 
   private homeTimer?: ReturnType<typeof setTimeout>;
   private pollTimer?: ReturnType<typeof setInterval>;
