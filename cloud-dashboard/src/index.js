@@ -22,9 +22,9 @@ import {
   requireDisplayOrUploadToken,
   requireAdminPin,
 } from './auth.js';
-import { emailConfig, sendPhotoEmail } from './email.js';
 import { boothUpdateRouter, adminBoothUpdateRouter } from './booth-update.js';
 import { framesRouter, sendFrameMedia } from './frames.js';
+import { isValidDay, listPhotoDays, streamPhotosZip } from './photo-zip.js';
 
 initDb();
 
@@ -63,40 +63,6 @@ function listPhotos(sessionId) {
     .all(sessionId);
 }
 
-async function maybeEmailAiPhoto(row, session, destPath) {
-  const to = String(row.guest_email || '').trim();
-  if (row.variant !== 'ai' || !to) {
-    getDb().prepare('UPDATE photos SET email_status = ? WHERE id = ?').run(to ? row.email_status : 'skipped', row.id);
-    return { emailStatus: to ? row.email_status || 'skipped' : 'skipped' };
-  }
-  const cfg = emailConfig();
-  if (!cfg.enabled) {
-    getDb().prepare('UPDATE photos SET email_status = ? WHERE id = ?').run('skipped', row.id);
-    return { emailStatus: 'skipped' };
-  }
-  getDb()
-    .prepare('UPDATE photos SET email_status = ?, email_attempts = email_attempts + 1 WHERE id = ?')
-    .run('sending', row.id);
-  try {
-    await sendPhotoEmail({
-      to,
-      filePath: destPath,
-      mime: row.mime,
-      filename: row.filename,
-    });
-    getDb()
-      .prepare('UPDATE photos SET email_status = ?, email_error = NULL WHERE id = ?')
-      .run('sent', row.id);
-    return { emailStatus: 'sent' };
-  } catch (e) {
-    const msg = String(e?.message || e);
-    getDb()
-      .prepare('UPDATE photos SET email_status = ?, email_error = ? WHERE id = ?')
-      .run('failed', msg, row.id);
-    return { emailStatus: 'failed', emailError: msg };
-  }
-}
-
 const app = express();
 app.disable('x-powered-by');
 app.use(cors());
@@ -116,7 +82,7 @@ app.get('/api/wall', (_req, res) => {
     .prepare(
       `SELECT p.*, sess.slug AS session_slug
        FROM photos p JOIN sessions sess ON sess.id = p.session_id
-       WHERE p.variant IN ('ai', 'framed') AND IFNULL(p.gallery_picked, 0) = 1
+       WHERE p.variant IN ('ai', 'framed')
        ORDER BY p.created_at DESC
        LIMIT 200`,
     )
@@ -215,12 +181,8 @@ app.post('/api/sessions/:slug/photos', requireUploadToken, upload.single('photo'
         getDb().prepare('UPDATE photos SET guest_email = ? WHERE id = ?').run(guestEmail, existing.id);
         existing.guest_email = guestEmail;
       }
-      const emailResult =
-        variant === 'ai'
-          ? await maybeEmailAiPhoto({ ...existing, guest_email: guestEmail || existing.guest_email }, session, existingPath)
-          : { emailStatus: existing.email_status };
       const fresh = getDb().prepare('SELECT * FROM photos WHERE id = ?').get(existing.id);
-      return res.json({ ok: true, photo: publicPhoto(session.slug, fresh), deduped: true, ...emailResult });
+      return res.json({ ok: true, photo: publicPhoto(session.slug, fresh), deduped: true });
     }
   }
 
@@ -245,14 +207,13 @@ app.post('/api/sessions/:slug/photos', requireUploadToken, upload.single('photo'
     height: req.body?.height ? Number(req.body.height) : null,
     created_at: createdAt,
     guest_email: guestEmail,
-    email_status: variant === 'ai' && guestEmail ? 'queued' : 'skipped',
+    email_status: 'skipped',
     email_error: null,
     email_attempts: 0,
     can_id: canId,
     can_label: canLabel,
     job_id: jobId,
-    gallery_picked:
-      variant === 'ai' && loadSettings().autoGalleryPickAi ? 1 : 0,
+    gallery_picked: 0,
   };
   getDb()
     .prepare(
@@ -289,9 +250,8 @@ app.post('/api/sessions/:slug/photos', requireUploadToken, upload.single('photo'
       });
   }
 
-  const emailResult = await maybeEmailAiPhoto(row, session, dest);
   const fresh = getDb().prepare('SELECT * FROM photos WHERE id = ?').get(id);
-  return res.status(201).json({ ok: true, photo: publicPhoto(session.slug, fresh), ...emailResult });
+  return res.status(201).json({ ok: true, photo: publicPhoto(session.slug, fresh) });
 });
 
 app.get('/api/display/settings', requireDisplayOrUploadToken, (_req, res) => {
@@ -318,7 +278,7 @@ app.get('/api/display/feed', requireDisplayOrUploadToken, (_req, res) => {
       `SELECT p.*, sess.slug AS session_slug
        FROM photos p
        JOIN sessions sess ON sess.id = p.session_id
-       WHERE p.variant = 'ai' AND IFNULL(p.gallery_picked, 0) = 1
+       WHERE p.variant = 'ai'
        ORDER BY p.created_at DESC
        LIMIT 200`,
     )
@@ -424,30 +384,28 @@ app.get('/api/admin/booth-jobs', requireAdminPin, (_req, res) => {
   });
 });
 
+app.delete('/api/admin/booth-jobs/:id', requireAdminPin, (req, res) => {
+  const id = String(req.params.id || '').trim();
+  if (!id) return res.status(400).json({ ok: false, error: 'Missing job id' });
+  const row = getDb().prepare('SELECT id FROM booth_jobs WHERE id = ?').get(id);
+  if (!row) return res.status(404).json({ ok: false, error: 'Job not found' });
+  getDb().prepare('DELETE FROM booth_jobs WHERE id = ?').run(id);
+  return res.json({ ok: true });
+});
+
 const admin = express.Router();
 admin.use(requireAdminPin);
 
 admin.get('/settings', (_req, res) => {
   const s = loadSettings();
   const uploadToken = getUploadToken();
-  const email = emailConfig();
   res.json({
     ok: true,
     settings: {
       defaultTtlDays: s.defaultTtlDays,
       uploadToken,
       uploadTokenConfigured: !!uploadToken,
-      displayToken: getDisplayToken(),
       publicBaseUrl: resolvePublicBaseUrl(),
-      displayIntervalMs: Number(s.displayIntervalMs) || 8000,
-      autoGalleryPickAi: !!s.autoGalleryPickAi,
-      emailEnabled: email.enabled,
-      sendgridApiUrl: email.apiUrl,
-      apiKeyConfigured: !!email.apiKey,
-      emailFrom: email.from,
-      emailFromName: email.fromName,
-      emailSubject: email.subject,
-      emailBody: email.body,
     },
   });
 });
@@ -469,25 +427,7 @@ admin.patch('/settings', (req, res) => {
     }
     patch.uploadToken = token;
   }
-  if (typeof body.displayToken === 'string') patch.displayToken = body.displayToken.trim();
   if (typeof body.publicBaseUrl === 'string') patch.publicBaseUrl = body.publicBaseUrl.trim().replace(/\/$/, '');
-  if (body.displayIntervalMs !== undefined) {
-    const ms = Number(body.displayIntervalMs);
-    if (!Number.isFinite(ms) || ms < 1000 || ms > 120000) {
-      return res.status(400).json({ ok: false, error: 'displayIntervalMs must be 1000–120000' });
-    }
-    patch.displayIntervalMs = Math.floor(ms);
-  }
-  if (body.autoGalleryPickAi !== undefined) patch.autoGalleryPickAi = !!body.autoGalleryPickAi;
-  if (body.emailEnabled !== undefined) patch.emailEnabled = !!body.emailEnabled;
-  if (typeof body.sendgridApiUrl === 'string') patch.sendgridApiUrl = body.sendgridApiUrl.trim();
-  if (typeof body.sendgridApiKey === 'string' && body.sendgridApiKey.trim()) {
-    patch.sendgridApiKey = body.sendgridApiKey.trim();
-  }
-  if (typeof body.emailFrom === 'string') patch.emailFrom = body.emailFrom.trim();
-  if (typeof body.emailFromName === 'string') patch.emailFromName = body.emailFromName.trim();
-  if (typeof body.emailSubject === 'string') patch.emailSubject = body.emailSubject.trim();
-  if (typeof body.emailBody === 'string') patch.emailBody = body.emailBody;
   if (!Object.keys(patch).length) {
     return res.status(400).json({ ok: false, error: 'No settings to update' });
   }
@@ -523,34 +463,17 @@ admin.get('/photos', (_req, res) => {
   });
 });
 
-admin.post('/photos/:id/email', async (req, res) => {
-  const row = getDb()
-    .prepare(
-      `SELECT p.*, sess.slug AS session_slug FROM photos p
-       JOIN sessions sess ON sess.id = p.session_id WHERE p.id = ?`,
-    )
-    .get(req.params.id);
-  if (!row) return res.status(404).json({ ok: false, error: 'Photo not found' });
-  const dest = path.join(config.photosDir, row.session_slug, row.filename);
-  const result = await maybeEmailAiPhoto(row, { slug: row.session_slug }, dest);
-  const fresh = getDb().prepare('SELECT * FROM photos WHERE id = ?').get(row.id);
-  return res.json({ ok: result.emailStatus === 'sent', photo: publicPhoto(row.session_slug, fresh), ...result });
+admin.get('/photos/days', (_req, res) => {
+  return res.json({ ok: true, days: listPhotoDays() });
 });
 
-admin.patch('/photos/:id', (req, res) => {
-  const row = getDb()
-    .prepare(
-      `SELECT p.*, sess.slug AS session_slug FROM photos p
-       JOIN sessions sess ON sess.id = p.session_id WHERE p.id = ?`,
-    )
-    .get(req.params.id);
-  if (!row) return res.status(404).json({ ok: false, error: 'Photo not found' });
-  if (typeof req.body?.galleryPicked !== 'boolean') {
-    return res.status(400).json({ ok: false, error: 'galleryPicked (boolean) is required' });
+/** Full-resolution photo zip. Query: ?day=YYYY-MM-DD for one event day, omit for all. */
+admin.get('/photos/zip', (req, res) => {
+  const raw = typeof req.query.day === 'string' ? req.query.day.trim() : '';
+  if (raw && !isValidDay(raw)) {
+    return res.status(400).json({ ok: false, error: 'day must be YYYY-MM-DD' });
   }
-  getDb().prepare('UPDATE photos SET gallery_picked = ? WHERE id = ?').run(req.body.galleryPicked ? 1 : 0, row.id);
-  const fresh = getDb().prepare('SELECT * FROM photos WHERE id = ?').get(row.id);
-  return res.json({ ok: true, photo: publicPhoto(row.session_slug, fresh) });
+  return streamPhotosZip(res, { day: raw || undefined });
 });
 
 admin.delete('/photos/:id', (req, res) => {
@@ -574,11 +497,8 @@ admin.delete('/photos/:id', (req, res) => {
 admin.get('/overview', (_req, res) => {
   const albums = getDb().prepare('SELECT COUNT(*) AS c FROM sessions').get().c;
   const photos = getDb().prepare('SELECT COUNT(*) AS c FROM photos').get().c;
-  const emailed = getDb().prepare(`SELECT COUNT(*) AS c FROM photos WHERE email_status = 'sent'`).get().c;
-  const failed = getDb().prepare(`SELECT COUNT(*) AS c FROM photos WHERE email_status = 'failed'`).get().c;
-  const gallery = getDb().prepare(`SELECT COUNT(*) AS c FROM photos WHERE gallery_picked = 1`).get().c;
   const releases = getDb().prepare('SELECT COUNT(*) AS c FROM booth_releases').get().c;
-  res.json({ ok: true, albums, photos, emailed, failed, gallery, releases });
+  res.json({ ok: true, albums, photos, releases });
 });
 
 app.use('/api/admin/booth-updates', adminBoothUpdateRouter);

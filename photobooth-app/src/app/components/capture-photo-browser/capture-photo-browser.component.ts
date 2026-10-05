@@ -4,16 +4,12 @@ import { BoothConfigService } from '../../services/booth-config.service';
 import { GalleryUploadService } from '../../services/gallery-upload.service';
 import type { PbCaptureHistoryItem } from '../../../types/pb-api';
 import { PrintTroubleDialogComponent } from '../print-trouble-dialog/print-trouble-dialog.component';
-import { PhysicalFrameAdjustDialogComponent } from '../physical-frame-adjust-dialog/physical-frame-adjust-dialog.component';
-import { PhysicalFrameLayoutService } from '../../services/physical-frame-layout.service';
-import type { PhysicalPhotoCrop } from '../../models/physical-frame-layout';
-import { FrameAdjustDialogComponent } from '../frame-adjust-dialog/frame-adjust-dialog.component';
 
 export type CaptureWhenFilter = 'all' | 'today' | 'yesterday' | 'week' | 'month' | 'custom';
 
 @Component({
   selector: 'pb-capture-photo-browser',
-  imports: [DatePipe, PrintTroubleDialogComponent, PhysicalFrameAdjustDialogComponent, FrameAdjustDialogComponent],
+  imports: [DatePipe, PrintTroubleDialogComponent],
   templateUrl: './capture-photo-browser.component.html',
   styleUrl: './capture-photo-browser.component.scss',
   host: {
@@ -24,7 +20,6 @@ export type CaptureWhenFilter = 'all' | 'today' | 'yesterday' | 'week' | 'month'
 export class CapturePhotoBrowserComponent implements OnInit {
   private readonly booth = inject(BoothConfigService);
   private readonly galleryUpload = inject(GalleryUploadService);
-  private readonly physicalLayout = inject(PhysicalFrameLayoutService);
   readonly copy = this.booth.copy;
 
   readonly compact = input(false);
@@ -47,15 +42,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
   readonly printBusy = signal(false);
   readonly printDone = signal(false);
   readonly printErr = signal<string | null>(null);
-  readonly makePhysicalBusy = signal(false);
-  readonly makePhysicalErr = signal<string | null>(null);
-  readonly physicalAdjustOpen = signal(false);
-  readonly makeFramedBusy = signal(false);
-  readonly makeFramedErr = signal<string | null>(null);
-  readonly framePickOpen = signal(false);
-  readonly framePickList = signal<{ filename: string; label: string; url: string }[]>([]);
-  readonly framePickSelected = signal<string | null>(null);
-  readonly frameAdjustOpen = signal(false);
   readonly deleteBusy = signal(false);
   readonly confirmDelete = signal(false);
 
@@ -97,15 +83,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
   readonly canPrint = computed(
     () => this.printEnabled() && !!this.selected() && !this.printBusy() && !this.printDone(),
   );
-
-  readonly canMakePhysical = computed(() => !!this.selected());
-
-  readonly canMakeFramed = computed(() => !!this.selected());
-
-  readonly physicalAdjustSource = computed(() => {
-    const photo = this.selected();
-    return photo ? this.sourceOriginal(photo) : '';
-  });
 
   async ngOnInit(): Promise<void> {
     await this.reload();
@@ -181,8 +158,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
     this.selectedId.set(photo.id);
     this.printDone.set(false);
     this.printErr.set(null);
-    this.makePhysicalErr.set(null);
-    this.makeFramedErr.set(null);
     this.confirmDelete.set(false);
     void this.ensureThumbs([photo]);
     await this.ensurePreview(photo);
@@ -253,125 +228,6 @@ export class CapturePhotoBrowserComponent implements OnInit {
       this.printErr.set(String(e));
     } finally {
       this.printBusy.set(false);
-    }
-  }
-
-  openPhysicalAdjust(): void {
-    if (!this.physicalAdjustSource()) {
-      this.makePhysicalErr.set('Physical layout requires Electron.');
-      return;
-    }
-    this.makePhysicalErr.set(null);
-    this.physicalAdjustOpen.set(true);
-  }
-
-  async onPhysicalAdjustConfirm(crop: PhysicalPhotoCrop): Promise<void> {
-    const src = this.physicalAdjustSource();
-    if (!src) {
-      this.makePhysicalErr.set('Physical layout requires Electron.');
-      return;
-    }
-    this.makePhysicalBusy.set(true);
-    this.makePhysicalErr.set(null);
-    try {
-      const r = await this.physicalLayout.generate(src, crop);
-      if (!r.ok || !r.path) {
-        this.makePhysicalErr.set(r.error || 'Could not create physical sheet.');
-        return;
-      }
-      this.physicalAdjustOpen.set(false);
-      await this.reload();
-    } catch (e) {
-      this.makePhysicalErr.set(String(e));
-    } finally {
-      this.makePhysicalBusy.set(false);
-    }
-  }
-
-  async openFramePick(): Promise<void> {
-    if (!this.physicalAdjustSource()) {
-      this.makeFramedErr.set('Framing requires Electron.');
-      return;
-    }
-    if (!window.pbApi?.listPhotoFrames) {
-      this.makeFramedErr.set('Frames require Electron.');
-      return;
-    }
-    this.makeFramedErr.set(null);
-    const r = await window.pbApi.listPhotoFrames();
-    if (!r.ok || !r.frames?.length) {
-      this.makeFramedErr.set(r.error || 'No frames on this booth. Upload one in Admin → Frames.');
-      return;
-    }
-    this.framePickList.set(
-      r.frames.map((f) => ({
-        filename: f.filename,
-        label: f.label || f.filename.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
-        url: f.url,
-      })),
-    );
-    const def = this.booth.photoFrames().defaultFrameFile;
-    const pick =
-      (def && r.frames.some((f) => f.filename === def) && def) || r.frames[0].filename;
-    this.framePickSelected.set(pick);
-    this.framePickOpen.set(true);
-  }
-
-  closeFramePick(): void {
-    if (this.makeFramedBusy()) return;
-    this.framePickOpen.set(false);
-  }
-
-  confirmMakeFramed(): void {
-    if (!this.physicalAdjustSource() || !this.framePickSelected()) {
-      this.makeFramedErr.set('Framing requires Electron.');
-      return;
-    }
-    this.makeFramedErr.set(null);
-    this.framePickOpen.set(false);
-    this.frameAdjustOpen.set(true);
-  }
-
-  closeFrameAdjust(): void {
-    if (this.makeFramedBusy()) return;
-    this.frameAdjustOpen.set(false);
-  }
-
-  async onFrameAdjustConfirm(crop: PhysicalPhotoCrop): Promise<void> {
-    const src = this.physicalAdjustSource();
-    const frame = this.framePickSelected();
-    if (!src || !frame || !window.pbApi?.applyPhotoFrame) {
-      this.makeFramedErr.set('Framing requires Electron.');
-      return;
-    }
-    this.makeFramedBusy.set(true);
-    this.makeFramedErr.set(null);
-    try {
-      const r = await window.pbApi.applyPhotoFrame({
-        imagePath: src,
-        frameFile: frame,
-        photoScale: this.booth.photoFrames().photoScale,
-        cropZoom: crop.zoom,
-        cropPanX: crop.panX,
-        cropPanY: crop.panY,
-      });
-      if (!r.ok || !r.path) {
-        this.makeFramedErr.set(r.error || 'Could not apply frame.');
-        return;
-      }
-      this.frameAdjustOpen.set(false);
-      this.galleryUpload.queueUpload(src, 'original');
-      this.galleryUpload.queueUpload(r.path, 'framed');
-      this.thumbUrls.set({});
-      this.previewUrls.set({});
-      const id = this.selectedId();
-      await this.reload();
-      const item = this.photos().find((p) => p.id === id);
-      if (item) await this.selectPhoto(item);
-    } catch (e) {
-      this.makeFramedErr.set(String(e));
-    } finally {
-      this.makeFramedBusy.set(false);
     }
   }
 

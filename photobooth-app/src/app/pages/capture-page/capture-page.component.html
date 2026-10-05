@@ -1,11 +1,6 @@
 <div class="pb-page pb-capture pb-zyn-capture-page">
   <div class="pb-zyn-screen pb-zyn-capture">
-    @if (branding.logoSrc(); as logo) {
-      <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
-    } @else {
-      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
-    }
-    <h1 class="pb-zyn-subtitle">AI PHOTOBOOTH</h1>
+    <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
     <p class="pb-zyn-tagline">
       {{ countdown() !== null && countdown()! > 0 ? copy().capture.smileHint : copy().capture.readySubtitle }}
     </p>
@@ -62,7 +57,7 @@
 
         <img
           class="pb-zyn-camera-overlay"
-          src="zyn/cameraoverlay.png"
+          [src]="branding.cameraOverlayUrl() || 'zyn/cameraoverlay.png'"
           alt=""
           aria-hidden="true"
           draggable="false"
@@ -112,33 +107,42 @@
     } @else {
       <div class="pb-zyn-capture-consents" role="group" aria-label="Consents">
         <div class="pb-zyn-consent">
-          <input
-            type="checkbox"
-            id="consent-marketing"
-            class="pb-zyn-consent-input"
-            [checked]="consentMarketing()"
-            (change)="consentMarketing.set($any($event.target).checked)"
-          />
+          <div class="pb-zyn-consent-control">
+            <input
+              type="checkbox"
+              id="consent-marketing"
+              class="pb-zyn-consent-input"
+              [checked]="consentMarketing()"
+              (change)="consentMarketing.set($any($event.target).checked)"
+            />
+            <span class="pb-zyn-consent-visual" aria-hidden="true"></span>
+          </div>
           <label class="pb-zyn-consent-label" for="consent-marketing">{{ copy().details.marketing }}</label>
         </div>
         <div class="pb-zyn-consent">
-          <input
-            type="checkbox"
-            id="consent-age"
-            class="pb-zyn-consent-input"
-            [checked]="consentAge()"
-            (change)="consentAge.set($any($event.target).checked)"
-          />
+          <div class="pb-zyn-consent-control">
+            <input
+              type="checkbox"
+              id="consent-age"
+              class="pb-zyn-consent-input"
+              [checked]="consentAge()"
+              (change)="consentAge.set($any($event.target).checked)"
+            />
+            <span class="pb-zyn-consent-visual" aria-hidden="true"></span>
+          </div>
           <label class="pb-zyn-consent-label" for="consent-age">{{ copy().details.age }}</label>
         </div>
         <div class="pb-zyn-consent">
-          <input
-            type="checkbox"
-            id="consent-image"
-            class="pb-zyn-consent-input"
-            [checked]="consentImageUse()"
-            (change)="consentImageUse.set($any($event.target).checked)"
-          />
+          <div class="pb-zyn-consent-control">
+            <input
+              type="checkbox"
+              id="consent-image"
+              class="pb-zyn-consent-input"
+              [checked]="consentImageUse()"
+              (change)="consentImageUse.set($any($event.target).checked)"
+            />
+            <span class="pb-zyn-consent-visual" aria-hidden="true"></span>
+          </div>
           <label class="pb-zyn-consent-label" for="consent-image">{{ copy().details.imageUse }}</label>
         </div>
       </div>

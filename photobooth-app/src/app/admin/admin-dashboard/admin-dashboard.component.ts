@@ -7,6 +7,7 @@ import type {
   PhotoboothBranding,
   PhotoboothCameraConfig,
   PhotoboothCaptureConfig,
+  PhotoboothKioskConfig,
   PhotoboothCopy,
   PhotoboothDebugConfig,
   PhotoboothGalleryConfig,
@@ -25,6 +26,7 @@ import {
   PHOTOBOOTH_DEFAULT_BRANDING,
   PHOTOBOOTH_DEFAULT_CAMERA,
   PHOTOBOOTH_DEFAULT_CAPTURE,
+  PHOTOBOOTH_DEFAULT_KIOSK,
   PHOTOBOOTH_DEFAULT_COPY,
   PHOTOBOOTH_DEFAULT_DEBUG,
   PHOTOBOOTH_DEFAULT_GALLERY,
@@ -155,6 +157,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     | 'debug' = 'copy';
   draft: PhotoboothCopy = structuredClone(PHOTOBOOTH_DEFAULT_COPY);
   draftCapture: PhotoboothCaptureConfig = structuredClone(PHOTOBOOTH_DEFAULT_CAPTURE);
+  draftKiosk: PhotoboothKioskConfig = structuredClone(PHOTOBOOTH_DEFAULT_KIOSK);
   draftBranding: PhotoboothBranding = structuredClone(PHOTOBOOTH_DEFAULT_BRANDING);
   draftCamera: PhotoboothCameraConfig = structuredClone(PHOTOBOOTH_DEFAULT_CAMERA);
   draftGallery: PhotoboothGalleryConfig = structuredClone(PHOTOBOOTH_DEFAULT_GALLERY);
@@ -408,6 +411,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private syncFromService(): void {
     this.draft = structuredClone(this.booth.copy());
     this.draftCapture = structuredClone(this.booth.capture());
+    this.draftKiosk = structuredClone(this.booth.kiosk());
     this.activeThemeId = this.booth.activeThemeId();
     const cfg = this.booth.config();
     this.draftAiEnabled = cfg?.aiGenerationEnabled ?? false;
@@ -913,7 +917,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           framedEdgeInsetMm: this.draftPrint.framedEdgeInsetMm ?? 4,
           framedBottomExtraMm: this.draftPrint.framedBottomExtraMm ?? 2.5,
           allowWifiPrinters: !!this.draftPrint.allowWifiPrinters,
-          stampTime: this.draftPrint.stampTime !== false,
+          stampTime: !!this.draftPrint.stampTime,
         },
       });
       if (ok) {
@@ -953,7 +957,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
           framedEdgeInsetMm: this.draftPrint.framedEdgeInsetMm ?? 4,
           framedBottomExtraMm: this.draftPrint.framedBottomExtraMm ?? 2.5,
           allowWifiPrinters: !!this.draftPrint.allowWifiPrinters,
-          stampTime: this.draftPrint.stampTime !== false,
+          stampTime: !!this.draftPrint.stampTime,
         },
       });
       this.draftPrint.enabled = true;
@@ -1780,6 +1784,80 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  async uploadCameraOverlay(): Promise<void> {
+    if (!window.pbApi?.adminPickCameraOverlayImage || !window.pbApi.adminInstallCameraOverlay) {
+      this.status.set('Guideline upload requires Electron.');
+      return;
+    }
+    this.status.set(null);
+    const pick = await window.pbApi.adminPickCameraOverlayImage();
+    if (!pick.ok || pick.canceled || !pick.path) return;
+    this.busy.set(true);
+    try {
+      const inst = await window.pbApi.adminInstallCameraOverlay(pick.path);
+      if (inst.ok) {
+        await this.booth.load();
+        await this.branding.refreshCameraOverlay();
+        this.status.set(`Capture guideline saved (${inst.cameraOverlayFile}).`);
+      } else {
+        this.status.set(inst.error ?? 'Could not save guideline.');
+      }
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  async useWaistCameraOverlay(): Promise<void> {
+    await this.installBundledCameraOverlay('waist', 'Waist-up guideline applied.');
+  }
+
+  async useCloseupCameraOverlay(): Promise<void> {
+    await this.installBundledCameraOverlay('closeup', 'Close-up guideline applied.');
+  }
+
+  private async installBundledCameraOverlay(
+    kind: 'waist' | 'closeup',
+    okMsg: string,
+  ): Promise<void> {
+    if (!window.pbApi?.adminInstallBundledCameraOverlay) {
+      this.status.set('Guideline swap requires Electron.');
+      return;
+    }
+    this.busy.set(true);
+    try {
+      const r = await window.pbApi.adminInstallBundledCameraOverlay(kind);
+      if (r.ok) {
+        await this.booth.load();
+        await this.branding.refreshCameraOverlay();
+        this.status.set(okMsg);
+      } else {
+        this.status.set(r.error ?? 'Could not apply guideline.');
+      }
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  async resetCameraOverlay(): Promise<void> {
+    if (!window.pbApi?.adminClearCameraOverlay) {
+      this.status.set('Guideline reset requires Electron.');
+      return;
+    }
+    this.busy.set(true);
+    try {
+      const r = await window.pbApi.adminClearCameraOverlay();
+      if (r.ok) {
+        await this.booth.load();
+        await this.branding.refreshCameraOverlay();
+        this.status.set('Capture guideline reset to theme default (waist-up).');
+      } else {
+        this.status.set(r.error ?? 'Could not reset guideline.');
+      }
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
   async reloadConfig(): Promise<void> {
     await this.booth.load();
     this.syncFromService();
@@ -1849,6 +1927,39 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   async kickJobs(): Promise<void> {
     await window.pbApi?.jobsKick?.();
     await this.refreshJobs();
+  }
+
+  async followUpJob(id: string): Promise<void> {
+    this.busy.set(true);
+    try {
+      const r = await window.pbApi?.jobsRetry?.({ id, aspects: 'all' });
+      this.status.set(r?.ok ? `Follow-up queued for ${id}` : r?.error || 'Follow-up failed.');
+      await this.refreshJobs();
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  async retryAiJob(id: string): Promise<void> {
+    this.busy.set(true);
+    try {
+      const r = await window.pbApi?.jobsRetry?.({ id, aspects: 'ai' });
+      this.status.set(r?.ok ? `AI re-queued for ${id}` : r?.error || 'Retry AI failed.');
+      await this.refreshJobs();
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  async retryUploadJob(id: string): Promise<void> {
+    this.busy.set(true);
+    try {
+      const r = await window.pbApi?.jobsRetry?.({ id, aspects: 'upload' });
+      this.status.set(r?.ok ? `Upload re-queued for ${id}` : r?.error || 'Retry upload failed.');
+      await this.refreshJobs();
+    } finally {
+      this.busy.set(false);
+    }
   }
 
   async printOp(id: string, op: 'retry' | 'cancel' | 'skip' | 'top' | 'reprint'): Promise<void> {
@@ -2028,6 +2139,28 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         this.syncFromService();
       }
       this.status.set(ok ? 'OpenAI API settings saved.' : 'Could not save OpenAI API.');
+    } finally {
+      this.busy.set(false);
+    }
+  }
+
+  async saveKioskIdle(): Promise<void> {
+    this.busy.set(true);
+    try {
+      const raw = Number(this.draftKiosk.idleTimeoutSeconds);
+      const idleTimeoutSeconds = Number.isFinite(raw)
+        ? Math.max(0, Math.min(600, Math.round(raw)))
+        : PHOTOBOOTH_DEFAULT_KIOSK.idleTimeoutSeconds;
+      this.draftKiosk.idleTimeoutSeconds = idleTimeoutSeconds;
+      const ok = await this.booth.save({ kiosk: { idleTimeoutSeconds } });
+      if (ok) this.syncFromService();
+      this.status.set(
+        ok
+          ? idleTimeoutSeconds > 0
+            ? `Idle timeout saved (${idleTimeoutSeconds}s).`
+            : 'Idle timeout disabled (0).'
+          : 'Could not save idle timeout.',
+      );
     } finally {
       this.busy.set(false);
     }

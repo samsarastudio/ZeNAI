@@ -496,6 +496,15 @@
   object-fit: contain;
 }
 
+.pb-admin-overlay-preview {
+  background: #000;
+  border-color: rgba(1, 179, 230, 0.45);
+}
+
+.pb-admin-overlay-preview img {
+  max-height: 280px;
+}
+
 .pb-admin-bg-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));

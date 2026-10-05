@@ -66,47 +66,6 @@
       </div>
     }
 
-    @if (showMakeFramed()) {
-      <div class="pb-result-physical">
-        <button
-          type="button"
-          class="pb-btn pb-btn-ghost pb-result-physical-btn"
-          [disabled]="makeFramedBusy()"
-          (click)="openMakeFramed()"
-        >
-          @if (makeFramedBusy()) {
-            {{ copy().result.makingFramed }}
-          } @else if (viewingFramedPhoto()) {
-            {{ copy().result.remakeFramed }}
-          } @else {
-            {{ copy().result.makeFramed }}
-          }
-        </button>
-      </div>
-    }
-
-    @if (showMakePhysical()) {
-      <div class="pb-result-physical">
-        @if (makePhysicalErr(); as pe) {
-          <p class="pb-msg">{{ copy().result.physicalErrorPrefix }} {{ pe }}</p>
-        }
-        <button
-          type="button"
-          class="pb-btn pb-btn-ghost pb-result-physical-btn"
-          [disabled]="makePhysicalBusy()"
-          (click)="openPhysicalAdjust()"
-        >
-          @if (makePhysicalBusy()) {
-            {{ copy().result.makingPhysical }}
-          } @else if (viewingPhysicalSheet()) {
-            {{ copy().result.remakePhysical }}
-          } @else {
-            {{ copy().result.makePhysical }}
-          }
-        </button>
-      </div>
-    }
-
     <div class="pb-row pb-result-actions">
       <button type="button" class="pb-btn pb-btn-ghost" (click)="retake()">{{ copy().result.retake }}</button>
       @if (isPreview()) {

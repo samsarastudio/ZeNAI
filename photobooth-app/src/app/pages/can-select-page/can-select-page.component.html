@@ -1,40 +1,62 @@
 <div class="pb-page pb-ai-mode pb-zyn-flavor-page">
   <div class="pb-zyn-screen">
     <header class="pb-zyn-header">
-      @if (branding.logoSrc(); as logo) {
-        <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
-      } @else {
-        <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
-      }
+      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
       <h1 class="pb-zyn-subtitle">{{ copy().cans.title }}</h1>
       <p class="pb-zyn-tagline">{{ copy().cans.subtitle }}</p>
     </header>
 
-    <ul class="pb-zyn-flavor-list" role="list">
-      @for (c of flavors(); track c.id) {
-        <li>
+    <div class="pb-zyn-carousel" role="listbox" [attr.aria-label]="copy().cans.title">
+      <div class="pb-zyn-carousel-viewport">
+        <div
+          class="pb-zyn-carousel-track"
+          [class.is-ready]="trackReady()"
+          [style.transform]="trackTransform()"
+          (transitionend)="onTrackTransitionEnd($event)"
+        >
+          @for (c of loopFlavors(); track $index) {
+            <button
+              type="button"
+              class="pb-zyn-flavor-card"
+              [class.is-active]="$index === trackIndex()"
+              [attr.aria-selected]="$index === trackIndex()"
+              (click)="selectAtTrack($index)"
+            >
+              <span class="pb-zyn-flavor-art">
+                <img
+                  class="pb-zyn-flavor-img"
+                  [src]="artFor(c.id)"
+                  [alt]="c.displayLabel"
+                  draggable="false"
+                />
+              </span>
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="pb-zyn-dots" role="tablist" aria-label="Flavors">
+        @for (c of flavors(); track c.id; let i = $index) {
           <button
             type="button"
-            class="pb-zyn-flavor-card"
-            [class.is-active]="selectedId() === c.id"
-            (click)="select(c.id, c.displayLabel)"
-          >
-            <span class="pb-zyn-flavor-art">
-              <img class="pb-zyn-flavor-img" [src]="artFor(c.id)" [alt]="c.displayLabel" />
-            </span>
-          </button>
-        </li>
-      }
-    </ul>
+            class="pb-zyn-dot"
+            [class.is-active]="focusIndex() === i"
+            [attr.aria-label]="c.displayLabel"
+            (click)="goTo(i)"
+          ></button>
+        }
+      </div>
+    </div>
 
     <div class="pb-zyn-flavor-actions">
-      <button
-        type="button"
-        class="pb-btn pb-btn-primary"
-        [disabled]="!selectedId()"
-        (click)="continue()"
-      >
+      <button type="button" class="pb-zyn-nav" aria-label="Previous flavor" (click)="prev()">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <button type="button" class="pb-btn pb-btn-primary pb-zyn-select" (click)="continue()">
         {{ copy().cans.continue }}
+      </button>
+      <button type="button" class="pb-zyn-nav" aria-label="Next flavor" (click)="next()">
+        <span aria-hidden="true">›</span>
       </button>
     </div>
   </div>

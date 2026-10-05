@@ -39,6 +39,13 @@ contextBridge.exposeInMainWorld('pbApi', {
   adminInstallAiLogo: (sourcePath) => ipcRenderer.invoke('admin:installAiLogo', sourcePath),
   adminClearAiLogo: () => ipcRenderer.invoke('admin:clearAiLogo'),
   adminGetAiBrandLogoUrl: () => ipcRenderer.invoke('admin:getAiBrandLogoUrl'),
+  adminPickCameraOverlayImage: () => ipcRenderer.invoke('admin:pickCameraOverlayImage'),
+  adminInstallCameraOverlay: (sourcePath) =>
+    ipcRenderer.invoke('admin:installCameraOverlay', sourcePath),
+  adminInstallBundledCameraOverlay: (kind) =>
+    ipcRenderer.invoke('admin:installBundledCameraOverlay', kind),
+  adminClearCameraOverlay: () => ipcRenderer.invoke('admin:clearCameraOverlay'),
+  adminGetCameraOverlayUrl: () => ipcRenderer.invoke('admin:getCameraOverlayUrl'),
   adminListAiBackgrounds: (modeId) => ipcRenderer.invoke('admin:listAiBackgrounds', modeId),
   adminPickAiBackgroundImage: () => ipcRenderer.invoke('admin:pickAiBackgroundImage'),
   adminInstallAiBackground: (modeId, sourcePath) =>
@@ -83,6 +90,7 @@ contextBridge.exposeInMainWorld('pbApi', {
   jobsList: () => ipcRenderer.invoke('jobs:list'),
   jobsGet: (id) => ipcRenderer.invoke('jobs:get', id),
   jobsPrintOp: (payload) => ipcRenderer.invoke('jobs:printOp', payload),
+  jobsRetry: (payload) => ipcRenderer.invoke('jobs:retry', payload),
   jobsSetDisplayPicked: (payload) => ipcRenderer.invoke('jobs:setDisplayPicked', payload),
   jobsKick: () => ipcRenderer.invoke('jobs:kick'),
   onJobsUpdated: (cb) => {

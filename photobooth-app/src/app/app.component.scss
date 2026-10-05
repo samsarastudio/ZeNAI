@@ -8,3 +8,20 @@
   min-height: 100vh;
   isolation: isolate;
 }
+
+/** Invisible 4-tap zone (top-right) to return to attract from mid-flow screens. */
+.pb-kiosk-home-hotspot {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 50;
+  width: clamp(3.5rem, 9vmin, 5rem);
+  height: clamp(3.5rem, 9vmin, 5rem);
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}

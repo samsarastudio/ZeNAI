@@ -1,56 +1,113 @@
 .pb-zyn-attract-page {
   align-items: center;
   justify-content: center;
+  padding: clamp(0.35rem, 1vh, 0.75rem);
+  box-sizing: border-box;
 }
 
 .pb-zyn-attract {
   position: relative;
-  width: min(100%, 1200px);
+  width: min(100%, 1600px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.25rem, 3vmin, 2.5rem);
   text-align: center;
-  padding: 1rem;
+  flex: 1 1 auto;
 }
 
-.pb-zyn-attract-brand .pb-zyn-logo {
-  width: min(260px, 42vw);
-  height: auto;
-}
-
+/*
+  Ring is a little under the previous lockup and shifted up.
+  ZYN is centered on the lower arm opening. The start button stays put.
+*/
 .pb-zyn-hero-ring {
-  width: min(42vw, 720px);
-  aspect-ratio: 1.2 / 1;
+  position: relative;
+  width: min(47vw, 924px);
+  aspect-ratio: 647 / 548;
+  container-type: size;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8% 10%;
+  box-sizing: border-box;
+  padding: 16% 3.5% 18%;
+  transform: translateY(-6.3vh);
+}
+
+.pb-zyn-hero-ring .pb-zyn-logo {
+  position: absolute;
+  top: 96.2%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(7.7vw, 223px);
+  height: auto;
+  margin: 0;
+  filter: brightness(0) invert(1);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .pb-zyn-hero-title {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: max-content;
+  max-width: 100%;
   color: #fff;
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
   font-weight: 800;
-  font-size: clamp(2rem, 5.5vmin, 3.75rem);
-  line-height: 1.05;
-  letter-spacing: 0.04em;
+  /* AI title ~15.6% of H across 2 lines → ~8–9.5vw / ~14cqi */
+  font-size: clamp(3.25rem, min(9.6vw, 15cqi), 9.75rem);
+  font-style: normal;
+  line-height: 0.9;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
-  white-space: pre-line;
+  text-align: center;
 }
 
-.pb-zyn-cta {
-  min-width: clamp(280px, 36vw, 520px);
-  border-radius: 88px;
+.pb-zyn-hero-line {
+  display: block;
+  white-space: nowrap;
+}
+
+.pb-zyn-attract .pb-zyn-cta {
+  position: fixed;
+  /* Same screen spot as the previous in-bracket button (56vw ring, bottom 1%). */
+  bottom: calc(50vh - 0.415 * min(56vw, 1100px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin-top: 0;
+  width: clamp(280px, 18vw, 540px);
+  min-width: clamp(280px, 18vw, 540px);
+  min-height: clamp(3.9rem, 8.6vh, 6.4rem);
+  height: auto;
+  border-radius: 88.228px;
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
   font-weight: 800;
-  font-size: clamp(1.15rem, 2.6vmin, 1.65rem);
-  letter-spacing: 0.06em;
+  font-size: clamp(1.25rem, 2.7vh, 2.05rem) !important;
+  letter-spacing: 0.04em;
+  line-height: normal;
   text-transform: uppercase;
   text-decoration: none;
+  padding: 0.85rem 2.35rem;
+  box-sizing: border-box;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pb-zyn-attract-alert {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,6 +128,20 @@
   text-transform: uppercase;
 }
 
+.pb-attract-admin-hotspot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  width: clamp(3.5rem, 9vmin, 5rem);
+  height: clamp(3.5rem, 9vmin, 5rem);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .pb-attract-admin {
   position: absolute;
   right: clamp(0.5rem, 2vmin, 1rem);
@@ -78,39 +149,20 @@
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0.5rem 0.85rem;
-  font-size: clamp(0.72rem, 1.9vmin, 0.9rem);
-  opacity: 0.32;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.85rem;
   text-decoration: none;
-  border-radius: 10px;
-}
-
-.pb-attract-admin:hover {
-  opacity: 0.95;
-  text-decoration: underline;
 }
 
 .pb-attract-history {
   position: absolute;
-  top: clamp(0.5rem, 2vmin, 1rem);
-  right: clamp(0.5rem, 2vmin, 1rem);
+  left: clamp(0.5rem, 2vmin, 1rem);
+  bottom: clamp(0.35rem, 2vmin, 1rem);
   z-index: 3;
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  margin: 0;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 0;
-  border-radius: 12px;
   background: transparent;
-  opacity: 0;
-  cursor: default;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.pb-attract-history:focus-visible {
-  opacity: 0.25;
-  outline: 2px solid rgba(255, 255, 255, 0.45);
-  outline-offset: 2px;
+  cursor: pointer;
+  opacity: 0.01;
 }

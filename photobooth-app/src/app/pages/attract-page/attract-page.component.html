@@ -1,13 +1,5 @@
 <div class="pb-page pb-attract pb-zyn-attract-page">
   <div class="pb-zyn-attract">
-    <header class="pb-zyn-attract-brand">
-      @if (branding.logoSrc(); as logo) {
-        <img class="pb-zyn-logo" [src]="logo" alt="ZYN" loading="eager" decoding="async" />
-      } @else {
-        <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
-      }
-    </header>
-
     @if (apiKeyMissing()) {
       <div class="pb-zyn-attract-alert" role="alert">
         <strong>{{ copy().thanks.apiKeyMissing || 'API KEY MISSING' }}</strong>
@@ -15,13 +7,29 @@
       </div>
     }
 
+    <!-- Brackets sit slightly smaller and higher. ZYN is in the bottom opening. Start stays at the previous screen position. -->
     <div class="pb-zyn-hero-ring">
-      <h1 class="pb-zyn-hero-title">{{ copy().attract.title }}</h1>
+      <h1 class="pb-zyn-hero-title">
+        @for (line of titleLines(); track line) {
+          <span class="pb-zyn-hero-line">{{ line }}</span>
+        }
+      </h1>
+      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" loading="eager" decoding="async" />
     </div>
-
-    <a [routerLink]="startLink" class="pb-btn pb-btn-primary pb-zyn-cta" [attr.aria-label]="copy().attract.startAria">
+    <a
+      [routerLink]="startLink"
+      class="pb-btn pb-btn-primary pb-zyn-cta"
+      [attr.aria-label]="copy().attract.startAria"
+    >
       {{ copy().attract.ctaLabel }}
     </a>
+
+    <button
+      type="button"
+      class="pb-attract-admin-hotspot"
+      aria-label="Staff access"
+      (click)="onAdminCornerTap()"
+    ></button>
 
     <button
       type="button"
@@ -30,7 +38,9 @@
       (click)="openHistory()"
     ></button>
 
-    <a routerLink="/admin" class="pb-attract-admin">{{ copy().attract.adminLink }}</a>
+    @if (adminLinkVisible()) {
+      <a routerLink="/admin" class="pb-attract-admin">{{ copy().attract.adminLink }}</a>
+    }
   </div>
 </div>
 

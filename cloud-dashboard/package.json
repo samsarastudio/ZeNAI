@@ -1,19 +1,21 @@
 {
   "name": "zyn-cloud-dashboard",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
-  "description": "ZYN photobooth cloud dashboard — photo upload, guest email, OTA packages",
+  "description": "ZYN photobooth cloud dashboard — photo upload and OTA packages",
   "type": "module",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
+    "package:server": "node scripts/package-server.mjs",
     "register-zip": "node scripts/register-booth-zip.mjs"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "better-sqlite3": "^11.8.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

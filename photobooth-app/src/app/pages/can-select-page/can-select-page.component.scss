@@ -1,7 +1,13 @@
+/* Equal-size lids, edges half-cut, smooth infinite loop + cyan active highlight */
 .pb-zyn-flavor-page {
-  align-items: stretch;
-  justify-content: center;
-  overflow: visible;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: clamp(1rem, 3vh, 2.25rem);
+  padding-bottom: clamp(0.75rem, 2vh, 1.5rem);
+  box-sizing: border-box;
 }
 
 .pb-zyn-screen {
@@ -9,8 +15,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1rem, 3vmin, 2rem);
-  overflow: visible;
+  justify-content: flex-start;
+  gap: clamp(0.65rem, 1.8vh, 1.35rem);
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .pb-zyn-header {
@@ -19,124 +28,207 @@
   align-items: center;
   text-align: center;
   gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .pb-zyn-logo {
-  width: min(260px, 42vw);
+  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
   height: auto;
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.3rem;
+  filter: brightness(0) invert(1);
 }
 
 .pb-zyn-subtitle {
   margin: 0;
-  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  font-size: clamp(2.05rem, 3.45vh, 4.15rem);
+  font-weight: 700; /* Oswald Heavy */
+  letter-spacing: 0.02em;
+  line-height: 1;
   color: #fff;
   text-transform: uppercase;
-}
-
-.pb-zyn-subtitle-grad {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  background: none;
 }
 
 .pb-zyn-tagline {
-  margin: 0.85rem 0 0;
-  color: #fff;
-  font-size: clamp(0.9rem, 2.2vmin, 1.5rem);
-  letter-spacing: 0.3em;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-
-.pb-zyn-flavor-list {
-  list-style: none;
   margin: 0;
-  padding: 0.75rem 0 0.5rem;
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: clamp(0.55rem, 1.6vmin, 1.25rem);
-  align-items: stretch;
-  overflow: visible;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  color: #fff;
+  font-size: clamp(0.95rem, 1.9vh, 1.45rem);
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  line-height: normal;
 }
 
-@media (max-width: 1100px) {
-  .pb-zyn-flavor-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.pb-zyn-flavor-list > li {
-  min-width: 0;
-  overflow: visible;
-  display: flex;
-}
-
-.pb-zyn-flavor-card {
+.pb-zyn-carousel {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(0.35rem, 1vmin, 0.65rem);
-  border: none;
+  gap: clamp(0.85rem, 2.2vh, 1.5rem);
+  flex: 1 1 auto;
+  min-height: 0;
+  justify-content: center;
+}
+
+/*
+  ~4.5 lids across the viewport so the end lids are cut in half.
+  All lids identical size; only the active one gets the cyan highlight + 1.05 scale.
+*/
+.pb-zyn-carousel-viewport {
+  --lid-size: min(38vh, 22vw, 480px);
+  --lid-gap: clamp(1.25rem, 2.8vw, 3rem);
+  --slide-step: calc(var(--lid-size) + var(--lid-gap));
+  width: 100%;
+  /* Room for lid + cyan highlight scale(1.05) — never clip vertically */
+  height: calc(var(--lid-size) * 1.22);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  /* Center active lid: pad so slide 0 sits centered before translateX */
+  padding-left: calc(50% - var(--lid-size) / 2);
+}
+
+.pb-zyn-carousel-track {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--lid-gap);
+  flex: 0 0 auto;
+  will-change: transform;
+  backface-visibility: hidden;
+  /* Only X moves — Y is flex-centered so first paint is never half-clipped */
+  transform: translate3d(0, 0, 0);
+}
+
+.pb-zyn-carousel-track.is-ready {
+  transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pb-zyn-flavor-card {
+  flex: 0 0 var(--lid-size);
+  width: var(--lid-size);
+  padding: 0.45rem;
+  border: 0;
   background: transparent;
-  color: #fff;
   cursor: pointer;
-  font: inherit;
-  border-radius: 1.5rem;
-  overflow: visible;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.pb-zyn-flavor-card.is-active,
-.pb-zyn-flavor-card:hover {
-  background: rgba(0, 210, 255, 0.12);
-  box-shadow: 0 0 28px rgba(0, 210, 255, 0.35);
-  transform: scale(1.05);
-}
-
-.pb-zyn-flavor-card.is-active .pb-zyn-flavor-art,
-.pb-zyn-flavor-card:hover .pb-zyn-flavor-art {
-  background: #01b3e6;
-  border: 2px solid rgba(0, 210, 255, 0.9);
+  border-radius: 27.121px;
+  /* Use scale on the art plate only so it doesn't bubble transform to the track */
+  box-sizing: border-box;
 }
 
 .pb-zyn-flavor-art {
+  display: block;
   width: 100%;
-  max-width: 280px;
-  aspect-ratio: 1 / 1;
-  display: grid;
-  place-items: center;
-  overflow: visible;
   border-radius: 27.121px;
-  border: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Previous HTML highlight: scale 1.05 + cyan plate (transform stays on art, not card) */
+.pb-zyn-flavor-card.is-active .pb-zyn-flavor-art {
+  background: #01b3e6;
+  border: 2px solid rgba(0, 210, 255, 0.9);
+  transform: scale(1.05);
 }
 
 .pb-zyn-flavor-img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
+  height: auto;
   display: block;
+  border-radius: 50%;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
   pointer-events: none;
+  user-select: none;
+}
+
+.pb-zyn-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.55rem, 1.4vw, 0.95rem);
+  flex-shrink: 0;
+}
+
+.pb-zyn-dot {
+  width: clamp(12px, 1.35vw, 18px);
+  height: clamp(12px, 1.35vw, 18px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.pb-zyn-dot.is-active {
+  background: #fff;
+  transform: scale(1.35);
 }
 
 .pb-zyn-flavor-actions {
-  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin-top: clamp(0.25rem, 1vh, 0.75rem);
+  flex-shrink: 0;
 }
 
-@media (max-width: 1100px) {
-  .pb-zyn-flavor-list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+.pb-zyn-nav {
+  flex: 0 0 auto;
+  width: clamp(3.4rem, 7.5vh, 5.25rem);
+  height: clamp(3.4rem, 7.5vh, 5.25rem);
+  border: 0;
+  border-radius: 50%;
+  background: #01b3e6;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(0, 210, 255, 0.35);
+}
+
+.pb-zyn-nav:active {
+  transform: scale(0.96);
+}
+
+.pb-zyn-nav span {
+  font-size: clamp(2rem, 5vh, 3rem);
+  font-weight: 300;
+  line-height: 1;
+  margin-top: -0.1em;
+}
+
+.pb-zyn-flavor-actions .pb-zyn-select {
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.35rem, 3.4vh, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
+  min-width: clamp(220px, 24vw, 380px);
+  min-height: clamp(3.1rem, 7.5vh, 4.8rem);
+  border-radius: 88.228px;
+}
+
+@media (max-height: 820px) {
+  .pb-zyn-carousel-viewport {
+    --lid-size: min(32vh, 20vw, 400px);
   }
 }
 
-@media (max-width: 700px) {
-  .pb-zyn-flavor-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 900px) {
+  .pb-zyn-carousel-viewport {
+    --lid-size: min(34vh, 38vw, 320px);
+    --lid-gap: clamp(0.75rem, 2vw, 1.25rem);
   }
 }

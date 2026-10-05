@@ -1,6 +1,6 @@
 # ZYN Cloud Dashboard — Server Install
 
-Node backend for the ZYN photobooth: photo upload host, guest email (SendGrid), public gallery wall, and kiosk OTA packages.
+Node backend for the ZYN photobooth: photo upload host and kiosk OTA packages.
 
 | Item | Value |
 |------|--------|
@@ -88,15 +88,6 @@ ADMIN_PIN=2727
 | `ADMIN_PIN` | PIN for `/admin` |
 | `DATA_DIR` | Optional absolute path for SQLite + photos (default `./data`) |
 
-Optional SendGrid defaults (also configurable later in **Admin → Email**):
-
-```env
-SENDGRID_API_URL=https://api.sendgrid.com/v3/mail/send
-SENDGRID_API_KEY=SG.xxxxx
-EMAIL_FROM=noreply@yourdomain.com
-EMAIL_FROM_NAME=ZYN Photobooth
-```
-
 Change `UPLOAD_TOKEN` and `ADMIN_PIN` before going live.
 
 ---
@@ -166,21 +157,17 @@ sudo systemctl stop zyn-cloud-dashboard
 ## 6. First-time product setup
 
 1. Open `/admin` → unlock with `ADMIN_PIN`.
-2. **Email** — enable SendGrid, paste API key, set a verified From address.
-3. **Settings** — set **Public base URL** to `http://YOUR_PUBLIC_IP:3020` (or your HTTPS domain). Confirm upload token.
-4. Optionally enable **Auto-send AI uploads to the live gallery wall**.
-5. On each Windows kiosk: **Admin → Cloud**
+2. **Settings** — set **Public base URL** to `http://YOUR_PUBLIC_IP:3020` (or your HTTPS domain). Confirm upload token.
+3. On each Windows kiosk: **Admin → Cloud**
    - Enable upload
    - API URL: same as `PUBLIC_BASE_URL`
    - Token: same as `UPLOAD_TOKEN`
-6. Test: run a session → AI photo should appear on the cloud gallery and email (if configured).
+4. Test: run a session → AI photo should appear under **Photos** in the cloud admin.
 
 | URL | What |
 |-----|------|
 | `http://HOST:3020/admin` | Cloud dashboard |
-| `http://HOST:3020/` | Public photo wall |
 | `http://HOST:3020/api/health` | Health check |
-| `http://HOST:3020/api/display/feed?token=zyn-display` | Gallery Windows app feed |
 
 ---
 
@@ -271,8 +258,6 @@ Do **not** delete `data/` or `.env` unless you intend to wipe photos/settings.
 | Can't reach from internet | Droplet running? Firewall allows TCP `3020`? `HOST=0.0.0.0`? `systemctl status` |
 | `npm install` fails on sqlite | Install `build-essential` and `python3`, then retry |
 | Kiosk upload 401 | `UPLOAD_TOKEN` must match kiosk Cloud token |
-| Emails not sending | Admin → Email: SendGrid key + verified From; check photo `email_status` in admin |
-| Wrong links in emails / QR | `PUBLIC_BASE_URL` must be the public URL guests can open |
 | Port in use | `ss -tlnp \| grep 3020` or change `PORT` |
 
 Logs:

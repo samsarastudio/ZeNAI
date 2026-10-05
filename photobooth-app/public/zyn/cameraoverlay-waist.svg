@@ -1,0 +1,47 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1080" viewBox="0 0 900 1080" fill="none">
+  <!-- Waist-up pose guide: guest a bit further back; waist pinned to bottom edge -->
+  <path
+    d="M 450 70
+       C 390 70 345 120 345 185
+       C 345 250 390 300 450 300
+       C 510 300 555 250 555 185
+       C 555 120 510 70 450 70
+       Z"
+    stroke="#FFFFFF"
+    stroke-width="14"
+    stroke-linejoin="round"
+    fill="none"/>
+  <!-- Neck -->
+  <path
+    d="M 415 295 L 415 355 L 485 355 L 485 295"
+    stroke="#FFFFFF"
+    stroke-width="14"
+    stroke-linejoin="round"
+    fill="none"/>
+  <!-- Shoulders + torso + arms to waist, open at bottom (flush) -->
+  <path
+    d="M 415 355
+       C 340 365 250 400 200 470
+       C 175 510 160 560 155 620
+       L 155 1080
+       M 745 1080
+       L 745 620
+       C 740 560 725 510 700 470
+       C 650 400 560 365 485 355"
+    stroke="#FFFFFF"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"/>
+  <!-- Inner torso / waist suggestion -->
+  <path
+    d="M 300 520
+       C 320 700 330 880 340 1080
+       M 600 520
+       C 580 700 570 880 560 1080"
+    stroke="#FFFFFF"
+    stroke-width="10"
+    stroke-linecap="round"
+    opacity="0.85"
+    fill="none"/>
+</svg>

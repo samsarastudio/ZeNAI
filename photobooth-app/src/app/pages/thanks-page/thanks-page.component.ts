@@ -36,9 +36,18 @@ export class ThanksPageComponent implements OnInit, OnDestroy {
     if (this.printEnabled() && this.printStatus() === 'failed') {
       return c.printError || 'SOMETHING WENT WRONG';
     }
-    // Match reference screen-6: always "YOUR PHOTO / IS PRINTING"
-    return c.printed || c.processing || c.title || 'YOUR PHOTO\nIS PRINTING';
+    // Match AI file: "THANK YOU!"
+    return c.printed || c.processing || c.title || 'THANK YOU!';
   });
+
+  readonly headlineLines = computed(() =>
+    this.headline()
+      .split(/\n/)
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+
+  readonly gradientLastLine = computed(() => false);
 
   /** Guest-facing hint — errors only (no AI/upload phase chatter). */
   readonly guestStatusHint = computed(() => {

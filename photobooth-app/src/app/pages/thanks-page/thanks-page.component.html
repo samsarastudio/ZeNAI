@@ -1,30 +1,21 @@
 <div class="pb-page pb-thanks pb-zyn-thanks-page">
   <div class="pb-zyn-thanks">
-    @if (branding.logoSrc(); as logo) {
-      <img class="pb-zyn-logo" [src]="logo" alt="ZYN" />
-    } @else {
-      <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
-    }
-    <h1 class="pb-zyn-subtitle">AI PHOTOBOOTH</h1>
+    <img class="pb-zyn-logo" src="zyn/logo.svg" alt="ZYN" />
 
-    <div class="pb-zyn-thanks-hero">
-      @if (printStatus() === 'failed' || aiStatus() === 'failed' || backendReachable() === false) {
-        <div class="pb-zyn-thanks-warn" aria-hidden="true">!</div>
-      } @else {
-        <img class="pb-zyn-thanks-tick" src="zyn/finalTick.png" alt="" />
-      }
-      <h2 class="pb-zyn-thanks-title">
-        @for (line of headline().split('\n'); track $index) {
-          <span class="pb-zyn-thanks-line">{{ line }}</span>
-        }
-      </h2>
+    <div class="pb-zyn-thanks-card" [class.is-error]="!!guestStatusHint()">
       @if (guestStatusHint(); as hint) {
+        <div class="pb-zyn-thanks-warn" aria-hidden="true">!</div>
+        <h2 class="pb-zyn-thanks-title">{{ headline() }}</h2>
         <p class="pb-zyn-thanks-hint">{{ hint }}</p>
+      } @else {
+        <h2 class="pb-zyn-thanks-title">{{ headline() }}</h2>
       }
     </div>
 
-    <button type="button" class="pb-btn pb-btn-primary" (click)="startOver()">
-      {{ copy().thanks.startOver }}
-    </button>
+    <div class="pb-zyn-thanks-actions">
+      <button type="button" class="pb-btn pb-btn-primary" (click)="startOver()">
+        {{ copy().thanks.startOver }}
+      </button>
+    </div>
   </div>
 </div>

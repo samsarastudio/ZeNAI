@@ -23,18 +23,33 @@
 .pb-zyn-details-title {
   margin: 0 0 0.75rem;
   color: #fff;
-  font-size: clamp(2.4rem, 6.5vmin, 4.4rem);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 70.8px;
   font-weight: 800;
-  line-height: 0.95;
+  font-style: normal;
+  line-height: normal;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
+.pb-zyn-subtitle-grad {
+  background: linear-gradient(90deg, #0072bb 0%, #01b3e6 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 .pb-zyn-tagline--left {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
   text-align: left;
-  letter-spacing: 0.22em;
+  letter-spacing: 4.8px;
   white-space: pre-line;
+  text-transform: uppercase;
 }
 
 .pb-zyn-form-card {
@@ -52,9 +67,11 @@
 .pb-zyn-form-heading {
   margin: 0 0 1.2rem;
   color: #fff;
-  font-size: clamp(1.15rem, 2.6vmin, 1.75rem);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 28px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  line-height: normal;
+  letter-spacing: normal;
   text-align: center;
   text-transform: uppercase;
 }
@@ -69,8 +86,10 @@
   display: grid;
   gap: 0.55rem;
   color: #fff;
-  font-size: 1.05rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
   font-weight: 500;
+  line-height: normal;
   text-transform: uppercase;
 }
 
@@ -110,9 +129,19 @@
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  font-size: 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
   text-transform: none;
   font-weight: 500;
+  line-height: normal;
+}
+
+.pb-zyn-form-actions .pb-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 26.468px;
+  font-weight: 800;
+  letter-spacing: normal;
+  line-height: normal;
 }
 
 .pb-check input[type='checkbox'] {

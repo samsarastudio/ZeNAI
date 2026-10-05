@@ -1,6 +1,9 @@
 .pb-zyn-review-page {
-  align-items: stretch;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: clamp(1.25rem, 3.5vh, 2.5rem);
 }
 
 .pb-zyn-screen {
@@ -8,8 +11,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: clamp(0.75rem, 2.2vmin, 1.5rem);
   text-align: center;
+  flex: 1 1 auto;
 }
 
 .pb-zyn-header {
@@ -21,32 +26,37 @@
 }
 
 .pb-zyn-logo {
-  width: min(220px, 36vw);
+  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
   height: auto;
-  margin-bottom: 0.35rem;
+  margin: 0;
+  filter: brightness(0) invert(1);
 }
 
 .pb-zyn-subtitle {
   margin: 0;
-  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(2.4rem, 6vmin, 4.5rem);
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
+  line-height: normal;
   color: #fff;
   text-transform: uppercase;
 }
 
 .pb-zyn-subtitle-grad {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
   background: none;
 }
 
 .pb-zyn-tagline {
   margin: 0.85rem 0 0;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
   color: #fff;
-  font-size: clamp(0.9rem, 2.2vmin, 1.5rem);
-  letter-spacing: 0.3em;
-  font-weight: 400;
+  font-size: clamp(1rem, 2.4vmin, 1.6rem);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  line-height: normal;
   text-transform: uppercase;
 }
 
@@ -123,16 +133,27 @@
 }
 
 .pb-btn-retake {
-  border-radius: 88px;
-  border: 2px solid #fff;
+  border-radius: 88.228px;
+  border: 1.765px solid #fff;
   background: #fff;
   color: #0072bb;
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
   font-weight: 800;
-  font-size: clamp(1rem, 2.4vmin, 1.65rem);
+  font-size: clamp(1.35rem, 3vmin, 2.1rem);
   letter-spacing: 0.04em;
+  line-height: normal;
   text-transform: uppercase;
   min-height: clamp(3.4rem, 7vmin, 4.6rem);
-  padding: 0.85rem 2.5rem;
+  padding: 1.1rem 2.75rem;
+}
+
+.pb-zyn-review-actions .pb-btn-primary {
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.35rem, 3vmin, 2.1rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 .pb-btn-retake:disabled {

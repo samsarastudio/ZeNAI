@@ -30,13 +30,18 @@
 }
 
 :root {
-  --pb-font-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
-  --pb-font-display: "Plus Jakarta Sans", "Montserrat", system-ui, sans-serif;
-  --pb-attract-hero-fs: clamp(2.45rem, min(11vmin, 10.5vh), 5.15rem);
+  /* AI file fonts: Oswald Heavy + Field Gothic → Oswald + Barlow Condensed */
+  --pb-font-sans: "Oswald", "Barlow Condensed", system-ui, sans-serif;
+  --pb-font-display: "Oswald", "Barlow Condensed", system-ui, sans-serif;
+  --pb-font-condensed: "Barlow Condensed", "Oswald", system-ui, sans-serif;
+  /* AI artboard: logo ~8.6% width, top edge at 16% on every screen */
+  --pb-zyn-logo-w: min(8.6vw, 248px);
+  --pb-zyn-logo-top: 16vh;
+  --pb-attract-hero-fs: clamp(3.25rem, 7.3vh, 8.75rem);
   --pb-attract-sub-fs: clamp(0.9rem, min(3.05vmin, 2.95vh), 1.42rem);
-  --pb-attract-cta-fs: clamp(1.35rem, min(3.8vmin, 3.6vh), 1.7rem);
-  --pb-attract-cta-min-h: clamp(3.6rem, 8.5vmin, 5.1rem);
-  --pb-attract-cta-width: clamp(280px, 36vw, 560px);
+  --pb-attract-cta-fs: clamp(1.15rem, 2.6vh, 2rem);
+  --pb-attract-cta-min-h: clamp(3.2rem, 7.5vh, 4.8rem);
+  --pb-attract-cta-width: clamp(260px, 28vw, 480px);
   --pb-bg-base: #030712;
   --pb-ink: #f5f5f7;
   --pb-ink-muted: rgba(245, 245, 247, 0.65);
@@ -181,13 +186,27 @@ html[data-pb-theme='zyn'] .pb-kia-hero-title {
 
 html[data-pb-theme='zyn'] .pb-zyn-hero-ring {
   background: url('center-bg.svg') no-repeat center / contain;
-  width: min(42vw, 720px);
-  min-height: min(28vw, 420px);
+  width: min(47vw, 924px);
+  min-height: 0;
+  aspect-ratio: 647 / 548;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 8% 10%;
+  padding: 16% 3.5% 18%;
+  box-sizing: border-box;
+  transform: translateY(-6.3vh);
+}
+
+/* Attract logo sits in the bottom opening of the brackets */
+html[data-pb-theme='zyn'] .pb-zyn-hero-ring .pb-zyn-logo {
+  position: absolute;
+  top: 96.2%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: min(7.7vw, 223px);
 }
 
 html[data-pb-theme='zyn'] .pb-kia-hero-streak {
@@ -482,9 +501,13 @@ html[data-pb-theme='zyn'] .pb-btn-primary {
   background: #01b3e6;
   color: #ffffff;
   border: 1.8px solid #01b3e6;
-  border-radius: 88px;
+  border-radius: 88.228px;
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.35rem, 3.2vmin, 2.35rem);
   font-weight: 800;
   letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
   box-shadow: 0 0 24px rgba(0, 210, 255, 0.3);
 }
 
@@ -536,29 +559,76 @@ html[data-pb-theme='zyn'] .pb-msg {
   color: var(--pb-msg);
 }
 
-html[data-pb-theme='zyn'] .pb-zyn-logo {
-  width: min(260px, 42vw);
+/* Same logo size on every guest screen — in-flow so subheads sit tight underneath */
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash) .pb-zyn-logo:not(.pb-zyn-logo--left) {
+  position: static;
+  display: block;
+  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
   height: auto;
+  margin: 0 auto 0.55rem;
+  filter: brightness(0) invert(1);
+  transform: none;
+  pointer-events: none;
+}
+
+/* Attract: logo nests in the bottom arc gap */
+html[data-pb-theme='zyn'] .pb-page.pb-attract .pb-zyn-hero-ring .pb-zyn-logo {
+  position: absolute;
+  top: 96.2%;
+  bottom: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  width: min(7.7vw, 223px);
+  z-index: 2;
+}
+
+/* Start stays at the previous screen position while the brackets move */
+html[data-pb-theme='zyn'] .pb-page.pb-attract .pb-zyn-cta.pb-btn-primary {
+  position: fixed;
+  bottom: calc(50vh - 0.415 * min(56vw, 1100px));
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0;
+  width: clamp(280px, 18vw, 540px);
+  min-width: clamp(280px, 18vw, 540px);
+  min-height: clamp(3.9rem, 8.6vh, 6.4rem);
+  font-size: clamp(1.25rem, 2.7vh, 2.05rem);
+  padding: 0.85rem 2.35rem;
+}
+
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash) {
+  position: relative;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-flavor-page .pb-zyn-subtitle {
+  font-size: clamp(2.05rem, 3.45vh, 4.15rem);
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-subtitle {
   margin: 0;
-  font-size: clamp(1.8rem, 5.2vmin, 3.3rem);
-  font-weight: 800;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  font-size: clamp(2.75rem, 6.8vmin, 5.1rem);
+  font-weight: 700; /* Oswald Heavy */
   letter-spacing: 0.02em;
+  line-height: 1;
   color: #fff;
+  text-transform: uppercase;
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-subtitle-grad {
-  color: #fff;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  background: none;
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-details-title {
   margin: 0 0 0.75rem;
   color: #fff;
-  font-size: clamp(2.4rem, 6.5vmin, 4.4rem);
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(3rem, 8vmin, 6rem);
   font-weight: 800;
-  line-height: 0.95;
+  line-height: normal;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -566,8 +636,21 @@ html[data-pb-theme='zyn'] .pb-zyn-details-title {
 
 html[data-pb-theme='zyn'] .pb-zyn-tagline--left {
   text-align: left;
-  letter-spacing: 0.22em;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  font-size: clamp(1rem, 2.4vmin, 1.5rem);
+  letter-spacing: 0.04em;
   white-space: pre-line;
+}
+
+html[data-pb-theme='zyn'] .pb-btn-primary,
+html[data-pb-theme='zyn'] .pb-btn-ghost,
+html[data-pb-theme='zyn'] .pb-btn-retake {
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.35rem, 3.2vmin, 2.35rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 html[data-pb-theme='zyn'] .pb-input {

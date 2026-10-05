@@ -25,9 +25,6 @@
           <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'cans'" (click)="setTab('cans')">
             Cans
           </button>
-          <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'display'" (click)="setTab('display')">
-            Display
-          </button>
           <button type="button" class="pb-tab" [class.pb-tab-active]="tab === 'gallery'" (click)="setTab('gallery')">
             Cloud
           </button>
@@ -79,38 +76,6 @@
         </section>
 
         <section class="pb-admin-card">
-          <h2>Details</h2>
-          <label>Subtitle</label>
-          <input class="pb-input" [(ngModel)]="draft.details.subtitle" />
-          <label>Form heading</label>
-          <input class="pb-input" [(ngModel)]="draft.details.formHeading" />
-          <label>First name label</label>
-          <input class="pb-input" [(ngModel)]="draft.details.firstNameLabel" />
-          <label>First name placeholder</label>
-          <input class="pb-input" [(ngModel)]="draft.details.firstNamePlaceholder" />
-          <label>Last name label</label>
-          <input class="pb-input" [(ngModel)]="draft.details.lastNameLabel" />
-          <label>Last name placeholder</label>
-          <input class="pb-input" [(ngModel)]="draft.details.lastNamePlaceholder" />
-          <label>Email label</label>
-          <input class="pb-input" [(ngModel)]="draft.details.emailLabel" />
-          <label>Email placeholder</label>
-          <input class="pb-input" [(ngModel)]="draft.details.emailPlaceholder" />
-          <label>Terms</label>
-          <input class="pb-input" [(ngModel)]="draft.details.terms" />
-          <label>Age</label>
-          <input class="pb-input" [(ngModel)]="draft.details.age" />
-          <label>Image use</label>
-          <input class="pb-input" [(ngModel)]="draft.details.imageUse" />
-          <label>Marketing</label>
-          <input class="pb-input" [(ngModel)]="draft.details.marketing" />
-          <label>Continue</label>
-          <input class="pb-input" [(ngModel)]="draft.details.continue" />
-          <label>Back</label>
-          <input class="pb-input" [(ngModel)]="draft.details.back" />
-        </section>
-
-        <section class="pb-admin-card">
           <h2>Capture</h2>
           <label>Ready subtitle</label>
           <input class="pb-input" [(ngModel)]="draft.capture.readySubtitle" />
@@ -124,6 +89,12 @@
           <input class="pb-input" [(ngModel)]="draft.capture.capturing" />
           <label>Take photo</label>
           <input class="pb-input" [(ngModel)]="draft.capture.takePhoto" />
+          <label>Marketing consent</label>
+          <input class="pb-input" [(ngModel)]="draft.details.marketing" />
+          <label>21+ confirmation</label>
+          <input class="pb-input" [(ngModel)]="draft.details.age" />
+          <label>Image-use consent</label>
+          <input class="pb-input" [(ngModel)]="draft.details.imageUse" />
           <label>Countdown (seconds)</label>
           <input
             class="pb-input"
@@ -449,6 +420,47 @@
             </button>
           </div>
         </section>
+
+        <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Capture pose guideline</h2>
+          <p class="pb-hint">
+            Cyan silhouette overlaid on the live camera. Default is waist-up (guest a bit further
+            back) so framing matches the AI composition inputs. Upload a custom PNG, or switch
+            between the bundled waist-up and close-up guides.
+          </p>
+          @if (branding.cameraOverlayUrl(); as overlayUrl) {
+            <div class="pb-admin-logo-preview pb-admin-overlay-preview">
+              <img [src]="overlayUrl" alt="Capture pose guideline preview" />
+            </div>
+            <p class="pb-hint pb-hint-tight">
+              Source:
+              {{
+                branding.cameraOverlaySource() === 'custom'
+                  ? 'custom upload / selected bundled guide'
+                  : 'theme default (waist-up)'
+              }}
+            </p>
+          }
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="uploadCameraOverlay()">
+              Upload guideline…
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="useWaistCameraOverlay()">
+              Use waist-up
+            </button>
+            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="useCloseupCameraOverlay()">
+              Use close-up
+            </button>
+            <button
+              type="button"
+              class="pb-btn pb-btn-ghost"
+              [disabled]="busy() || !branding.hasCustomCameraOverlay()"
+              (click)="resetCameraOverlay()"
+            >
+              Reset to default
+            </button>
+          </div>
+        </section>
       </div>
     }
 
@@ -487,10 +499,6 @@
             Upload AI results to cloud (required for gallery / email)
           </label>
           <p class="pb-hint">Raw captures are never uploaded — cloud and print use the finished AI image only.</p>
-          <label class="pb-admin-check">
-            <input type="checkbox" [(ngModel)]="draftGallery.uploadPhysical" />
-            Upload physical print sheets (admin download only — not guest wall/gallery)
-          </label>
           <div class="pb-row pb-row-wrap">
             <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveGallery()">
               Save gallery settings
@@ -516,7 +524,7 @@
           }
           <label class="pb-admin-check">
             <input type="checkbox" [(ngModel)]="galleryForceResync" />
-            Force re-upload already completed photos (use if Moments lost files)
+            Force re-upload already completed photos (if cloud lost files)
           </label>
           <div class="pb-row pb-row-wrap">
             <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="refreshUploadQueueSummary()">
@@ -524,146 +532,6 @@
             </button>
             <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="resyncUploadQueue()">
               Re-sync upload queue
-            </button>
-          </div>
-        </section>
-      </div>
-    }
-
-    @if (tab === 'modes') {
-      <div class="pb-admin-modes">
-        <section class="pb-admin-card pb-admin-card-wide">
-          <h2>Booth modes</h2>
-          <p class="pb-hint">
-            Guests pick a mode after <strong>Tap to start</strong>. Enable one or both options
-            below. If only one is enabled, that mode runs automatically (no picker).
-            Physical cut sheets upload to Moments for <strong>admin download only</strong> (not the
-            guest wall). Custom sheets can also be generated in Moments Admin → Physical frame.
-          </p>
-          <label class="pb-admin-check">
-            <input type="checkbox" [(ngModel)]="draftGuestModes.defaultEnabled" />
-            <strong>Digital frame</strong> — photo + digital frames / caption / AI as configured
-          </label>
-          <label class="pb-admin-check">
-            <input type="checkbox" [(ngModel)]="draftGuestModes.physicalFrameEnabled" />
-            <strong>Physical frame</strong> — landscape capture, rotate 90°, sheet with
-            <em>two identical</em> portrait cells for cutting into frames
-          </label>
-
-          @if (draftGuestModes.physicalFrameEnabled) {
-            <h3 class="pb-admin-subhead">Physical cut-sheet layout (cm / mm at DPI)</h3>
-            <p class="pb-hint pb-hint-tight">
-              Each cell prints at the centimetre size below — measurable with a ruler on SELPHY
-              postcard paper (148 × 100 mm). Gap and margins are auto-filled around the two cells so
-              global print bleed is not applied. Safe insets only shift the photo
-              <em>inside</em> the frame (heads / ridges). Guests can zoom and drag before the sheet
-              is created.
-            </p>
-            <div class="pb-row pb-row-wrap">
-              <label>
-                Cell width (cm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="3"
-                  max="7.4"
-                  step="0.1"
-                  [(ngModel)]="draftPhysicalFrame.cellWidthCm"
-                />
-              </label>
-              <label>
-                Cell height (cm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="4"
-                  max="9.8"
-                  step="0.1"
-                  [(ngModel)]="draftPhysicalFrame.cellHeightCm"
-                />
-              </label>
-              <label>
-                Photo inset (mm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="0"
-                  max="12"
-                  step="0.5"
-                  [(ngModel)]="draftPhysicalFrame.innerPaddingMm"
-                />
-              </label>
-              <label>
-                Safe top (mm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="0"
-                  max="20"
-                  step="0.5"
-                  [(ngModel)]="draftPhysicalFrame.safeInsetTopMm"
-                />
-              </label>
-              <label>
-                Safe bottom (mm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="0"
-                  max="25"
-                  step="0.5"
-                  [(ngModel)]="draftPhysicalFrame.safeInsetBottomMm"
-                />
-              </label>
-              <label>
-                Safe left (mm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="0"
-                  max="15"
-                  step="0.5"
-                  [(ngModel)]="draftPhysicalFrame.safeInsetLeftMm"
-                />
-              </label>
-              <label>
-                Safe right (mm)
-                <input
-                  class="pb-input"
-                  type="number"
-                  min="0"
-                  max="15"
-                  step="0.5"
-                  [(ngModel)]="draftPhysicalFrame.safeInsetRightMm"
-                />
-              </label>
-              <label>
-                Rotate
-                <select class="pb-input" [(ngModel)]="draftPhysicalFrame.rotateDegrees">
-                  <option [ngValue]="90">90° clockwise</option>
-                  <option [ngValue]="-90">90° counter-clockwise</option>
-                </select>
-              </label>
-            </div>
-            <label class="pb-admin-check">
-              <input type="checkbox" [(ngModel)]="draftPhysicalFrame.borderEnabled" />
-              Thin gold border (double hairline)
-            </label>
-            <p class="pb-hint pb-hint-tight">
-              Each cell prints
-              <strong>
-                {{ draftPhysicalFrame.cellWidthCm }} × {{ draftPhysicalFrame.cellHeightCm }} cm
-              </strong>
-              (ruler size). Sheet is a Canon SELPHY postcard
-              <strong>14.8 × 10.0 cm</strong>
-              at {{ draftPhysicalFrame.dpi }} DPI ({{ physicalSheetPixelW() }}×{{ physicalSheetPixelH() }} px).
-              Gap and margins auto-fill. Global print bleed is not applied.
-            </p>
-          }
-
-          <div class="pb-row pb-row-wrap">
-            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveModes()">
-              Save modes
             </button>
           </div>
         </section>
@@ -714,6 +582,29 @@
           </div>
         </section>
         <section class="pb-admin-card pb-admin-card-wide">
+          <h2>Unattended / idle</h2>
+          <p class="pb-hint">
+            On flavor select, capture, and review/preview screens: after this many seconds with no
+            touch, clear the guest session and return to the attract (home) screen. Set to
+            <strong>0</strong> to disable. Staff can also tap the <strong>top-right corner 4 times</strong>
+            to reset home immediately.
+          </p>
+          <label>Idle timeout (seconds)</label>
+          <input
+            class="pb-input"
+            type="number"
+            min="0"
+            max="600"
+            step="1"
+            [(ngModel)]="draftKiosk.idleTimeoutSeconds"
+          />
+          <div class="pb-row pb-row-wrap">
+            <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveKioskIdle()">
+              Save idle timeout
+            </button>
+          </div>
+        </section>
+        <section class="pb-admin-card pb-admin-card-wide">
           <h2>OpenAI API</h2>
           <p class="pb-hint">
             Base URL must include <code>/v1</code>. Use a proxy or Azure-compatible endpoint if needed.
@@ -745,9 +636,8 @@
         <section class="pb-admin-card pb-admin-card-wide">
           <h2>Photos</h2>
           <p class="pb-hint">
-            Local captures on this booth — every photo taken, not only printed ones. Same grid as
-            Photo history. Physical sheets also upload to Moments so you can download them from
-            Gallery admin on another device. Delete removes files from this booth only.
+            Local captures on this booth — every photo taken, not only printed ones. Delete removes
+            files from this booth only.
           </p>
           <pb-capture-photo-browser [compact]="true" />
         </section>
@@ -772,9 +662,17 @@
             Auto-print when AI finishes
           </label>
           <label class="pb-admin-check">
-            <input type="checkbox" [(ngModel)]="draftPrint.stampTime" />
+            <input
+              type="checkbox"
+              name="stampTime"
+              [(ngModel)]="draftPrint.stampTime"
+            />
             Stamp capture time on prints
           </label>
+          <p class="pb-hint pb-hint-tight">
+            When on, the kiosk burns the capture date/time onto the photo before sending it to the
+            printer (not a printer firmware stamp).
+          </p>
           <label class="pb-admin-check">
             <input
               type="checkbox"
@@ -816,7 +714,7 @@
               } @else if (!sp.isUsb) {
                 · <strong>Wi‑Fi / network</strong> — paper size and color may be ignored; USB is more reliable
               } @else if (sp.isDnpDriver) {
-                · <strong>DNP USB — ready</strong> (4×6″)
+                · <strong>DNP USB — ready</strong> (4×6″ portrait)
               } @else if (sp.isCanonDriver) {
                 · <strong>Canon USB — ready</strong> (postcard)
               } @else if (sp.isUsb) {
@@ -824,42 +722,20 @@
               }
             </p>
           }
-          <label>Borderless bleed (USB white-edge fix)</label>
+          <label>Print scale (bleed / safe margin)</label>
           <input
             class="pb-input"
             type="number"
-            min="1.00"
+            min="0.90"
             max="1.12"
             step="0.01"
             [(ngModel)]="draftPrint.bleedScale"
           />
           <p class="pb-hint pb-hint-tight">
-            Default <code>1.02</code>–<code>1.06</code> overscans slightly on unframed photos so USB
-            borderless prints don’t show a thin white edge. Framed / physical-frame layouts ignore bleed.
-          </p>
-          <label>Framed print left/right inset (mm)</label>
-          <input
-            class="pb-input"
-            type="number"
-            min="0"
-            max="12"
-            step="0.5"
-            [(ngModel)]="draftPrint.framedEdgeInsetMm"
-          />
-          <p class="pb-hint pb-hint-tight">
-            White margin on the left and right only for framed prints. Typical 0–4 mm.
-          </p>
-          <label>Framed print extra bottom (mm)</label>
-          <input
-            class="pb-input"
-            type="number"
-            min="0"
-            max="12"
-            step="0.5"
-            [(ngModel)]="draftPrint.framedBottomExtraMm"
-          />
-          <p class="pb-hint pb-hint-tight">
-            Extra white at the bottom for framed prints when the printer overscans the trailing edge.
+            <code>1.00</code> = exact page fit.
+            Above 1 (e.g. <code>1.02</code>–<code>1.06</code>) overscans to hide thin white edges.
+            Below 1 (e.g. <code>0.95</code>) shrinks slightly so printer trim doesn’t cut content.
+            Range <code>0.90</code>–<code>1.12</code>.
           </p>
 
           <p class="pb-hint pb-hint-tight">
@@ -995,7 +871,9 @@
         <section class="pb-admin-card pb-admin-card-wide">
           <h2>AI generation jobs</h2>
           <p class="pb-hint">
-            The booth runs this queue locally (AI → cloud upload → print). The cloud dashboard mirrors status when gallery upload is enabled.
+            The booth runs this queue locally (AI → cloud upload → print). Each job keeps its own id.
+            If the app closes mid-AI, jobs resume automatically on restart. Use Follow up on a row to
+            re-queue that job’s AI / upload / print.
           </p>
           <div class="pb-row pb-row-wrap">
             <button type="button" class="pb-btn pb-btn-ghost" (click)="refreshJobs()">Refresh</button>
@@ -1056,6 +934,46 @@
                       · {{ j.lastError }}
                     }
                   </p>
+                  <div class="pb-row pb-row-wrap">
+                    <button
+                      type="button"
+                      class="pb-btn pb-btn-primary pb-btn-sm"
+                      [disabled]="busy()"
+                      (click)="followUpJob(j.id)"
+                    >
+                      Follow up
+                    </button>
+                    @if (j.aiStatus === 'failed' || j.aiStatus === 'queued') {
+                      <button
+                        type="button"
+                        class="pb-btn pb-btn-ghost pb-btn-sm"
+                        [disabled]="busy()"
+                        (click)="retryAiJob(j.id)"
+                      >
+                        Retry AI
+                      </button>
+                    }
+                    @if (j.uploadStatus === 'failed' || j.uploadStatus === 'queued') {
+                      <button
+                        type="button"
+                        class="pb-btn pb-btn-ghost pb-btn-sm"
+                        [disabled]="busy()"
+                        (click)="retryUploadJob(j.id)"
+                      >
+                        Retry upload
+                      </button>
+                    }
+                    @if (j.aiPath && (j.printStatus === 'failed' || j.printStatus === 'queued' || j.printStatus === 'idle' || !j.printStatus)) {
+                      <button
+                        type="button"
+                        class="pb-btn pb-btn-ghost pb-btn-sm"
+                        [disabled]="busy()"
+                        (click)="printOp(j.id, 'retry')"
+                      >
+                        Retry print
+                      </button>
+                    }
+                  </div>
                 </div>
               </div>
             } @empty {
@@ -1132,43 +1050,6 @@
       </div>
     }
 
-    @if (tab === 'display') {
-      <div>
-        <section class="pb-admin-card pb-admin-card-wide">
-          <h2>Gallery display (server settings)</h2>
-          <p class="pb-hint">The standalone gallery-display app reads this API. Default port 3040.</p>
-          <label>API port</label>
-          <input class="pb-input" type="number" [(ngModel)]="draftDisplay.apiPort" />
-          <label>API token</label>
-          <input class="pb-input" [(ngModel)]="draftDisplay.apiToken" />
-          <label>Filter</label>
-          <select class="pb-input" [(ngModel)]="draftDisplay.filter">
-            <option value="today">Today</option>
-            <option value="all">All</option>
-            <option value="range">Date range</option>
-            <option value="tags">Tags</option>
-            <option value="picked">Direct pick</option>
-          </select>
-          <label>Range from</label>
-          <input class="pb-input" type="date" [(ngModel)]="draftDisplay.rangeFrom" />
-          <label>Range to</label>
-          <input class="pb-input" type="date" [(ngModel)]="draftDisplay.rangeTo" />
-          <label>Tags (comma)</label>
-          <input class="pb-input" [(ngModel)]="displayTagsText" />
-          <label>Slide interval (ms)</label>
-          <input class="pb-input" type="number" [(ngModel)]="draftDisplay.intervalMs" />
-          <button type="button" class="pb-btn pb-btn-primary" [disabled]="busy()" (click)="saveDisplay()">Save display settings</button>
-          <h3>Direct pick</h3>
-          @for (j of jobItems(); track j.id) {
-            <label class="pb-check">
-              <input type="checkbox" [ngModel]="j.displayPicked" (ngModelChange)="togglePicked(j.id, $event)" />
-              {{ j.canLabel || j.id }} · {{ j.aiStatus }}
-            </label>
-          }
-        </section>
-      </div>
-    }
-
     @if (tab === 'email') {
       <div>
         <section class="pb-admin-card pb-admin-card-wide">
@@ -1200,14 +1081,9 @@
         <section class="pb-admin-card pb-admin-card-wide">
           <h2>Photo frame overlays</h2>
           <p class="pb-hint">
-            Choose which decorative frames guests see after capture (Digital frame mode). Export a
-            landscape PNG at <strong>3:2 (6×4)</strong> — for example <strong>1800×1200</strong> or
-            <strong>2400×1600</strong> — with a transparent or black photo hole. That ratio fills the
-            Moments gallery, live wall, and SELPHY 6×4 print with no letterbox gap. A 16:9 frame
-            (wider) leaves empty space at the top of gallery tiles.
-            <code>botanical-landscape.png</code> is already 3:2. Moments Admin is the master library —
-            this booth pulls it on load and drops overlays deleted on the server. Offline, the last
-            local copies keep working.
+            Optional decorative frames for digital capture. Export a landscape PNG at
+            <strong>3:2 (6×4)</strong> — for example <strong>1800×1200</strong> — with a transparent
+            or black photo hole so SELPHY 6×4 prints fill without a letterbox gap.
           </p>
           <label class="pb-admin-check">
             <input type="checkbox" [(ngModel)]="draftFramesEnabled" />
@@ -1224,8 +1100,7 @@
             <input type="checkbox" [(ngModel)]="draftGuestAdjustPhoto" [disabled]="!draftFramesEnabled" />
             Zoom and pan after capture (align people in the frame)
             <span class="pb-hint pb-hint-inline">
-              Same drag / zoom as physical sheets. Turn off for a faster kiosk flow. Make framed from
-              originals always includes this step.
+              Turn off for a faster kiosk flow when guests do not need to align the photo.
             </span>
           </label>
           <label class="pb-admin-check">
@@ -1397,9 +1272,6 @@
             <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="uploadPhotoFrame()">
               Upload frame
             </button>
-            <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="syncFramesFromMoments()">
-              Sync with Moments
-            </button>
             <button type="button" class="pb-btn pb-btn-ghost" [disabled]="busy()" (click)="selectAllGuestFrames()">
               Enable all for guests
             </button>
@@ -1415,13 +1287,11 @@
         <section class="pb-admin-card pb-admin-card-wide">
           <h2>Frames on this machine</h2>
           <p class="pb-hint pb-hint-tight">
-            Stored in <code>config/photo-frames/</code>. The booth pulls the Moments library on
-            startup (and when the network returns). Frames deleted on the server are removed here.
-            Uploading a frame still publishes it to Moments when a gallery token is set. Offline, the
-            last local copies stay in use and photo uploads wait in the queue.
+            Stored in <code>config/photo-frames/</code>. Upload a PNG with a black or transparent
+            photo hole for local use on this booth.
           </p>
           @if (photoFramesList().length === 0) {
-            <p class="pb-hint">No frames found. Sync from Moments or upload a PNG with a black or transparent photo hole.</p>
+            <p class="pb-hint">No frames found. Upload a PNG with a black or transparent photo hole.</p>
           }
           <div class="pb-admin-frame-grid">
             @for (f of photoFramesList(); track f.filename) {
@@ -1454,25 +1324,9 @@
                       type="button"
                       class="pb-btn pb-btn-ghost pb-btn-sm"
                       [disabled]="busy()"
-                      (click)="publishFrameToMoments(f.filename)"
-                    >
-                      Publish
-                    </button>
-                    <button
-                      type="button"
-                      class="pb-btn pb-btn-ghost pb-btn-sm"
-                      [disabled]="busy()"
                       (click)="deletePhotoFrame(f.filename)"
                     >
                       Delete local
-                    </button>
-                    <button
-                      type="button"
-                      class="pb-btn pb-btn-ghost pb-btn-sm"
-                      [disabled]="busy()"
-                      (click)="deleteRemoteFrame(f.filename)"
-                    >
-                      Delete on server
                     </button>
                   </div>
                 </div>

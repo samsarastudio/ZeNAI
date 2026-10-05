@@ -67,6 +67,54 @@ function psQuote(s) {
   return "'" + String(s).replace(/'/g, "''") + "'";
 }
 
+/**
+ * Windows often throws ENOTEMPTY on nested dirs (e.g. resources/) even with
+ * recursive rmSync when files are briefly locked. Retry, then PowerShell.
+ */
+function rmDirRobust(dirPath) {
+  if (!dirPath || !fs.existsSync(dirPath)) return;
+  const attempts = [
+    () => fs.rmSync(dirPath, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 }),
+    () => {
+      execFileSync(
+        'powershell.exe',
+        [
+          '-NoProfile',
+          '-NonInteractive',
+          '-Command',
+          `Remove-Item -LiteralPath ${psQuote(dirPath)} -Recurse -Force -ErrorAction Stop`,
+        ],
+        { windowsHide: true, stdio: 'pipe' },
+      );
+    },
+  ];
+  let lastErr = null;
+  for (const run of attempts) {
+    try {
+      run();
+      if (!fs.existsSync(dirPath)) return;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  // Last resort: move aside so a fresh staging dir can be created
+  if (fs.existsSync(dirPath)) {
+    const trash = `${dirPath}.trash-${Date.now()}`;
+    try {
+      fs.renameSync(dirPath, trash);
+      try {
+        fs.rmSync(trash, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+      } catch (_) {
+        /* leftover trash is harmless under updates/ */
+      }
+      return;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  if (fs.existsSync(dirPath) && lastErr) throw lastErr;
+}
+
 function sha256File(filePath) {
   return new Promise((resolve, reject) => {
     const hash = crypto.createHash('sha256');
@@ -379,9 +427,27 @@ async function pollAndApply(deps) {
     fs.mkdirSync(updatesDir, { recursive: true });
     const zipPath = path.join(updatesDir, `incoming-${release.version}-${release.buildId}.zip`);
     const stagingDir = path.join(updatesDir, `staging-${release.version}-${release.buildId}`);
-    if (fs.existsSync(stagingDir)) fs.rmSync(stagingDir, { recursive: true, force: true });
+    rmDirRobust(stagingDir);
+    // Clear any leftover .trash-* from prior failed cleans (best effort)
+    try {
+      for (const name of fs.readdirSync(updatesDir)) {
+        if (!name.startsWith('staging-') || !name.includes('.trash-')) continue;
+        rmDirRobust(path.join(updatesDir, name));
+      }
+    } catch (_) {}
     fs.mkdirSync(stagingDir, { recursive: true });
-    if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+    if (fs.existsSync(zipPath)) {
+      try {
+        fs.unlinkSync(zipPath);
+      } catch (_) {
+        const bak = `${zipPath}.old-${Date.now()}`;
+        try {
+          fs.renameSync(zipPath, bak);
+        } catch (e) {
+          throw new Error(`Could not clear previous download zip: ${e.message || e}`);
+        }
+      }
+    }
 
     const downloadUrl = `${base}/api/booth-update/download/${encodeURIComponent(release.id)}`;
     const { shaHeader } = await downloadToFile(downloadUrl, zipPath, {

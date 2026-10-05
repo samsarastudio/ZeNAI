@@ -6,107 +6,111 @@
     <title>ZYN Cloud admin</title>
     <link rel="stylesheet" href="/admin.css" />
   </head>
-  <body>
+  <body class="is-login">
     <div class="shell">
-      <header>
-        <div>
-          <p class="eyebrow">ZYN Photobooth</p>
-          <h1>Cloud dashboard</h1>
+      <header class="topbar" id="topbar" hidden>
+        <div class="brand">
+          <img class="brand-logo" src="/icons/zyn-logo.png" alt="ZYN" />
+          <nav class="tabs" id="mainNav" aria-label="Sections">
+            <button type="button" class="tab active" data-tab="overview">Overview</button>
+            <button type="button" class="tab" data-tab="jobs">AI jobs</button>
+            <button type="button" class="tab" data-tab="photos">Photos</button>
+            <button type="button" class="tab" data-tab="ota">Booth updates</button>
+            <button type="button" class="tab" data-tab="settings">Settings</button>
+          </nav>
         </div>
         <div class="header-actions">
-          <p id="status" class="meta"></p>
-          <button type="button" class="btn ghost" id="btnSignOut" hidden>Sign out</button>
+          <div class="staff-meta">
+            <strong>Cloud admin</strong>
+            <span id="status">Signed in</span>
+          </div>
+          <button type="button" class="icon-btn" id="btnSignOut" title="Sign out" aria-label="Sign out">
+            <img src="/icons/log-out.svg" alt="" />
+          </button>
         </div>
       </header>
 
-      <section class="card" id="loginCard">
-        <h2>Sign in</h2>
-        <form id="loginForm" autocomplete="off">
-          <label for="pin">Admin PIN</label>
-          <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" />
-          <button type="submit" class="btn">Unlock</button>
+      <section class="login-card" id="loginCard">
+        <div class="login-brand">
+          <img src="/icons/zyn-logo.png" alt="ZYN" />
+          <p>Photobooth Portal</p>
+        </div>
+        <form id="loginForm" class="login-form" autocomplete="off">
+          <div class="field">
+            <label for="pin">Access PIN</label>
+            <div class="input-wrap">
+              <input id="pin" type="password" inputmode="numeric" autocomplete="one-time-code" placeholder="••••••••" />
+              <img class="field-icon" src="/icon-eye-off.svg" alt="" />
+            </div>
+          </div>
+          <button type="submit" class="btn block">Sign in</button>
         </form>
         <p id="loginErr" class="err" hidden></p>
+        <p class="login-foot">Secure device environment • For event personnel use only</p>
       </section>
 
       <div id="panel" hidden>
-        <nav>
-          <button type="button" class="tab active" data-tab="overview">Overview</button>
-          <button type="button" class="tab" data-tab="jobs">AI jobs</button>
-          <button type="button" class="tab" data-tab="photos">Photos</button>
-          <button type="button" class="tab" data-tab="email">Email</button>
-          <button type="button" class="tab" data-tab="ota">Booth updates</button>
-          <button type="button" class="tab" data-tab="settings">Settings</button>
-        </nav>
-
         <section class="card section is-active" data-section="overview">
-          <h2>Overview</h2>
+          <div class="section-head">
+            <div>
+              <h2>Overview</h2>
+              <p class="meta">Kiosk OTA check: <code>/api/booth-update/check</code></p>
+            </div>
+          </div>
           <div class="stats">
             <div><strong id="statAlbums">0</strong><span>Albums</span></div>
             <div><strong id="statPhotos">0</strong><span>Photos</span></div>
-            <div><strong id="statEmailed">0</strong><span>Emailed</span></div>
-            <div><strong id="statFailed">0</strong><span>Email failed</span></div>
-            <div><strong id="statGallery">0</strong><span>On gallery</span></div>
             <div><strong id="statReleases">0</strong><span>OTA packages</span></div>
           </div>
-          <p class="meta">
-            Guest wall: <a href="/" target="_blank" rel="noopener">/</a>
-            · Feed: <code>/api/display/feed</code>
-            · Kiosk OTA check: <code>/api/booth-update/check</code>
-          </p>
         </section>
 
         <section class="card section" data-section="jobs" hidden>
-          <h2>AI generation jobs</h2>
-          <p class="meta">
-            Live booth status for each capture: AI progress, cloud upload, and print. Only finished AI images are stored and printable.
-          </p>
-          <div class="photo-toolbar">
-            <button type="button" class="btn ghost" id="btnRefreshJobs">Refresh</button>
+          <div class="section-head">
+            <div>
+              <h2>AI generation jobs</h2>
+              <p class="meta">
+                Live booth status for each capture: AI progress, cloud upload, and print. Only finished AI images are
+                stored and printable.
+              </p>
+            </div>
+            <button type="button" class="btn ghost sm" id="btnRefreshJobs">Refresh</button>
           </div>
           <div id="jobList" class="job-list"></div>
         </section>
 
         <section class="card section" data-section="photos" hidden>
-          <h2>Photos &amp; gallery</h2>
-          <p class="meta">
-            Uploads land here first. <strong>Send to gallery</strong> puts a photo on the guest wall and the 98" display feed.
-            (This used to live on the kiosk Admin → Display “Direct pick” list.)
-          </p>
-          <div class="photo-toolbar">
-            <button type="button" class="btn ghost" data-filter="all" id="filterAll">All</button>
-            <button type="button" class="btn ghost" data-filter="gallery" id="filterGallery">On gallery</button>
-            <button type="button" class="btn ghost" data-filter="inbox" id="filterInbox">Not on gallery</button>
-            <button type="button" class="btn ghost" id="btnRefreshPhotos">Refresh</button>
+          <div class="section-head">
+            <div>
+              <h2>Photos</h2>
+              <p class="meta">AI uploads from the kiosk land here. Preview, delete, or download full-resolution zips by event day.</p>
+            </div>
+            <button type="button" class="btn ghost sm" id="btnRefreshPhotos">
+              <img src="/icons/search.svg" alt="" />
+              Refresh
+            </button>
+          </div>
+          <div class="photo-download-bar">
+            <div class="field photo-day-field">
+              <label for="photoDaySelect">Event day</label>
+              <select id="photoDaySelect">
+                <option value="">No days with photos yet</option>
+              </select>
+            </div>
+            <div class="photo-download-actions">
+              <button type="button" class="btn sm" id="btnDownloadDayZip">Download day zip</button>
+              <button type="button" class="btn ghost sm" id="btnDownloadAllZip">Download all photos</button>
+            </div>
+            <p id="photoZipStatus" class="meta" aria-live="polite"></p>
           </div>
           <div id="photoList" class="photo-list"></div>
-        </section>
-
-        <section class="card section" data-section="email" hidden>
-          <h2>SendGrid</h2>
-          <p class="meta">Guest emails leave from this dashboard, not from the kiosk.</p>
-          <label class="check"><input type="checkbox" id="emailEnabled" /> Send AI photo by email</label>
-          <label>SendGrid API URL</label>
-          <input id="sendgridApiUrl" placeholder="https://api.sendgrid.com/v3/mail/send" />
-          <label>API key <span id="keyHint"></span></label>
-          <input id="sendgridApiKey" type="password" autocomplete="off" placeholder="leave blank to keep saved key" />
-          <label>From email</label>
-          <input id="emailFrom" placeholder="noreply@example.com" />
-          <label>From name</label>
-          <input id="emailFromName" />
-          <label>Subject</label>
-          <input id="emailSubject" />
-          <label>Body</label>
-          <textarea id="emailBody" rows="3"></textarea>
-          <button type="button" class="btn" id="btnSaveEmail">Save email</button>
         </section>
 
         <section class="card section" data-section="ota" hidden>
           <h2>Booth OTA</h2>
           <p class="meta">
-            Upload a Folder zip from <code>builds/ZYN-Photobooth-Folder-…zip</code>, then Roll out.
-            Version / build id are read from the zip when left blank. The kiosk Admin → System → Check for update
-            downloads it (Folder install only — not portable exe).
+            Upload a Folder zip from <code>builds/ZYN-Photobooth-Folder-…zip</code>, then Roll out. Version / build id
+            are read from the zip when left blank. The kiosk Admin → System → Check for update downloads it (Folder
+            install only — not portable exe).
           </p>
           <label>Version (semver, optional if stamped zip)</label>
           <input id="otaVersion" placeholder="1.1.1" />
@@ -129,31 +133,29 @@
           <p class="meta">Used for share links and OTA download URLs. Save here so it applies without restarting.</p>
           <label>Booth upload token</label>
           <input id="uploadToken" autocomplete="off" />
-          <label>Gallery display token</label>
-          <input id="displayToken" autocomplete="off" />
           <label>Album TTL (days)</label>
           <input id="ttl" type="number" min="1" max="3650" />
-          <label>Display slide interval (ms)</label>
-          <input id="displayIntervalMs" type="number" min="1000" max="120000" step="500" />
-          <label class="check">
-            <input type="checkbox" id="autoGalleryPickAi" />
-            Auto-send AI uploads to the live gallery wall
-          </label>
           <button type="button" class="btn" id="btnSaveSettings">Save settings</button>
           <p class="meta">Admin PIN is <code>ADMIN_PIN</code> in <code>cloud-dashboard/.env</code> (default 2727).</p>
         </section>
+
+        <footer class="footer-bar">
+          <span>ZYN Photobooth</span>
+          <span>Cloud · <span class="ok">Connected</span></span>
+          <span>© 2026 ZYN Events</span>
+        </footer>
       </div>
     </div>
+
     <div id="lightbox" class="lightbox" hidden>
       <button type="button" class="lightbox-backdrop" id="lightboxBackdrop" aria-label="Close preview"></button>
       <figure class="lightbox-card">
         <img id="lightboxImg" alt="" />
         <figcaption id="lightboxCap" class="meta"></figcaption>
         <div class="lightbox-bar">
-          <button type="button" class="btn ghost" id="lightboxPrev">Previous</button>
-          <button type="button" class="btn" id="lightboxGallery">Send to gallery</button>
-          <button type="button" class="btn ghost" id="lightboxNext">Next</button>
-          <button type="button" class="btn ghost" id="lightboxClose">Close</button>
+          <button type="button" class="btn ghost sm" id="lightboxPrev">Previous</button>
+          <button type="button" class="btn ghost sm" id="lightboxNext">Next</button>
+          <button type="button" class="btn ghost sm" id="lightboxClose">Close</button>
         </div>
       </figure>
     </div>

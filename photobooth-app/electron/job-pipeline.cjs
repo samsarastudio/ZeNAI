@@ -153,28 +153,84 @@ function createJobPipeline(opts) {
   }
 
   function recoverStale() {
+    let recovered = 0;
     mutate((data) => {
       for (const job of data.jobs) {
         if (job.aiStatus === 'running') {
           job.aiStatus = 'queued';
           job.aiStartedAt = null;
+          job.aiPhaseLabel = null;
+          job.aiProgress = 0;
           job.updatedAt = nowIso();
-          log && log('warn', 'jobs', 'recovered stale AI job', { id: job.id });
+          recovered += 1;
+          log && log('warn', 'jobs', 'recovered stale AI job after restart', { id: job.id });
         }
         if (job.printStatus === 'printing') {
           job.printStatus = 'queued';
           job.updatedAt = nowIso();
+          recovered += 1;
         }
         if (job.emailStatus === 'sending') {
           job.emailStatus = 'queued';
           job.updatedAt = nowIso();
+          recovered += 1;
         }
         if (job.uploadStatus === 'uploading') {
           job.uploadStatus = 'queued';
           job.updatedAt = nowIso();
+          recovered += 1;
         }
       }
     });
+    if (recovered) {
+      log && log('info', 'jobs', 'resume after restart', { recovered });
+    }
+  }
+
+  /**
+   * Manual follow-up for a specific job id (safe with multiple in-flight jobs).
+   * aspects: 'ai' | 'upload' | 'print' | 'all' (default all pending stages).
+   */
+  function retryJob(id, aspects) {
+    const want = String(aspects || 'all');
+    const doAi = want === 'all' || want === 'ai';
+    const doUpload = want === 'all' || want === 'upload';
+    const doPrint = want === 'all' || want === 'print';
+    let touched = false;
+    mutate((d) => {
+      const j = findJob(d.jobs, id);
+      if (!j) return;
+      if (doAi && (j.aiStatus === 'failed' || j.aiStatus === 'queued' || j.aiStatus === 'running' || !j.aiPath)) {
+        j.aiStatus = 'queued';
+        j.aiStartedAt = null;
+        j.aiPhaseLabel = null;
+        j.aiProgress = 0;
+        j.aiAttempts = Math.min(Number(j.aiAttempts || 0), MAX_AI_ATTEMPTS - 1);
+        j.lastError = null;
+        touched = true;
+      }
+      if (doUpload && j.aiPath && (j.uploadStatus === 'failed' || j.uploadStatus === 'queued' || j.uploadStatus === 'idle' || !j.uploadStatus)) {
+        j.uploadStatus = 'queued';
+        j.uploadAttempts = 0;
+        j.nextUploadAt = null;
+        j.lastError = null;
+        touched = true;
+      }
+      if (doPrint && j.aiPath) {
+        j.printStatus = 'queued';
+        j.printManual = true;
+        j.printAttempts = 0;
+        j.nextPrintAt = null;
+        j.lastError = null;
+        touched = true;
+      }
+      if (touched) j.updatedAt = nowIso();
+    });
+    if (touched) {
+      log && log('info', 'jobs', 'manual follow-up', { id, aspects: want });
+      kick();
+    }
+    return { ok: touched, id };
   }
 
   function nextAiJob(jobs) {
@@ -722,6 +778,7 @@ function createJobPipeline(opts) {
     },
     listJobs,
     printOp,
+    retryJob,
     setAutoPrint,
     setDisplayPicked,
     summarize: () => summarize(loadJobs().jobs),

@@ -18,7 +18,6 @@ const {
   repairSelphyUsb,
 } = require('./selphy-usb.cjs');
 const { createJobPipeline } = require('./job-pipeline.cjs');
-const { startDisplayApi } = require('./display-api.cjs');
 
 const execFileAsync = promisify(execFile);
 
@@ -186,6 +185,34 @@ function getAiBrandLogoAbsPath() {
   const safe = path.basename(name);
   if (safe !== name || safe.includes('..')) return null;
   return path.join(getBrandingDir(), safe);
+}
+
+function getCameraOverlayAbsPath() {
+  const cfg = loadMergedConfig();
+  const name =
+    cfg.branding && typeof cfg.branding.cameraOverlayFile === 'string'
+      ? cfg.branding.cameraOverlayFile
+      : null;
+  if (!name) return null;
+  const safe = path.basename(name);
+  if (safe !== name || safe.includes('..')) return null;
+  return path.join(getBrandingDir(), safe);
+}
+
+/** Bundled theme pose guides (waist-up default, close-up legacy). */
+function getBundledCameraOverlayPath(kind) {
+  const file =
+    kind === 'closeup' ? 'cameraoverlay-closeup.png' : 'cameraoverlay.png';
+  const candidates = [
+    path.join(getPortableRoot(), 'themes', 'zyn', file),
+    path.join(getBundleRoot(), 'themes', 'zyn', file),
+    path.join(__dirname, '..', 'themes', 'zyn', file),
+    path.join(__dirname, '..', 'public', 'zyn', file),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  return null;
 }
 
 function getConfigDefaultPath() {
@@ -2538,14 +2565,8 @@ app.whenReady().then(() => {
     });
   }
   jobPipeline.start();
-  startDisplayApi({
-    getConfig: () => loadMergedConfig(),
-    listJobs: () => jobPipeline.listJobs(),
-    log: (level, scope, message, detail) => appendAppLog(level, scope, message, detail),
-  });
-  // Frames + photo queue: never block window creation. Retry periodically so a
-  // later network restore still drains the queue without guest interaction.
-  void syncFramesOnStartup();
+  // Gallery-display wall player is not part of this ZYN booth — skip its local API.
+  // Frames Moments library sync is also unused here (no digital-frame guest flow).
   setTimeout(() => {
     void flushUploadQueue().catch((e) =>
       appendAppLog('warn', 'gallery', 'startup queue flush failed', String(e)),
@@ -2554,9 +2575,6 @@ app.whenReady().then(() => {
   setInterval(() => {
     void flushUploadQueue().catch(() => {});
   }, 60 * 1000);
-  setInterval(() => {
-    void syncFramesOnStartup();
-  }, 5 * 60 * 1000);
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
@@ -3437,6 +3455,111 @@ ipcMain.handle('admin:getAiBrandLogoUrl', async () => {
     const p = getAiBrandLogoAbsPath();
     if (!p || !fs.existsSync(p)) return { ok: true, url: null };
     return { ok: true, url: `${pathToFileURL(p).href}?v=${Date.now()}` };
+  } catch (e) {
+    return { ok: false, error: String(e), url: null };
+  }
+});
+
+ipcMain.handle('admin:pickCameraOverlayImage', async () => {
+  const win = BrowserWindow.getFocusedWindow() || mainWindow;
+  const r = await dialog.showOpenDialog(win, {
+    title: 'Select capture pose guideline',
+    properties: ['openFile'],
+    filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'webp'] }],
+  });
+  if (r.canceled || !r.filePaths?.length) return { ok: false, canceled: true };
+  return { ok: true, path: r.filePaths[0] };
+});
+
+ipcMain.handle('admin:installCameraOverlay', async (_e, sourcePath) => {
+  try {
+    if (!sourcePath || typeof sourcePath !== 'string' || !fs.existsSync(sourcePath)) {
+      return { ok: false, error: 'Invalid source file.' };
+    }
+    const ext = path.extname(sourcePath).toLowerCase() || '.png';
+    const allowed = ['.png', '.jpg', '.jpeg', '.webp'];
+    const useExt = allowed.includes(ext) ? ext : '.png';
+    const destName = `camera-overlay${useExt}`;
+    ensureConfigFiles();
+    const brandingDir = getBrandingDir();
+    fs.mkdirSync(brandingDir, { recursive: true });
+    const dest = path.join(brandingDir, destName);
+    try {
+      const prev = getCameraOverlayAbsPath();
+      if (prev && fs.existsSync(prev) && path.normalize(prev) !== path.normalize(dest)) {
+        fs.unlinkSync(prev);
+      }
+    } catch (_) {}
+    fs.copyFileSync(sourcePath, dest);
+    const merged = deepMerge(loadMergedConfig(), {
+      branding: { cameraOverlayFile: destName },
+    });
+    fs.writeFileSync(getConfigPath(), JSON.stringify(merged, null, 2), 'utf8');
+    const url = `${pathToFileURL(dest).href}?v=${Date.now()}`;
+    return { ok: true, cameraOverlayFile: destName, url };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+});
+
+ipcMain.handle('admin:installBundledCameraOverlay', async (_e, kind) => {
+  try {
+    const k = kind === 'closeup' ? 'closeup' : 'waist';
+    const bundled = getBundledCameraOverlayPath(k === 'closeup' ? 'closeup' : 'waist');
+    if (!bundled) return { ok: false, error: 'Bundled guideline not found.' };
+    ensureConfigFiles();
+    const brandingDir = getBrandingDir();
+    fs.mkdirSync(brandingDir, { recursive: true });
+    const destName = `camera-overlay.png`;
+    const dest = path.join(brandingDir, destName);
+    try {
+      const prev = getCameraOverlayAbsPath();
+      if (prev && fs.existsSync(prev) && path.normalize(prev) !== path.normalize(dest)) {
+        fs.unlinkSync(prev);
+      }
+    } catch (_) {}
+    fs.copyFileSync(bundled, dest);
+    const merged = deepMerge(loadMergedConfig(), {
+      branding: { cameraOverlayFile: destName },
+    });
+    fs.writeFileSync(getConfigPath(), JSON.stringify(merged, null, 2), 'utf8');
+    return {
+      ok: true,
+      cameraOverlayFile: destName,
+      kind: k,
+      url: `${pathToFileURL(dest).href}?v=${Date.now()}`,
+    };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+});
+
+ipcMain.handle('admin:clearCameraOverlay', async () => {
+  try {
+    ensureConfigFiles();
+    const p = getCameraOverlayAbsPath();
+    if (p && fs.existsSync(p)) fs.unlinkSync(p);
+    const merged = deepMerge(loadMergedConfig(), {
+      branding: { cameraOverlayFile: null },
+    });
+    fs.writeFileSync(getConfigPath(), JSON.stringify(merged, null, 2), 'utf8');
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+});
+
+ipcMain.handle('admin:getCameraOverlayUrl', async () => {
+  try {
+    const custom = getCameraOverlayAbsPath();
+    if (custom && fs.existsSync(custom)) {
+      return { ok: true, url: `${pathToFileURL(custom).href}?v=${Date.now()}`, source: 'custom' };
+    }
+    const bundled = getBundledCameraOverlayPath('waist');
+    if (bundled && fs.existsSync(bundled)) {
+      return { ok: true, url: `${pathToFileURL(bundled).href}?v=${Date.now()}`, source: 'default' };
+    }
+    return { ok: true, url: null, source: 'none' };
   } catch (e) {
     return { ok: false, error: String(e), url: null };
   }
@@ -4921,7 +5044,48 @@ ipcMain.handle('print:repairSelphyUsb', async () => {
 });
 
 /**
+ * Ensure the raster is portrait (taller than wide) for 4×6 / postcard kiosk prints.
+ * Landscape AI/output gets rotated +90° so the subject prints upright on portrait media.
+ */
+async function ensurePortraitPrintRaster(imagePath) {
+  let sharpMod;
+  try {
+    sharpMod = require('sharp');
+  } catch (_dep) {
+    return { path: imagePath, rotated: false, tmp: null };
+  }
+  const meta = await sharpMod(imagePath).metadata();
+  const w = Number(meta.width) || 0;
+  const h = Number(meta.height) || 0;
+  if (w <= 0 || h <= 0 || h >= w) {
+    return { path: imagePath, rotated: false, tmp: null, width: w, height: h };
+  }
+  const tmp = path.join(os.tmpdir(), `pb-print-portrait-${Date.now()}.png`);
+  // Do not chain EXIF .rotate() before .rotate(angle) — Sharp drops the angle.
+  const inputBuf = await sharpMod(imagePath).png().toBuffer();
+  await sharpMod(inputBuf)
+    .rotate(90, { background: { r: 255, g: 255, b: 255, alpha: 1 } })
+    .png()
+    .toFile(tmp);
+  const outMeta = await sharpMod(tmp).metadata();
+  appendAppLog('info', 'print', 'rotated landscape raster to portrait', {
+    source: imagePath,
+    from: `${w}x${h}`,
+    to: `${outMeta.width}x${outMeta.height}`,
+    tmp,
+  });
+  return {
+    path: tmp,
+    rotated: true,
+    tmp,
+    width: outMeta.width,
+    height: outMeta.height,
+  };
+}
+
+/**
  * Windows photo print for kiosk — DNP DS-RX1 4×6″ or Canon SELPHY postcard 100×148 mm.
+ * Media is always portrait (short edge × long edge) so upright photos print correctly.
  */
 async function printPhotoViaWindowsSpooler(imagePath, printerName, bleedScale = 1.06, options = {}) {
   const abs = path.resolve(imagePath);
@@ -4931,7 +5095,7 @@ async function printPhotoViaWindowsSpooler(imagePath, printerName, bleedScale = 
   const physicalPostcard = options.physicalPostcard === true;
   const bleed = physicalPostcard
     ? 1
-    : Math.min(1.12, Math.max(1.0, Number(bleedScale) || 1.06));
+    : Math.min(1.12, Math.max(0.9, Number(bleedScale) || 1.06));
   const fitMode = physicalPostcard
     ? 'postcard'
     : options.fitMode === 'contain'
@@ -4968,14 +5132,14 @@ try {
   $doc.DefaultPageSettings.Margins = New-Object System.Drawing.Printing.Margins(0, 0, 0, 0)
 
   if ($media -eq 'dnp-4x6') {
-    # DNP DS-RX1 standard 4x6 inch (101.6 x 152.4 mm)
-    $targetW = [int][Math]::Round(6.0 * 100)
-    $targetH = [int][Math]::Round(4.0 * 100)
+    # DNP DS-RX1 4x6 inch PORTRAIT (4" wide × 6" tall)
+    $targetW = [int][Math]::Round(4.0 * 100)
+    $targetH = [int][Math]::Round(6.0 * 100)
     $paperMatch = '(?i)4\\s*[x×]\\s*6|6\\s*[x×]\\s*4|10\\s*[x×]\\s*15|RX1|PC|L size'
   } else {
-    # Canon SELPHY CP1500 postcard is 100.0 x 148.0 mm (not 6x4 inch).
-    $targetW = [int][Math]::Round(148.0 / 25.4 * 100)
-    $targetH = [int][Math]::Round(100.0 / 25.4 * 100)
+    # Canon SELPHY CP1500 postcard PORTRAIT 100 × 148 mm
+    $targetW = [int][Math]::Round(100.0 / 25.4 * 100)
+    $targetH = [int][Math]::Round(148.0 / 25.4 * 100)
     $paperMatch = '(?i)postcard|hagaki|kp-?108|100\\s*[x×]\\s*148|148\\s*[x×]\\s*100'
   }
 
@@ -4993,7 +5157,7 @@ try {
     foreach ($ps in $doc.PrinterSettings.PaperSizes) {
       $a = [Math]::Min($ps.Width, $ps.Height)
       $b = [Math]::Max($ps.Width, $ps.Height)
-      $delta = [Math]::Abs($a - $targetH) + [Math]::Abs($b - $targetW)
+      $delta = [Math]::Abs($a - $targetW) + [Math]::Abs($b - $targetH)
       if ($media -eq 'dnp-4x6') {
         $inRange = ($a -ge 370 -and $a -le 450 -and $b -ge 550 -and $b -le 650)
       } else {
@@ -5007,15 +5171,17 @@ try {
     $chosenPaper = $best
   }
   if ($chosenPaper -eq $null) {
-    if ($media -eq 'dnp-4x6') { $label = 'DNP 4x6' } else { $label = 'SELPHY Postcard 100x148mm' }
+    if ($media -eq 'dnp-4x6') { $label = 'DNP 4x6 Portrait' } else { $label = 'SELPHY Postcard 100x148mm Portrait' }
     $chosenPaper = New-Object System.Drawing.Printing.PaperSize($label, $targetW, $targetH)
     try { $doc.PrinterSettings.PaperSizes.Add($chosenPaper) } catch {}
   }
   $doc.DefaultPageSettings.PaperSize = $chosenPaper
-  if ($chosenPaper.Width -ge $chosenPaper.Height) {
-    $doc.DefaultPageSettings.Landscape = $false
-  } else {
+  # Always print PORTRAIT: if the driver paper is landscape-shaped, Landscape=true
+  # swaps axes to portrait; if already portrait-shaped, Landscape=false.
+  if ($chosenPaper.Width -gt $chosenPaper.Height) {
     $doc.DefaultPageSettings.Landscape = $true
+  } else {
+    $doc.DefaultPageSettings.Landscape = $false
   }
 
   $script:pbImg = $img
@@ -5024,6 +5190,7 @@ try {
   $script:fitMode = $fitMode
   $script:targetW = $targetW
   $script:targetH = $targetH
+  $script:pageLandscape = $doc.DefaultPageSettings.Landscape
   $doc.add_PrintPage({
     param($sender, $e)
     $page = $e.PageBounds
@@ -5057,7 +5224,8 @@ try {
   })
 
   $doc.Print()
-  Write-Output ("OK|" + $doc.PrinterSettings.PrinterName + "|" + $script:paperName + "|" + $script:bleed)
+  $orient = if ($script:pageLandscape) { 'landscape-flag-for-portrait-page' } else { 'portrait' }
+  Write-Output ("OK|" + $doc.PrinterSettings.PrinterName + "|" + $script:paperName + "|" + $script:bleed + "|" + $orient + "|" + $img.Width + "x" + $img.Height)
 } finally {
   if ($img) { $img.Dispose() }
 }
@@ -5097,6 +5265,8 @@ try {
       printer: parts[1] || printerName || null,
       paper: parts[2] || null,
       bleed: parts[3] || String(bleed),
+      orientation: parts[4] || 'portrait',
+      imageSize: parts[5] || null,
     };
   } catch (e) {
     const detail = [e.stderr, e.stdout, e.message].filter(Boolean).join(' | ');
@@ -5255,6 +5425,20 @@ async function printPhotoInternal(payload) {
       }
     }
 
+    let portraitTmp = null;
+    try {
+      // Skip auto-rotate for dual-cell physical/framed sheets (already composed for the media).
+      if (!physicalLayout && !framedLayout) {
+        const normalized = await ensurePortraitPrintRaster(printPath);
+        if (normalized.rotated && normalized.tmp) {
+          portraitTmp = normalized.tmp;
+          printPath = normalized.path;
+        }
+      }
+    } catch (orientErr) {
+      appendAppLog('warn', 'print', 'portrait normalize skipped', String(orientErr));
+    }
+
     try {
       const keepEdges = physicalLayout || framedLayout;
       const media = isDnpPrinterName(resolved.chosen) ? 'dnp-4x6' : 'selphy';
@@ -5275,18 +5459,22 @@ async function printPhotoInternal(payload) {
         framedLayout,
         media,
         stamped: !!stampTmp,
+        portraitNormalized: !!portraitTmp,
         bytes: fs.statSync(printPath).size,
         deviceName: result.printer || resolved.chosen || 'default',
         paper: result.paper || null,
         bleed: result.bleed || (keepEdges ? 1 : bleedScale),
+        orientation: result.orientation || null,
+        imageSize: result.imageSize || null,
       });
       return {
         ok: true,
         deviceName: result.printer || resolved.chosen || null,
         paper: result.paper || null,
+        orientation: result.orientation || 'portrait',
       };
     } finally {
-      for (const tmp of [printTmp, stampTmp]) {
+      for (const tmp of [portraitTmp, printTmp, stampTmp]) {
         if (!tmp) continue;
         try {
           fs.unlinkSync(tmp);
@@ -5302,7 +5490,7 @@ async function printPhotoInternal(payload) {
 
 ipcMain.handle('print:photo', async (_e, payload) => printPhotoInternal(payload));
 
-/** Admin test print — solid 6×4 JPEG to verify SELPHY USB path. */
+/** Admin test print — solid portrait 4×6 JPEG to verify DS-RX1 / SELPHY USB path. */
 ipcMain.handle('print:test', async () => {
   let tmp = null;
   try {
@@ -5320,11 +5508,11 @@ ipcMain.handle('print:test', async () => {
 
     const sharp = require('sharp');
     tmp = path.join(os.tmpdir(), `pb-print-test-${Date.now()}.jpg`);
-    // 1800×1200 ≈ 6×4 @ 300dpi
+    // 1200×1800 ≈ 4×6 @ 300dpi PORTRAIT
     await sharp({
       create: {
-        width: 1800,
-        height: 1200,
+        width: 1200,
+        height: 1800,
         channels: 3,
         background: { r: 34, g: 90, b: 56 },
       },
@@ -5336,15 +5524,19 @@ ipcMain.handle('print:test', async () => {
       typeof printCfg.bleedScale === 'number' && Number.isFinite(printCfg.bleedScale)
         ? printCfg.bleedScale
         : 1.06;
-    const result = await printPhotoViaWindowsSpooler(tmp, resolved.chosen, bleedScale);
+    const media = isDnpPrinterName(resolved.chosen) ? 'dnp-4x6' : 'selphy';
+    const result = await printPhotoViaWindowsSpooler(tmp, resolved.chosen, bleedScale, { media });
     appendAppLog('info', 'print', 'test print spooled', {
       deviceName: result.printer || resolved.chosen,
       paper: result.paper || null,
+      orientation: result.orientation || null,
+      imageSize: result.imageSize || null,
     });
     return {
       ok: true,
       deviceName: result.printer || resolved.chosen || null,
       paper: result.paper || null,
+      orientation: result.orientation || 'portrait',
     };
   } catch (e) {
     const msg = String(e?.message || e);
@@ -5412,6 +5604,17 @@ ipcMain.handle('jobs:printOp', async (_e, payload) => {
     const id = String(payload?.id || '');
     const op = String(payload?.op || '');
     return requirePipeline().printOp(id, op);
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+});
+
+ipcMain.handle('jobs:retry', async (_e, payload) => {
+  try {
+    const id = String(payload?.id || '');
+    const aspects = String(payload?.aspects || 'all');
+    if (!id) return { ok: false, error: 'Missing job id' };
+    return requirePipeline().retryJob(id, aspects);
   } catch (e) {
     return { ok: false, error: String(e) };
   }

@@ -149,6 +149,26 @@ export interface PbApi {
   ): Promise<{ ok: boolean; aiLogoFile?: string; url?: string; error?: string }>;
   adminClearAiLogo(): Promise<{ ok: boolean; error?: string }>;
   adminGetAiBrandLogoUrl(): Promise<{ ok: boolean; url?: string | null; error?: string }>;
+  adminPickCameraOverlayImage(): Promise<{ ok: boolean; canceled?: boolean; path?: string }>;
+  adminInstallCameraOverlay(
+    sourcePath: string,
+  ): Promise<{ ok: boolean; cameraOverlayFile?: string; url?: string; error?: string }>;
+  adminInstallBundledCameraOverlay(
+    kind: 'waist' | 'closeup',
+  ): Promise<{
+    ok: boolean;
+    cameraOverlayFile?: string;
+    kind?: string;
+    url?: string;
+    error?: string;
+  }>;
+  adminClearCameraOverlay(): Promise<{ ok: boolean; error?: string }>;
+  adminGetCameraOverlayUrl(): Promise<{
+    ok: boolean;
+    url?: string | null;
+    source?: 'custom' | 'default' | 'none';
+    error?: string;
+  }>;
   adminListAiBackgrounds(modeId: string): Promise<{
     ok: boolean;
     modeId?: string;
@@ -501,6 +521,10 @@ export interface PbApi {
     id: string;
     op: 'retry' | 'cancel' | 'skip' | 'top' | 'reprint';
   }): Promise<{ ok: boolean; error?: string }>;
+  jobsRetry(payload: {
+    id: string;
+    aspects?: 'ai' | 'upload' | 'print' | 'all';
+  }): Promise<{ ok: boolean; id?: string; error?: string }>;
   jobsSetDisplayPicked(payload: { id: string; picked: boolean }): Promise<{ ok: boolean; error?: string }>;
   jobsKick(): Promise<{ ok: boolean; summary?: Record<string, number>; error?: string }>;
   onJobsUpdated?(cb: (summary: Record<string, number>) => void): () => void;

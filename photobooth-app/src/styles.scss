@@ -270,5 +270,5 @@ html[data-pb-theme='zyn'] body {
 
 /* Attract hero art — resolved/copied by Angular so Electron file:// works. */
 html[data-pb-theme='zyn'] .pb-zyn-hero-ring {
-  background: url('../public/zyn/center-bg.svg') no-repeat center / 100% 100%;
+  background: url('../public/zyn/center-bg.svg') no-repeat center / contain;
 }

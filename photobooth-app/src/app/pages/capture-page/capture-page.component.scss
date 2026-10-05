@@ -1,5 +1,6 @@
 .pb-page.pb-zyn-capture-page {
   flex-direction: column;
+  /* Vertically center the capture stack (this page only) */
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
@@ -8,8 +9,9 @@
   max-height: 100vh;
   max-height: 100dvh;
   overflow: hidden;
-  padding: clamp(0.35rem, 1.2vmin, 0.75rem);
-  padding-bottom: max(clamp(0.85rem, 2.2vmin, 1.4rem), env(safe-area-inset-bottom, 0px));
+  padding: max(clamp(0.5rem, 1.5vh, 1rem), env(safe-area-inset-top, 0px))
+    clamp(0.35rem, 1.2vmin, 0.75rem)
+    max(clamp(0.85rem, 2.2vmin, 1.4rem), env(safe-area-inset-bottom, 0px));
 }
 
 .pb-zyn-capture {
@@ -17,8 +19,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  flex: 1 1 auto;
+  justify-content: center;
+  flex: 0 1 auto;
   min-height: 0;
   max-height: 100%;
   overflow: hidden;
@@ -28,34 +30,22 @@
 }
 
 .pb-zyn-logo {
-  width: min(160px, 22vw);
+  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
   height: auto;
   flex-shrink: 0;
-}
-
-.pb-zyn-subtitle {
-  margin: 0;
-  flex-shrink: 0;
-  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #fff;
-  text-transform: uppercase;
-}
-
-.pb-zyn-subtitle-grad {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  background: none;
+  filter: brightness(0) invert(1);
+  margin: 0 0 0.35rem;
 }
 
 .pb-zyn-tagline {
-  margin: 0.85rem 0 0;
+  margin: 0 0 clamp(0.35rem, 1vh, 0.75rem);
   flex-shrink: 0;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
   color: #fff;
-  font-size: clamp(0.9rem, 2.2vmin, 1.5rem);
-  letter-spacing: 0.3em;
-  font-weight: 400;
+  font-size: clamp(1rem, 2.4vmin, 1.6rem);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  line-height: normal;
   text-transform: uppercase;
 }
 
@@ -154,10 +144,11 @@
   z-index: 2;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center center;
   pointer-events: none;
   mix-blend-mode: screen;
-  opacity: 0.95;
+  opacity: 1;
 }
 
 .pb-zyn-countdown-panel {
@@ -265,12 +256,13 @@
   position: relative;
   z-index: 20;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0.65rem 1.25rem;
-  width: min(100%, 50vw);
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  width: min(100%, 70vw);
+  margin: 0.75rem auto 1.25rem;
   text-align: left;
-  margin: 0.15rem 0;
   pointer-events: auto;
   flex-shrink: 0;
 }
@@ -281,33 +273,86 @@
   gap: 0.55rem;
   min-height: 2.4rem;
   color: #fff;
-  font-size: clamp(0.8rem, 1.6vmin, 1rem);
-  line-height: 1.3;
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  font-size: clamp(0.95rem, 2vmin, 1.25rem);
+  font-weight: 500;
+  line-height: normal;
   pointer-events: auto;
+  flex: 0 1 auto;
+  max-width: none;
+}
+
+.pb-zyn-consent--full {
+  flex: 0 1 auto;
+  max-width: none;
+}
+
+.pb-zyn-consent-control {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  margin-top: 0;
 }
 
 .pb-zyn-consent-input {
-  width: 1.25rem;
-  height: 1.25rem;
+  opacity: 0;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
   margin: 0;
-  accent-color: #01b3e6;
-  flex-shrink: 0;
   cursor: pointer;
   pointer-events: auto;
+}
+
+.pb-zyn-consent-visual {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  border: 2px solid #fff;
+  background: transparent;
+  pointer-events: none;
+}
+
+.pb-zyn-consent-input:checked + .pb-zyn-consent-visual::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+  color: #0a1f3d;
+  line-height: 26px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 4px;
 }
 
 .pb-zyn-consent-label {
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  padding: 0.25rem 0;
+  padding: 0;
   pointer-events: auto;
+  margin-top: 0;
 }
 
 .pb-zyn-capture > .pb-btn,
 .pb-zyn-capture > .pb-row {
   flex-shrink: 0;
   margin-top: 0.15rem;
+}
+
+.pb-zyn-capture > .pb-btn-primary {
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.5rem, 3.4vmin, 2.4rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 .pb-kia-wait-copy {
@@ -339,7 +384,13 @@
 
   .pb-zyn-capture-consents {
     width: min(100%, 92vw);
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+  }
+
+  .pb-zyn-consent {
+    max-width: none;
+    flex: 0 1 auto;
   }
 
   .pb-zyn-viewfinder {
@@ -355,6 +406,6 @@
   }
 
   .pb-zyn-logo {
-    width: min(130px, 18vw);
+    width: var(--pb-zyn-logo-w, min(9.5vw, 275px));
   }
 }

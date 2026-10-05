@@ -12,6 +12,7 @@ import type {
   PhotoboothGuestModesConfig,
   PhotoboothBoothModeId,
   PhotoboothCaptureConfig,
+  PhotoboothKioskConfig,
   PhotoboothPrintConfig,
   PhotoboothEmailConfig,
   PhotoboothDisplayConfig,
@@ -24,6 +25,7 @@ import {
   PHOTOBOOTH_DEFAULT_BRANDING,
   PHOTOBOOTH_DEFAULT_CAMERA,
   PHOTOBOOTH_DEFAULT_CAPTURE,
+  PHOTOBOOTH_DEFAULT_KIOSK,
   PHOTOBOOTH_DEFAULT_COPY,
   PHOTOBOOTH_DEFAULT_DEBUG,
   PHOTOBOOTH_DEFAULT_GALLERY,
@@ -103,6 +105,8 @@ function mergeBranding(patch?: Partial<PhotoboothBranding> | null): PhotoboothBr
     ...patch,
     logoFile: patch.logoFile === undefined ? base.logoFile : patch.logoFile,
     aiLogoFile: patch.aiLogoFile === undefined ? base.aiLogoFile : patch.aiLogoFile,
+    cameraOverlayFile:
+      patch.cameraOverlayFile === undefined ? base.cameraOverlayFile : patch.cameraOverlayFile,
     brandName,
     applyBrandToAi: typeof patch.applyBrandToAi === 'boolean' ? patch.applyBrandToAi : base.applyBrandToAi,
   };
@@ -400,6 +404,16 @@ function normalizeCaptureConfig(
   };
 }
 
+function normalizeKioskConfig(
+  patch?: Partial<PhotoboothKioskConfig> | null,
+): PhotoboothKioskConfig {
+  const base = PHOTOBOOTH_DEFAULT_KIOSK;
+  const p = patch && typeof patch === 'object' ? patch : {};
+  return {
+    idleTimeoutSeconds: Math.round(clampRange(p.idleTimeoutSeconds, 0, 600, base.idleTimeoutSeconds)),
+  };
+}
+
 function normalizePrintConfig(
   patch?: Partial<PhotoboothPrintConfig> | null,
 ): PhotoboothPrintConfig {
@@ -418,7 +432,7 @@ function normalizePrintConfig(
       : Number.isFinite(Number(patch.bleedScale))
         ? Number(patch.bleedScale)
         : base.bleedScale;
-    bleedScale = Math.min(1.12, Math.max(1.0, bleedScale));
+    bleedScale = Math.min(1.12, Math.max(0.9, bleedScale));
   return {
     enabled: typeof patch.enabled === 'boolean' ? patch.enabled : base.enabled,
     autoPrint: typeof patch.autoPrint === 'boolean' ? patch.autoPrint : base.autoPrint,
@@ -428,6 +442,7 @@ function normalizePrintConfig(
     framedBottomExtraMm: clampRange(patch.framedBottomExtraMm, 0, 12, base.framedBottomExtraMm),
     allowWifiPrinters:
       typeof patch.allowWifiPrinters === 'boolean' ? patch.allowWifiPrinters : base.allowWifiPrinters,
+    stampTime: typeof patch.stampTime === 'boolean' ? patch.stampTime : base.stampTime !== false,
   };
 }
 
@@ -589,6 +604,9 @@ function normalizeConfigPayload(raw: unknown): PhotoboothConfig {
   const capture = normalizeCaptureConfig(
     (rest['capture'] as Partial<PhotoboothCaptureConfig> | undefined) ?? undefined,
   );
+  const kiosk = normalizeKioskConfig(
+    (rest['kiosk'] as Partial<PhotoboothKioskConfig> | undefined) ?? undefined,
+  );
   const requireQrUnlock =
     typeof rest['requireQrUnlock'] === 'boolean' ? rest['requireQrUnlock'] : false;
   const aiGenerationEnabled =
@@ -615,6 +633,7 @@ function normalizeConfigPayload(raw: unknown): PhotoboothConfig {
     debug,
     copy,
     capture,
+    kiosk,
     guestModes,
     physicalFrame,
     requireQrUnlock,
@@ -641,6 +660,7 @@ export type BoothAdminSavePartial = Partial<
     | 'physicalFrame'
     | 'guestModes'
     | 'capture'
+    | 'kiosk'
   >
 > & {
   openAiApiKey?: string;
@@ -656,6 +676,7 @@ export type BoothAdminSavePartial = Partial<
   physicalFrame?: Partial<PhotoboothPhysicalFrameConfig>;
   guestModes?: Partial<PhotoboothGuestModesConfig>;
   capture?: Partial<PhotoboothCaptureConfig>;
+  kiosk?: Partial<PhotoboothKioskConfig>;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -665,6 +686,7 @@ export class BoothConfigService {
   readonly config = computed(() => this.state());
   readonly copy = computed(() => this.state()?.copy ?? PHOTOBOOTH_DEFAULT_COPY);
   readonly capture = computed(() => this.state()?.capture ?? PHOTOBOOTH_DEFAULT_CAPTURE);
+  readonly kiosk = computed(() => this.state()?.kiosk ?? PHOTOBOOTH_DEFAULT_KIOSK);
   readonly branding = computed(() => this.state()?.branding ?? PHOTOBOOTH_DEFAULT_BRANDING);
   readonly camera = computed(() => this.state()?.camera ?? PHOTOBOOTH_DEFAULT_CAMERA);
   readonly photoFrames = computed(
@@ -746,6 +768,7 @@ export class BoothConfigService {
         debug: { ...PHOTOBOOTH_DEFAULT_DEBUG },
         copy: PHOTOBOOTH_DEFAULT_COPY,
         capture: { ...PHOTOBOOTH_DEFAULT_CAPTURE },
+        kiosk: { ...PHOTOBOOTH_DEFAULT_KIOSK },
         guestModes: { ...PHOTOBOOTH_DEFAULT_GUEST_MODES },
         physicalFrame: { ...PHOTOBOOTH_DEFAULT_PHYSICAL_FRAME },
         requireQrUnlock: false,

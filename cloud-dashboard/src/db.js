@@ -91,19 +91,8 @@ export function initDb() {
 const SETTINGS_DEFAULTS = {
   defaultTtlDays: 30,
   uploadToken: '',
-  displayToken: 'zyn-display',
   publicBaseUrl: '',
-  displayIntervalMs: 8000,
-  /** When true, new AI uploads are immediately visible on wall / display feed. */
-  autoGalleryPickAi: false,
   boothUpdateActiveId: '',
-  emailEnabled: false,
-  sendgridApiUrl: 'https://api.sendgrid.com/v3/mail/send',
-  sendgridApiKey: '',
-  emailFrom: '',
-  emailFromName: 'ZYN Photobooth',
-  emailSubject: 'Your ZYN photo',
-  emailBody: 'Thanks for visiting the ZYN photobooth. Your photo is attached.',
 };
 
 /** Prefer admin-saved publicBaseUrl; fall back to PUBLIC_BASE_URL / default. */
@@ -153,10 +142,6 @@ export function publicPhoto(sessionSlug, row) {
     createdAt: row.created_at,
     canId: row.can_id || null,
     canLabel: row.can_label || null,
-    guestEmail: row.guest_email || null,
-    emailStatus: row.email_status || 'idle',
-    emailError: row.email_error || null,
-    galleryPicked: Number(row.gallery_picked) === 1,
     url: `/media/${encodeURIComponent(sessionSlug)}/${encodeURIComponent(row.filename)}`,
     sharePath,
     shareUrl: `${base}${sharePath}`,

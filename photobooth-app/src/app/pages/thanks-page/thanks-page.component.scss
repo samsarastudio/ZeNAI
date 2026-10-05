@@ -1,92 +1,97 @@
 .pb-zyn-thanks-page {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: clamp(1.25rem, 3.5vh, 2.5rem);
 }
 
 .pb-zyn-thanks {
   width: min(100%, 1100px);
-  min-height: min(92vh, 920px);
+  min-height: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   text-align: center;
-  gap: 1.25rem;
-  padding: clamp(0.75rem, 2vmin, 1.5rem) 0;
+  gap: clamp(1.5rem, 4vmin, 2.75rem);
+  padding: 0 0 clamp(0.75rem, 2vmin, 1.5rem);
   box-sizing: border-box;
 }
 
 .pb-zyn-logo {
-  width: min(220px, 36vw);
+  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
   height: auto;
-  margin-bottom: 0.35rem;
-}
-
-.pb-zyn-subtitle {
+  filter: brightness(0) invert(1);
   margin: 0;
-  font-size: clamp(1.6rem, 4.2vmin, 3.3rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: #fff;
-  text-transform: uppercase;
 }
 
-.pb-zyn-subtitle-grad {
-  color: #fff;
-  -webkit-text-fill-color: #fff;
-  background: none;
-}
-
-.pb-zyn-thanks-hero {
+/* AI thanks card: 58.8vw × 45.3vh, fill #001F6F */
+.pb-zyn-thanks-card {
+  width: min(58.8vw, 1694px);
+  min-height: min(45.3vh, 870px);
   display: grid;
   place-items: center;
   gap: 1rem;
-  min-height: 35vh;
-  margin: clamp(2rem, 5vh, 5rem) 0;
-  flex: 1 1 auto;
+  padding: clamp(2rem, 5vh, 3.5rem) clamp(1.5rem, 4vw, 3rem);
+  border-radius: 28px;
+  background: #001f6f;
+  box-sizing: border-box;
+  /* AI: logo bottom ~21%, card top ~27% → ~6vh gap */
+  margin-top: clamp(1.25rem, 5.5vh, 3.25rem);
 }
 
-.pb-zyn-thanks-tick {
-  width: min(10rem, 22vw);
-  height: auto;
-  margin-bottom: 0.5rem;
+.pb-zyn-thanks-card.is-error {
+  gap: 1.25rem;
 }
 
 .pb-zyn-thanks-title {
   margin: 0;
   color: #fff;
-  font-size: clamp(2.6rem, 7.5vmin, 4.4rem);
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(3.5rem, 9vmin, 7rem);
   font-weight: 800;
   letter-spacing: 0.02em;
+  line-height: 1;
   text-transform: uppercase;
-  line-height: 1.05;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.pb-zyn-thanks-line {
-  color: #fff;
 }
 
 .pb-zyn-thanks-hint {
-  margin: 0.35rem 0 0;
+  margin: 0;
   max-width: 36rem;
   color: rgba(255, 255, 255, 0.88);
+  font-family: var(--pb-font-display, 'Oswald', sans-serif);
   font-size: clamp(0.95rem, 2.2vmin, 1.2rem);
   line-height: 1.35;
   letter-spacing: 0.04em;
 }
 
 .pb-zyn-thanks-warn {
-  width: min(6.5rem, 16vw);
-  height: min(6.5rem, 16vw);
+  width: min(5rem, 14vw);
+  height: min(5rem, 14vw);
   border-radius: 999px;
   border: 3px solid #fff;
   color: #fff;
-  font-size: clamp(2.5rem, 8vmin, 3.5rem);
+  font-size: clamp(2rem, 6vmin, 3rem);
   font-weight: 800;
   display: grid;
   place-items: center;
   background: rgba(0, 0, 0, 0.18);
+}
+
+/* Match flavor SELECT button */
+.pb-zyn-thanks-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.pb-zyn-thanks-actions .pb-btn-primary {
+  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.35rem, 3.4vh, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: normal;
+  text-transform: uppercase;
+  min-width: clamp(200px, 22vw, 340px);
+  min-height: clamp(3.1rem, 7vh, 4.6rem);
 }

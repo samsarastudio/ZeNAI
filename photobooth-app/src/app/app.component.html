@@ -52,5 +52,13 @@
     <div class="pb-backdrop-el pb-backdrop-el--4"></div>
   </div>
   <router-outlet />
+  @if (kioskIdle.homeHotspotVisible()) {
+    <button
+      type="button"
+      class="pb-kiosk-home-hotspot"
+      aria-label="Reset to home"
+      (click)="kioskIdle.onHomeCornerTap()"
+    ></button>
+  }
   <pb-debug-log-dock />
 </div>

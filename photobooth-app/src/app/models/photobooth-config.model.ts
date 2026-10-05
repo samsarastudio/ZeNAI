@@ -3,6 +3,11 @@ export interface PhotoboothBranding {
   logoFile: string | null;
   /** AI reference logo under `config/branding/` — signage, products, accessories in generated photos. */
   aiLogoFile: string | null;
+  /**
+   * Optional capture pose guideline under `config/branding/`.
+   * When null, guest capture uses theme `zyn/cameraoverlay.png`.
+   */
+  cameraOverlayFile: string | null;
   /** Display name used in AI prompts when `{brand}` appears. */
   brandName: string | null;
   /** When true and `aiLogoFile` exists, use it during AI generation. */
@@ -144,6 +149,19 @@ export interface PhotoboothCaptureConfig {
 
 export const PHOTOBOOTH_DEFAULT_CAPTURE: PhotoboothCaptureConfig = {
   countdownSeconds: 5,
+};
+
+/** Guest-flow unattended safeguards (selection / preview / capture). */
+export interface PhotoboothKioskConfig {
+  /**
+   * Seconds of no touch/keyboard on cans / details / capture / review / preview
+   * before clearing the session and returning to attract. `0` disables.
+   */
+  idleTimeoutSeconds: number;
+}
+
+export const PHOTOBOOTH_DEFAULT_KIOSK: PhotoboothKioskConfig = {
+  idleTimeoutSeconds: 90,
 };
 
 export interface PhotoboothDebugConfig {
@@ -329,7 +347,8 @@ export interface PhotoboothPrintConfig {
    */
   printerName: string | null;
   /**
-   * Borderless overscan for regular photo prints (1.0 = exact fit, 1.06 = ~6% bleed).
+   * Print scale vs page: 1.0 = exact fit, >1 overscans (hide white edges),
+   * <1 shrinks (safe margin when the printer trims edges). Range ~0.90–1.12.
    * Physical-frame cut sheets ignore this and print 1:1 on 148×100 mm postcard stock.
    */
   bleedScale: number;
@@ -345,8 +364,8 @@ export interface PhotoboothPrintConfig {
   framedBottomExtraMm: number;
   /** Include Wi‑Fi / IPP / WSD queues in the printer list (USB is still preferred). */
   allowWifiPrinters: boolean;
-  /** Burn local capture date/time onto the printed photo corner. */
-  stampTime?: boolean;
+  /** Burn local capture date/time onto the printed photo corner (app-side, not the printer). */
+  stampTime: boolean;
 }
 
 export const PHOTOBOOTH_DEFAULT_PRINT: PhotoboothPrintConfig = {
@@ -703,6 +722,8 @@ export interface PhotoboothConfig {
   debug: PhotoboothDebugConfig;
   copy: PhotoboothCopy;
   capture: PhotoboothCaptureConfig;
+  /** Idle timeout + unattended guest safeguards. */
+  kiosk: PhotoboothKioskConfig;
   /**
    * Which guest modes are offered after Tap to start.
    * When more than one is enabled, guests pick on `/booth-mode`.
@@ -735,6 +756,7 @@ export const PHOTOBOOTH_DEFAULT_CAMERA: PhotoboothCameraConfig = {
 export const PHOTOBOOTH_DEFAULT_BRANDING: PhotoboothBranding = {
   logoFile: 'zyn-logo.svg',
   aiLogoFile: null,
+  cameraOverlayFile: null,
   brandName: 'ZYN',
   applyBrandToAi: true,
 };
@@ -756,15 +778,15 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     topScale: 1,
     title: 'WHEN PHOTO\nMEETS FINISH',
     subtitle: '',
-    ctaLabel: 'START NOW',
-    startAria: 'Start now',
+    ctaLabel: 'TAP TO START',
+    startAria: 'Tap to start',
     adminLink: 'Admin',
   },
   cans: {
-    title: 'AI PHOTOBOOTH',
-    subtitle: 'A SAME NICOTINE, A DIFFERENT DRIVE.',
+    title: 'CHOOSE YOUR ZYN',
+    subtitle: 'Select your flavor and suit up',
     back: 'Back',
-    continue: 'CONTINUE',
+    continue: 'SELECT',
   },
   details: {
     title: 'ALMOST THERE',
@@ -784,14 +806,14 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     back: 'BACK',
   },
   thanks: {
-    title: 'YOUR PHOTO\nIS PRINTING',
+    title: 'THANK YOU!',
     subtitle: '',
     hint: '',
     inboxTitle: '',
     inboxBody: '',
     startOver: 'START OVER',
-    processing: 'YOUR PHOTO\nIS PRINTING',
-    printed: 'YOUR PHOTO\nIS PRINTING',
+    processing: 'THANK YOU!',
+    printed: 'THANK YOU!',
     printError: 'SOMETHING WENT WRONG',
     backendOffline: '',
     apiKeyMissing: 'API KEY MISSING',
@@ -812,10 +834,10 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
   },
   capture: {
     sideTitle: 'How to pose',
-    instructions: 'LOOK AT THE CAMERA, BRING YOUR BEST SELF',
+    instructions: 'LOOK AT THE CAMERA AND SMILE',
     starting: 'Starting camera…',
     readyTitle: 'PHOTOBOOTH',
-    readySubtitle: 'LOOK AT THE CAMERA, BRING YOUR BEST SELF',
+    readySubtitle: 'LOOK AT THE CAMERA AND SMILE',
     footerHint: 'AI applies guest’s face to F1 driver in chosen suit color',
     smileHint: 'HOLD STILL, YOUR PHOTO IS BEING CAPTURED',
     capturing: 'CAPTURING...',
@@ -852,7 +874,7 @@ export const PHOTOBOOTH_DEFAULT_COPY: PhotoboothCopy = {
     uploadFailed: 'Could not upload to gallery',
     print: 'Print',
     printing: 'Printing…',
-    printed: 'YOUR PHOTO\nIS PRINTING',
+    printed: 'THANK YOU!',
     printFailed: 'Print failed',
     makePhysical: 'Make physical sheet',
     remakePhysical: 'Remake physical sheet',
