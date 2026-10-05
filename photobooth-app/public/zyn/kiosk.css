@@ -582,23 +582,66 @@ html[data-pb-theme='zyn'] .pb-page.pb-attract .pb-zyn-hero-ring .pb-zyn-logo {
 
 html[data-pb-theme='zyn'] .pb-page.pb-attract .pb-zyn-cta.pb-btn-primary {
   position: fixed;
-  bottom: calc(50vh - 0.415 * min(56vw, 1100px));
+  bottom: max(6.5vh, calc(50vh - 0.415 * min(56vw, 1100px) - 5.5vh));
   left: 50%;
   transform: translateX(-50%);
   margin-top: 0;
-  width: clamp(280px, 18vw, 540px);
-  min-width: clamp(280px, 18vw, 540px);
-  min-height: clamp(3.9rem, 8.6vh, 6.4rem);
-  font-size: clamp(1.25rem, 2.7vh, 2.05rem);
-  padding: 0.85rem 2.35rem;
+  width: 25.9vh;
+  min-width: 25.9vh;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  padding: 0;
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 3.0vh;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
 }
 
 html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash) {
   position: relative;
 }
 
+html[data-pb-theme='zyn'] .pb-page.pb-zyn-flavor-page .pb-zyn-logo:not(.pb-zyn-logo--left) {
+  width: 14.2vh;
+  margin: 0 0 5.2vh;
+}
+
 html[data-pb-theme='zyn'] .pb-zyn-flavor-page .pb-zyn-subtitle {
-  font-size: clamp(2.05rem, 3.45vh, 4.15rem);
+  font-family: "Oswald", sans-serif;
+  font-size: 3.34vh;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 1.7vh;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-flavor-page .pb-zyn-tagline {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 2.55vh;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin: 0;
+}
+
+html[data-pb-theme='zyn'] .pb-zyn-flavor-page .pb-zyn-select.pb-btn-primary {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 3.0vh;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  /* Google Oswald tops out at 700. A same-color stroke stands in for Oswald Heavy (900). */
+  -webkit-text-stroke: 0.035em #fff;
+  paint-order: stroke fill;
+  width: 25.8vh;
+  min-width: 25.8vh;
+  height: 7.7vh;
+  min-height: 7.7vh;
+  padding: 0;
+  border-radius: 999px;
 }
 
 html[data-pb-theme='zyn'] .pb-zyn-subtitle {
@@ -647,6 +690,31 @@ html[data-pb-theme='zyn'] .pb-btn-retake {
   letter-spacing: 0.04em;
   line-height: normal;
   text-transform: uppercase;
+}
+
+/* Artboard pills are one size: Oswald Heavy, about 280×84 on a 1080-tall screen. */
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-primary,
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-ghost,
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-retake {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 3.0vh;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  padding: 0 1.5vh;
+  border-radius: 999px;
+  box-sizing: border-box;
+}
+
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-primary,
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-ghost,
+html[data-pb-theme='zyn'] .pb-page:not(.pb-admin-dash):not(.pb-admin-login) .pb-btn-retake {
+  min-width: 25.9vh;
 }
 
 html[data-pb-theme='zyn'] .pb-input {

@@ -27,36 +27,38 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.4rem;
+  gap: 0;
   flex-shrink: 0;
 }
 
 .pb-zyn-logo {
-  width: var(--pb-zyn-logo-w, min(8.6vw, 248px));
+  width: 14.2vh;
   height: auto;
-  margin: 0 0 0.3rem;
+  margin: 0 0 5.2vh;
   filter: brightness(0) invert(1);
 }
 
+/* Artboard 2880×1920: title is Oswald Heavy, about 64px tall. */
 .pb-zyn-subtitle {
-  margin: 0;
-  font-family: var(--pb-font-display, 'Oswald', sans-serif);
-  font-size: clamp(2.05rem, 3.45vh, 4.15rem);
-  font-weight: 700; /* Oswald Heavy */
-  letter-spacing: 0.02em;
+  margin: 0 0 1.7vh;
+  font-family: "Oswald", sans-serif;
+  font-size: 3.34vh;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1;
   color: #fff;
   text-transform: uppercase;
 }
 
+/* Artboard supporting line is Field Gothic Regular. Barlow Condensed is the stand-in. */
 .pb-zyn-tagline {
   margin: 0;
-  font-family: var(--pb-font-display, 'Oswald', sans-serif);
+  font-family: "Inter", sans-serif;
   color: #fff;
-  font-size: clamp(0.95rem, 1.9vh, 1.45rem);
+  font-size: 2.55vh;
   letter-spacing: 0.01em;
-  font-weight: 500;
-  line-height: normal;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .pb-zyn-carousel {
@@ -177,15 +179,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(1rem, 2.5vw, 2rem);
+  gap: 3.3vh;
   margin-top: clamp(0.25rem, 1vh, 0.75rem);
   flex-shrink: 0;
 }
 
 .pb-zyn-nav {
   flex: 0 0 auto;
-  width: clamp(3.4rem, 7.5vh, 5.25rem);
-  height: clamp(3.4rem, 7.5vh, 5.25rem);
+  width: 7.7vh;
+  height: 7.7vh;
   border: 0;
   border-radius: 50%;
   background: #01b3e6;
@@ -209,15 +211,20 @@
 }
 
 .pb-zyn-flavor-actions .pb-zyn-select {
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-size: clamp(1.35rem, 3.4vh, 2.5rem);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  line-height: normal;
+  font-family: "Oswald", sans-serif;
+  font-size: 3.0vh;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  -webkit-text-stroke: 0.035em #fff;
+  paint-order: stroke fill;
   text-transform: uppercase;
-  min-width: clamp(220px, 24vw, 380px);
-  min-height: clamp(3.1rem, 7.5vh, 4.8rem);
-  border-radius: 88.228px;
+  width: 25.8vh;
+  min-width: 25.8vh;
+  height: 7.7vh;
+  min-height: 7.7vh;
+  padding: 0;
+  border-radius: 999px;
 }
 
 @media (max-height: 820px) {

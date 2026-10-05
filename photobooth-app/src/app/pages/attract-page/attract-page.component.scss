@@ -58,9 +58,9 @@
   width: max-content;
   max-width: 100%;
   color: #fff;
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-weight: 800;
-  /* AI title ~15.6% of H across 2 lines → ~8–9.5vw / ~14cqi */
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  /* Client artboard headline is Oswald Heavy. Google Fonts Oswald tops out at 700. */
   font-size: clamp(3.25rem, min(9.6vw, 15cqi), 9.75rem);
   font-style: normal;
   line-height: 0.9;
@@ -76,25 +76,27 @@
 
 .pb-zyn-attract .pb-zyn-cta {
   position: fixed;
-  /* Same screen spot as the previous in-bracket button (56vw ring, bottom 1%). */
-  bottom: calc(50vh - 0.415 * min(56vw, 1100px));
+  /* Kiosk is 2736×1824 at 200%, so the old lock sat high. Drop it, and keep it off the edge on 1080p. */
+  bottom: max(6.5vh, calc(50vh - 0.415 * min(56vw, 1100px) - 5.5vh));
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
   margin-top: 0;
-  width: clamp(280px, 18vw, 540px);
-  min-width: clamp(280px, 18vw, 540px);
-  min-height: clamp(3.9rem, 8.6vh, 6.4rem);
-  height: auto;
-  border-radius: 88.228px;
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-weight: 800;
-  font-size: clamp(1.25rem, 2.7vh, 2.05rem) !important;
+  width: 25.9vh;
+  min-width: 25.9vh;
+  min-height: 7.8vh;
+  height: 7.8vh;
+  border-radius: 999px;
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 3.0vh !important;
   letter-spacing: 0.04em;
-  line-height: normal;
+  line-height: 1;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 0.85rem 2.35rem;
+  padding: 0;
   box-sizing: border-box;
   white-space: nowrap;
   display: inline-flex;

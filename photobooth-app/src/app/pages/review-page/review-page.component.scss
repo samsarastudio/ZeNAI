@@ -133,27 +133,37 @@
 }
 
 .pb-btn-retake {
-  border-radius: 88.228px;
+  border-radius: 999px;
   border: 1.765px solid #fff;
   background: #fff;
   color: #0072bb;
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-weight: 800;
-  font-size: clamp(1.35rem, 3vmin, 2.1rem);
-  letter-spacing: 0.04em;
-  line-height: normal;
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 3.0vh;
+  letter-spacing: 0.02em;
+  line-height: 1;
   text-transform: uppercase;
-  min-height: clamp(3.4rem, 7vmin, 4.6rem);
-  padding: 1.1rem 2.75rem;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  min-width: 25.9vh;
+  padding: 0 1.5vh;
 }
 
 .pb-zyn-review-actions .pb-btn-primary {
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-size: clamp(1.35rem, 3vmin, 2.1rem);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  line-height: normal;
+  font-family: "Oswald", sans-serif;
+  font-size: 3.0vh;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
   text-transform: uppercase;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  min-width: 25.9vh;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  padding: 0 1.5vh;
 }
 
 .pb-btn-retake:disabled {

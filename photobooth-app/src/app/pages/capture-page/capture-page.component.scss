@@ -347,12 +347,18 @@
 }
 
 .pb-zyn-capture > .pb-btn-primary {
-  font-family: var(--pb-font-condensed, 'Barlow Condensed', sans-serif);
-  font-size: clamp(1.5rem, 3.4vmin, 2.4rem);
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  line-height: normal;
+  font-family: "Oswald", sans-serif;
+  font-size: 3.0vh;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
   text-transform: uppercase;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  min-width: 25.9vh;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  padding: 0 1.5vh;
 }
 
 .pb-kia-wait-copy {

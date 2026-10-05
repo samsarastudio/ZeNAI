@@ -9,7 +9,8 @@
  * Booth Admin checks for a rolled-out package, then the operator confirms
  * Install — which downloads the zip and spawns a detached PowerShell script
  * that waits for PhotoBooth to exit, replaces files (preserving config /
- * capture / data / logs / updates), relaunches, and cleans up.
+ * capture / data / logs / updates), refreshes shipped scene images inside
+ * config, relaunches, and cleans up.
  */
 const fs = require('fs');
 const path = require('path');
@@ -284,6 +285,24 @@ Get-ChildItem -LiteralPath $payload -Force | ForEach-Object {
     }
     if (-not $copied) { throw "Failed to copy $($_.Name)" }
   }
+}
+
+# config/ is preserved so booth settings survive. Scene images inside it still
+# have to be replaced or the new UI keeps showing the previous pictures.
+$AssetDirs = @(
+  'config\\compositions',
+  'config\\ai-backgrounds',
+  'config\\photo-frames'
+)
+foreach ($rel in $AssetDirs) {
+  $src = Join-Path $payload $rel
+  if (-not (Test-Path -LiteralPath $src)) {
+    Log "asset skip missing $rel"
+    continue
+  }
+  $dest = Join-Path $InstallRoot $rel
+  Log "refresh asset $rel"
+  Copy-Tree $src $dest
 }
 
 $verPath = Join-Path $InstallRoot 'version.json'

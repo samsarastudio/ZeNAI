@@ -137,11 +137,16 @@
 }
 
 .pb-zyn-form-actions .pb-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 26.468px;
-  font-weight: 800;
-  letter-spacing: normal;
-  line-height: normal;
+  font-family: "Oswald", sans-serif;
+  font-size: 3.0vh;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  -webkit-text-stroke: 0.035em currentColor;
+  paint-order: stroke fill;
+  height: 7.8vh;
+  min-height: 7.8vh;
+  padding: 0 1.5vh;
 }
 
 .pb-check input[type='checkbox'] {

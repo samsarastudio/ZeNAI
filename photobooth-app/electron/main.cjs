@@ -251,6 +251,46 @@ function readJsonSafe(p) {
   return JSON.parse(text);
 }
 
+/** Scene art shipped inside the app. OTA keeps the live config folder, so these are copied out of the package when the build id changes. */
+const SHIPPED_CONFIG_ASSET_DIRS = ['compositions', 'ai-backgrounds', 'photo-frames'];
+
+function copyShippedTree(src, dest) {
+  fs.mkdirSync(dest, { recursive: true });
+  for (const ent of fs.readdirSync(src, { withFileTypes: true })) {
+    const from = path.join(src, ent.name);
+    const to = path.join(dest, ent.name);
+    if (ent.isDirectory()) copyShippedTree(from, to);
+    else if (ent.isFile()) fs.copyFileSync(from, to);
+  }
+}
+
+function syncShippedConfigAssets() {
+  if (!app.isPackaged) return;
+  try {
+    const local = readLocalVersion(getPortableRoot(), getBundleRoot());
+    const buildKey = String(local.buildId || local.version || '').trim();
+    if (!buildKey) return;
+    const markerPath = path.join(getConfigDir(), '.shipped-assets-build');
+    let applied = '';
+    try {
+      applied = fs.readFileSync(markerPath, 'utf8').trim();
+    } catch (_) {}
+    if (applied === buildKey) return;
+    const bundledConfig = path.join(app.getAppPath(), 'config');
+    if (!fs.existsSync(bundledConfig)) return;
+    for (const name of SHIPPED_CONFIG_ASSET_DIRS) {
+      const src = path.join(bundledConfig, name);
+      if (!fs.existsSync(src)) continue;
+      copyShippedTree(src, path.join(getConfigDir(), name));
+    }
+    fs.writeFileSync(markerPath, buildKey, 'utf8');
+  } catch (err) {
+    try {
+      appendAppLog?.('warn', 'config', 'shipped asset sync failed', String(err));
+    } catch (_) {}
+  }
+}
+
 function ensureConfigFiles() {
   const dir = getConfigDir();
   fs.mkdirSync(dir, { recursive: true });
@@ -263,6 +303,7 @@ function ensureConfigFiles() {
       fs.writeFileSync(cfgPath, '{}', 'utf8');
     }
   }
+  syncShippedConfigAssets();
 }
 
 function loadMergedConfig() {
